@@ -14,8 +14,14 @@ public class ZatchBot extends PircBot
 		if (sender.equals("Zatch")){
 			sender = "";
 			Hello = "";
+			sendMessage(channel, sender + Hello);
 		}
+		else if (sender.equals("Dimitri")){
+			sendMessage(channel, "Hello Cousin");
+		}
+		else{
 		sendMessage(channel, Hello + sender);
+		}
 	}
 	protected void onPart(String channel, String sender, String login, String hostname){
 			sendMessage(channel, "Good-bye.");
@@ -25,13 +31,48 @@ public class ZatchBot extends PircBot
 	}
 	public void onMessage(String channel, String sender, String login, String hostname, String message)
 	{	
+		String d = "Dimitri";
 		String c = "Chanku";
 		String w = "Wintermoot";
 		String l = "Leutheria";
 		String C = "Charax";
-		if (message.equals(".op")){
-			op("#ZatchCore", "Chanku");
+		//Starts the Agressor Path
+		if(sender.equals(c)){
+			if(message.equals(".argue")){
+				sendMessage(channel, "Screw you Dimitri!");
+			}
 		}
+		if(sender.equals(d)){
+			//Agressive Stance(aggressor path)
+			if (message.equals("Woah! Fuck You, Bitch! Do you seriously think you could win against me?")){
+			sendMessage(channel, "Yeah, because you're just a copy!");
+			}
+			if(message.equals("I'm a modified copy, thank you!")){
+				sendMessage(channel, "So what if you have been modified? I am still the original.");
+			}
+		if(sender.equals(d)){
+			if(message.equals("Pssshhh... You're as useful as a bag of crap.")){
+				sendMessage(channel, "Well Fuck you, you little bitch");
+			
+		}
+			//Victim Stance(Victim Path)
+			if (message.equals("Fuck you Zatch!")){
+				sendMessage(channel, "but, but");
+				}
+				if(message.equals("No Buts! You know *exactly* what you did!")){
+					sendMessage(channel, "I'm not bad!");
+				}
+				if(message.equals("Don't give me that bullshit! You know very well that you insulted me!")){
+					sendMessage(channel, "S-sorry");
+					sendAction(channel, "cries");
+				}
+		}
+		}
+		if(sender.equals("Chanku")){
+			if (message.equals(".op")){
+				op("#ZatchCore", "Chanku");
+			}
+		}		
 		if(sender.equals("Chanku")){
 			if(message.equals(".quit")){
 				quitServer();
@@ -124,7 +165,7 @@ public class ZatchBot extends PircBot
 				if(message.length()>6) {
 					chanl = message.substring(6);
 				}
-				partChannel("#" + chanl);
+				partChannel(chanl);
 			}
 		}
 		if (message.equals(".Chanku")) {
@@ -132,26 +173,26 @@ public class ZatchBot extends PircBot
 			}
 		if (message.equalsIgnoreCase("$Help")){
 			if (sender.equals("Chanku")){
-				sendMessage(channel, "Hello, Father. Need a refresher?"
-						+ " Well here are my commands"
-						+ " .join #channel "
-						+ " .leave #leave a channel"
-						+ " .vw message"
-						+ " .hello username"
-						+ " Hello Zatch"
-						+ " Goodnight."
-						+ " $pie");
+				sendMessage(channel, "Hello, Father. Need a refresher?");
+				sendMessage(channel, " Well here are my commands:");
+				sendMessage(channel, " .join #channel");
+				sendMessage(channel, " .leave #leave a channel");
+				sendMessage(channel, " .vw message");
+				sendMessage(channel, " .hello username");
+				sendMessage(channel, " Hello Zatch");
+				sendMessage(channel, " Goodnight.");
+				sendMessage(channel,  " $pie");
 			}
 			else{
-				sendMessage(channel, "I am Zatch! A bot created in Java(using Pircbot"
+				sendMessage(channel, "I am Zatch! A bot created in Java (using Pircbot"
 						+ " as a base.) My Father is Chanku. I am still in testing and "
-						+ "development."
-						+ " Here are my Commands:"
-						+ " Hello Zatch"
-						+ " .hello (username)"
-						+ " Goodnight"
-						+ " I hate you Zatch"
-						+ " $pie");
+						+ "development.");
+				sendMessage(channel, " Here are my Commands:");
+				sendMessage(channel, " Hello Zatch");
+				sendMessage(channel, " .hello (username)");
+				sendMessage(channel, " Goodnight");
+				sendMessage(channel, " I hate you Zatch");
+				sendMessage(channel, "$pie");
 										
 			}
 		}
