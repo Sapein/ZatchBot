@@ -93,8 +93,8 @@ public class ZatchBot extends PircBot
 			Matcher changeM = changeN.matcher(message);
 			if (changeM.find()){
 				String chanl = new String("");
-				if (message.length()>6) {
-				    chanl = message.substring(6);
+				if (message.length()>4) {
+				    chanl = message.substring(4);
 				}
 			sendMessage("#wintreath", chanl);
 			}
