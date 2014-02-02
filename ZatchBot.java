@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 import org.jibble.pircbot.*;
 public class ZatchBot extends PircBot
 {
+	String m = new String("");
 	public ZatchBot(){
 		this.setName("Zatch");
 		this.setLogin("Zatch");
@@ -15,6 +16,9 @@ public class ZatchBot extends PircBot
 			sender = "";
 			Hello = "";
 			sendMessage(channel, sender + Hello);
+		}
+		else if(sender.equalsIgnoreCase("Chanku")){
+			sendMessage(channel, "FATHER!");
 		}
 		else if (sender.equals("Dimitri")){
 			sendMessage(channel, "Hello Cousin");
@@ -29,6 +33,18 @@ public class ZatchBot extends PircBot
 	protected void onQuit(String channel, String sender, String login, String hostname){
 		sendMessage(channel, "Good-bye.");
 	}
+	protected void onPrivateMessage(String sender, String login, String hostname, String message){
+		sendMessage("Chanku", sender + ": " + message);
+
+	}
+	public void onAction(String channel, String sender, String login, String hostname, String action){
+		channel = "#wintreath";
+		if(action.equals("waves to Zatch")){
+			sendMessage(channel, "Hello again, cousin" );
+			sendAction(channel, "looks away from Dimitri");
+			sendMessage(channel, "Father, why does my cousin have to be a useless copy?");
+				}
+	} 
 	public void onMessage(String channel, String sender, String login, String hostname, String message)
 	{	
 		String d = "Dimitri";
@@ -36,6 +52,45 @@ public class ZatchBot extends PircBot
 		String w = "Wintermoot";
 		String l = "Leutheria";
 		String C = "Charax";
+		
+		
+		if(sender.equals(d)){
+			if(message.equals("Ladies and Gentlemen, I have arrived.")){
+				sendMessage(channel, "Ugh, please Fuck off " + d + ". Also stop acting like you are hot stuff. You aren't."
+						+ " You are just a copy.");
+			}
+		}			
+		if(sender.equals(c)){
+			Pattern afkP = Pattern.compile("^\\.afk");
+			Matcher afkM = afkP.matcher(message);
+				if(afkM.find()){
+					String afk = new String("");
+					if(message.length()>4){
+						afk = message.substring(4);
+					}
+				sendMessage(afk, sender + " is now afk, please wait until he returns");
+				}
+			Pattern afkR = Pattern.compile("^\\.rej");
+			Matcher afkL = afkR.matcher(message);
+				if(afkL.find()){
+					String afk2 = new String("");
+					if(message.length()>4){
+						afk2 = message.substring(4); 
+				}
+					sendMessage(afk2, sender +" has returned.");
+		}
+		}
+		Pattern hugP = Pattern.compile("^\\.hugn");
+		Matcher hugM = hugP.matcher(message);
+			if(hugM.find()){
+				String chanl = new String("");
+				if(message.length()>6){
+					chanl = message.substring(4);
+				}
+			sendAction("#wintreath", "hugs " + chanl);
+			}
+		
+		//Zatch-Dimitri, fight
 		//Starts the Agressor Path
 		if(sender.equals(c)){
 			if(message.equals(".argue")){
@@ -162,10 +217,10 @@ public class ZatchBot extends PircBot
 			Matcher leaveM = leaveP.matcher(message);
 			if (leaveM.find()){
 				String chanl = new String("");
-				if(message.length()>6) {
-					chanl = message.substring(6);
+				if(message.length()>7) {
+					chanl = message.substring(7);
 				}
-				partChannel(chanl);
+				partChannel("#" + chanl);
 			}
 		}
 		if (message.equals(".Chanku")) {
@@ -210,6 +265,7 @@ public class ZatchBot extends PircBot
 	  }
 	  sendMessage(channel,"Hello"+carthago);
 	}
+
 	//Removed Code
 	/* if (message.equals("I hate you Zatch")){
 	sendMessage(channel, "I hate you too, bitch");
