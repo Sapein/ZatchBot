@@ -53,7 +53,20 @@ public class ZatchBot extends PircBot
 		String l = "Leutheria";
 		String C = "Charax";
 		
-		
+		if(message.equals("$fish")){
+			sendMessage(channel, "FISH");
+		}
+		Pattern fishP = Pattern.compile("^\\.fishslap");
+		Matcher fishM = fishP.matcher(message);
+		if(fishM.find()){
+			String fslap = new String("");
+			if(message.length()>10){
+				fslap = message.substring(10);
+			}
+			sendAction(channel, "must slap " +fslap+ " with a trout, because " +sender+ " wills it.");
+            sendAction(channel, "slaps " +fslap+ " with a trout.");
+            sendAction(channel, "laughs evily");
+		}
 		if(sender.equals(d)){
 			if(message.equals("Ladies and Gentlemen, I have arrived.")){
 				sendMessage(channel, "Ugh, please Fuck off " + d + ". Also stop acting like you are hot stuff. You aren't."
@@ -85,7 +98,7 @@ public class ZatchBot extends PircBot
 			if(hugM.find()){
 				String chanl = new String("");
 				if(message.length()>6){
-					chanl = message.substring(4);
+					chanl = message.substring(5);
 				}
 			sendAction("#wintreath", "hugs " + chanl);
 			}
@@ -226,32 +239,41 @@ public class ZatchBot extends PircBot
 		if (message.equals(".Chanku")) {
 			sendMessage(channel, "Test" );
 			}
-		if (message.equalsIgnoreCase("$Help")){
+		if (message.equalsIgnoreCase("&Help")){
 			if (sender.equals("Chanku")){
 				sendMessage(channel, "Hello, Father. Need a refresher?");
-				sendMessage(channel, " Well here are my commands:");
-				sendMessage(channel, " .join #channel");
-				sendMessage(channel, " .leave #leave a channel");
-				sendMessage(channel, " .vw message");
-				sendMessage(channel, " .hello username");
-				sendMessage(channel, " Hello Zatch");
-				sendMessage(channel, " Goodnight.");
-				sendMessage(channel,  " $pie");
+				sendMessage(channel, "Well here are my commands:");
+				sendMessage(channel, ".join channel");
+				sendMessage(channel, ".leave channel");
+				sendMessage(channel, ".vw message");
+				sendMessage(channel, ".hello username");
+				sendMessage(channel, "Hello Zatch");
+				sendMessage(channel, "Goodnight.");
+				sendMessage(channel, "&pie");
+				sendMessage(channel, ".quit");
+				sendMessage(channel, ".hugn user");
+				sendMessage(channel, "Goodbye");
+				sendMessage(channel, ".quit");
+				sendMessage(channel, ".fishslap user");
+				sendMessage(channel, "$fish");
 			}
 			else{
 				sendMessage(channel, "I am Zatch! A bot created in Java (using Pircbot"
 						+ " as a base.) My Father is Chanku. I am still in testing and "
 						+ "development.");
-				sendMessage(channel, " Here are my Commands:");
-				sendMessage(channel, " Hello Zatch");
-				sendMessage(channel, " .hello (username)");
-				sendMessage(channel, " Goodnight");
-				sendMessage(channel, " I hate you Zatch");
-				sendMessage(channel, "$pie");
-										
+				sendMessage(channel, "Here are my Commands:");
+				sendMessage(channel, "Hello Zatch");
+				sendMessage(channel, ".hello (username)");
+				sendMessage(channel, "Goodnight");
+				sendMessage(channel, "I hate you Zatch");
+				sendMessage(channel, "&pie");
+				sendMessage(channel, "Goodbye");
+				sendMessage(channel, ".hugn user");
+				sendMessage(channel, ".fishslap user");
+				sendMessage(channel, "$fish");
 			}
 		}
-		if (message.equals("$pie")){
+		if (message.equals("&pie")){
 			sendAction(channel, "Throws pie in " + sender + "'s " + "face.");
 		}
 	Pattern catoP = Pattern.compile("^\\.hello");
