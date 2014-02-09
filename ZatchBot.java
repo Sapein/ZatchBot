@@ -2,10 +2,13 @@
 //Zatchbot v 1.0 BETA
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.jibble.pircbot.*;
 public class ZatchBot extends PircBot
 {
 	String m = new String("");
+	int x = 0;
+	String g = "";
 	public ZatchBot(){
 		this.setName("Zatch");
 		this.setLogin("Zatch");
@@ -52,6 +55,54 @@ public class ZatchBot extends PircBot
 		String w = "Wintermoot";
 		String l = "Leutheria";
 		String C = "Charax";
+		int f = 1 + (int)(Math.random() * ((500 - 1) + 1)); // The response Generator
+		int x = 1 + (int)(Math.random() * ((2 - 1) + 1)); //The Gwedin is Generator
+	// The random responses
+		if(x == 1){ 
+			g = "Cool"; //Gwedin is cool
+		}
+		if(x == 2){
+			g = "cruel"; //Gwedin is Cruel
+		}
+		if(f == 1){
+			sendMessage(channel, "I like cat-food!");
+		}
+		if(f == 2){
+			sendMessage(channel, "Java is interesting");
+		}
+		if(f == 3)
+		{
+			sendMessage(channel, "I love pie!");
+		}
+		if(f == 4){
+			sendMessage(channel, "Gwedin is " + g);
+		}
+		if(f == 5){
+			sendMessage(channel, "Gwedin owes xcriteria $35.");
+		}
+		if(f == 6){
+			sendMessage(channel, "Gwedin is handsome!!");
+		}
+	
+		//SS debt thingy
+		if(channel.equalsIgnoreCase("#schoolsurvival")){
+			if(message.equals(".debt")){
+				sendMessage(channel, "Gwedin's Debt to xcriteria is $35.");
+			}
+		}
+		//NOTE: .ccha is still in alpha and is incomplete(only works with one word). 
+		Pattern crossP = Pattern.compile("^\\.ccha");
+		Matcher crossM = crossP.matcher(message);
+			if(crossM.find()){
+				String chanl = new String("");
+				String ms = new String("");
+				String chl = chanl;
+				if(message.length()>18){
+					chanl = message.substring(5);
+				}
+			sendMessage(chanl, ms + " was said by " + sender + chl);
+			}
+		
 		
 		if(message.equals("$fish")){
 			sendMessage(channel, "FISH");
@@ -110,7 +161,7 @@ public class ZatchBot extends PircBot
 				sendMessage(channel, "Screw you Dimitri!");
 			}
 		}
-		if(sender.equals(d)){
+		if(sender.equals("xcriteria")){
 			//Agressive Stance(aggressor path)
 			if (message.equals("Woah! Fuck You, Bitch! Do you seriously think you could win against me?")){
 			sendMessage(channel, "Yeah, because you're just a copy!");
@@ -118,7 +169,7 @@ public class ZatchBot extends PircBot
 			if(message.equals("I'm a modified copy, thank you!")){
 				sendMessage(channel, "So what if you have been modified? I am still the original.");
 			}
-		if(sender.equals(d)){
+		if(sender.equals("xcriteria")){
 			if(message.equals("Pssshhh... You're as useful as a bag of crap.")){
 				sendMessage(channel, "Well Fuck you, you little bitch");
 			
@@ -241,6 +292,7 @@ public class ZatchBot extends PircBot
 			}
 		if (message.equalsIgnoreCase("&Help")){
 			if (sender.equals("Chanku")){
+				channel = sender;
 				sendMessage(channel, "Hello, Father. Need a refresher?");
 				sendMessage(channel, "Well here are my commands:");
 				sendMessage(channel, ".join channel");
@@ -258,19 +310,19 @@ public class ZatchBot extends PircBot
 				sendMessage(channel, "$fish");
 			}
 			else{
-				sendMessage(channel, "I am Zatch! A bot created in Java (using Pircbot"
+				sendMessage(sender, "I am Zatch! A bot created in Java (using Pircbot"
 						+ " as a base.) My Father is Chanku. I am still in testing and "
 						+ "development.");
-				sendMessage(channel, "Here are my Commands:");
-				sendMessage(channel, "Hello Zatch");
-				sendMessage(channel, ".hello (username)");
-				sendMessage(channel, "Goodnight");
-				sendMessage(channel, "I hate you Zatch");
-				sendMessage(channel, "&pie");
-				sendMessage(channel, "Goodbye");
-				sendMessage(channel, ".hugn user");
-				sendMessage(channel, ".fishslap user");
-				sendMessage(channel, "$fish");
+				sendMessage(sender, "Here are my Commands:");
+				sendMessage(sender, "Hello Zatch");
+				sendMessage(sender, ".hello (username)");
+				sendMessage(sender, "Goodnight");
+				sendMessage(sender, "I hate you Zatch");
+				sendMessage(sender, "&pie");
+				sendMessage(sender, "Goodbye");
+				sendMessage(sender, ".hugn user");
+				sendMessage(sender, ".fishslap user");
+				sendMessage(sender, "$fish");
 			}
 		}
 		if (message.equals("&pie")){
