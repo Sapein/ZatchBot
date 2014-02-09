@@ -50,18 +50,23 @@ public class ZatchBot extends PircBot
 	} 
 	public void onMessage(String channel, String sender, String login, String hostname, String message)
 	{	
+		@SuppressWarnings("unused")
+		String x = "xcriteria";
 		String d = "Dimitri";
 		String c = "Chanku";
 		String w = "Wintermoot";
 		String l = "Leutheria";
 		String C = "Charax";
 		int f = 1 + (int)(Math.random() * ((500 - 1) + 1)); // The response Generator
-		int x = 1 + (int)(Math.random() * ((2 - 1) + 1)); //The Gwedin is Generator
-	// The random responses
-		if(x == 1){ 
+		int a = 1 + (int)(Math.random() * ((2 - 1) + 1)); //The Gwedin is Generator
+		if(message.equals(".code")){
+			sendMessage(channel, "https://github.com/Sapein/ZatchBot");
+		}
+		// The random responses
+		if(a == 1){ 
 			g = "Cool"; //Gwedin is cool
 		}
-		if(x == 2){
+		if(a == 2){
 			g = "cruel"; //Gwedin is Cruel
 		}
 		if(f == 1){
@@ -161,7 +166,7 @@ public class ZatchBot extends PircBot
 				sendMessage(channel, "Screw you Dimitri!");
 			}
 		}
-		if(sender.equals("xcriteria")){
+		if(sender.equals(d)){
 			//Agressive Stance(aggressor path)
 			if (message.equals("Woah! Fuck You, Bitch! Do you seriously think you could win against me?")){
 			sendMessage(channel, "Yeah, because you're just a copy!");
@@ -169,7 +174,7 @@ public class ZatchBot extends PircBot
 			if(message.equals("I'm a modified copy, thank you!")){
 				sendMessage(channel, "So what if you have been modified? I am still the original.");
 			}
-		if(sender.equals("xcriteria")){
+		if(sender.equals(d)){
 			if(message.equals("Pssshhh... You're as useful as a bag of crap.")){
 				sendMessage(channel, "Well Fuck you, you little bitch");
 			
@@ -197,6 +202,10 @@ public class ZatchBot extends PircBot
 				quitServer();
 			}
 		}
+		if(message.equalsIgnoreCase(".secret")){
+			sendMessage(channel, "Butt/Vivi/Vesper is awesome!");
+		}
+		
 		Pattern hateY = Pattern.compile("^I hate you Zatch");
 		Matcher hateM = hateY.matcher(message);
 			if(hateM.find()){
@@ -323,6 +332,7 @@ public class ZatchBot extends PircBot
 				sendMessage(sender, ".hugn user");
 				sendMessage(sender, ".fishslap user");
 				sendMessage(sender, "$fish");
+				sendMessage(sender, ".code");
 			}
 		}
 		if (message.equals("&pie")){
