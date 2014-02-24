@@ -2,6 +2,13 @@
 //Zatchbot v 1.0 BETA
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.io.*;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
+
+
 
 import org.jibble.pircbot.*;
 public class ZatchBot extends PircBot
@@ -50,6 +57,15 @@ public class ZatchBot extends PircBot
 	} 
 	public void onMessage(String channel, String sender, String login, String hostname, String message)
 	{	
+		 
+		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+		Date date = new Date();
+		String yourDate = dateFormat.format(date);
+		DateFormat dF = new SimpleDateFormat("hh:mm");
+		Date time = new Date();
+		String yourTime = dF.format(time);
+		   
+		   
 		@SuppressWarnings("unused")
 		String x = "xcriteria";
 		String d = "Dimitri";
@@ -57,6 +73,35 @@ public class ZatchBot extends PircBot
 		String w = "Wintermoot";
 		String l = "Leutheria";
 		String C = "Charax";
+		
+		//auto-log code begin
+		Pattern change2 = Pattern.compile("^");
+		Matcher change1 = change2.matcher(message);
+		if (change1.find()){
+			String chanl1 = new String("");
+			if (message.length()>0) {
+			    chanl1 = message.substring(0);
+			}
+			try {
+	
+	 
+				File file = new File("C:/Documents and Settings/bob/Desktop/logs/" + channel + " " + yourDate + " " + "log.txt");
+				
+				if (!file.exists()) {
+					file.createNewFile();
+				}
+	
+				FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+				BufferedWriter bw = new BufferedWriter(fw);
+				bw.write(channel +" " + " " + yourTime + " " + sender + ":" + chanl1 + "\r\n");
+				bw.close();
+	 
+			} catch (IOException e) {
+				e.printStackTrace();
+		}
+		}
+		//auto-log code ends
+		
 		int f = 1 + (int)(Math.random() * ((500 - 1) + 1)); // The response Generator
 		int a = 1 + (int)(Math.random() * ((2 - 1) + 1)); //The Gwedin is Generator
 		if(message.equals(".code")){
