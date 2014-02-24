@@ -61,7 +61,7 @@ public class ZatchBot extends PircBot
 		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
 		Date date = new Date();
 		String yourDate = dateFormat.format(date);
-		DateFormat dF = new SimpleDateFormat("hh:mm");
+		DateFormat dF = new SimpleDateFormat("HH:mm");
 		Date time = new Date();
 		String yourTime = dF.format(time);
 		   
