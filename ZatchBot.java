@@ -65,8 +65,6 @@ public class ZatchBot extends PircBot
 		Date time = new Date();
 		String yourTime = dF.format(time);
 		   
-		   
-		@SuppressWarnings("unused")
 		String x = "xcriteria";
 		String d = "Dimitri";
 		String c = "Chanku";
@@ -329,8 +327,30 @@ public class ZatchBot extends PircBot
 				} 
 				joinChannel("#" + chanl);
 			}
+			if (sender.equals(x)){
+				Pattern joinX = Pattern.compile("^\\.join");
+				Matcher joinF = joinX.matcher(message);
+				if (joinF.find()) {
+					String chanl = new String("");
+					if (message.length()>6) {
+						chanl = message.substring(6);
+					} 
+					joinChannel("#" + chanl);
+				}
+			}
 		}
 		if (sender.equals("Chanku")){
+			Pattern leaveP = Pattern.compile("^\\.leave");
+			Matcher leaveM = leaveP.matcher(message);
+			if (leaveM.find()){
+				String chanl = new String("");
+				if(message.length()>7) {
+					chanl = message.substring(7);
+				}
+				partChannel("#" + chanl);
+			}
+		}
+		if (sender.equals(x)){
 			Pattern leaveP = Pattern.compile("^\\.leave");
 			Matcher leaveM = leaveP.matcher(message);
 			if (leaveM.find()){
