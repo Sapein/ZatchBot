@@ -138,6 +138,9 @@ public class ZatchBot extends PircBot
 				sendMessage(channel, "Gwedin's Debt to xcriteria is $35.");
 			}
 		}
+		if(message.equalsIgnoreCase(".site")){
+			sendMessage(channel, "http://sapein.us.to");
+		}
 		//NOTE: .ccha is still in alpha and is incomplete(only works with one word). 
 		Pattern crossP = Pattern.compile("^\\.ccha");
 		Matcher crossM = crossP.matcher(message);
@@ -382,6 +385,8 @@ public class ZatchBot extends PircBot
 				sendMessage(channel, ".quit");
 				sendMessage(channel, ".fishslap user");
 				sendMessage(channel, "$fish");
+				sendMessage(channel, ".site");
+				sendMessage(channel, ".code");
 			}
 			else{
 				sendMessage(sender, "I am Zatch! A bot created in Java (using Pircbot"
@@ -398,6 +403,7 @@ public class ZatchBot extends PircBot
 				sendMessage(sender, ".fishslap user");
 				sendMessage(sender, "$fish");
 				sendMessage(sender, ".code");
+				sendMessage(sender, ".site");
 			}
 		}
 		if (message.equals("&pie")){
