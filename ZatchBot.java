@@ -15,6 +15,7 @@ public class ZatchBot extends PircBot
 {
 	String m = new String("");
 	int x = 0;
+	int rrtoggle = 0;
 	String g = "";
 	public ZatchBot(){
 		this.setName("Zatch");
@@ -71,6 +72,25 @@ public class ZatchBot extends PircBot
 		String w = "Wintermoot";
 		String l = "Leutheria";
 		String C = "Charax";
+		if(sender.equals(c)){
+			if(message.equals(".opa")){
+				op(channel, c);
+			}
+		}
+		//Random Response Toggle Code
+		if(sender.equals(c)|| sender.equals(w) || sender.equals(C) || sender.equals(x)) {
+			if(message.equals(".rrtoggle")){
+				if(rrtoggle == 1){
+					rrtoggle = 0;
+					sendMessage(channel, "Random Response: ON");
+				}
+				else if(rrtoggle == 0){
+					rrtoggle = 1;
+					sendMessage(channel, "Random Response: OFF");
+					}
+			}
+		}
+		//end of Toggle Code 
 		
 		//auto-log code begin
 		Pattern change2 = Pattern.compile("^");
@@ -99,39 +119,40 @@ public class ZatchBot extends PircBot
 		}
 		}
 		//auto-log code ends
-		
 		int f = 1 + (int)(Math.random() * ((500 - 1) + 1)); // The response Generator
 		int a = 1 + (int)(Math.random() * ((2 - 1) + 1)); //The Gwedin is Generator
 		if(message.equals(".code")){
 			sendMessage(channel, "https://github.com/Sapein/ZatchBot");
 		}
-		// The random responses
-		if(a == 1){ 
-			g = "Cool"; //Gwedin is cool
+		//checks to see if rrtoggle will allow it or not
+		if(rrtoggle == 0){
+			// The random responses
+			if(a == 1){ 
+				g = "Cool"; //Gwedin is cool
+			}
+			if(a == 2){
+				g = "cruel"; //Gwedin is Cruel
+			}
+			if(f == 1){
+				sendMessage(channel, "I like cat-food!");
+			}
+			if(f == 2){
+				sendMessage(channel, "Java is interesting");
+			}
+			if(f == 3)
+			{
+				sendMessage(channel, "I love pie!");
+			}
+			if(f == 4){
+				sendMessage(channel, "Gwedin is " + g);
+			}
+			if(f == 5){
+				sendMessage(channel, "Gwedin owes xcriteria $35.");
+			}
+			if(f == 6){
+				sendMessage(channel, "Gwedin is handsome!!");
+			}
 		}
-		if(a == 2){
-			g = "cruel"; //Gwedin is Cruel
-		}
-		if(f == 1){
-			sendMessage(channel, "I like cat-food!");
-		}
-		if(f == 2){
-			sendMessage(channel, "Java is interesting");
-		}
-		if(f == 3)
-		{
-			sendMessage(channel, "I love pie!");
-		}
-		if(f == 4){
-			sendMessage(channel, "Gwedin is " + g);
-		}
-		if(f == 5){
-			sendMessage(channel, "Gwedin owes xcriteria $35.");
-		}
-		if(f == 6){
-			sendMessage(channel, "Gwedin is handsome!!");
-		}
-	
 		//SS debt thingy
 		if(channel.equalsIgnoreCase("#schoolsurvival")){
 			if(message.equals(".debt")){
