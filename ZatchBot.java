@@ -22,6 +22,16 @@ public class ZatchBot extends PircBot
 		this.setLogin("Zatch");
 	}
 	protected void onJoin(String channel, String sender, String login, String hostname){
+		//Auto-op
+		String[] opNames = {
+				"Chanku", "xcriteria", "xcmobile", "xcmobile2", "MichaelMerging", "HeilKaiba8921", "Neue"
+		};
+		
+		if(sender.equalsIgnoreCase(opNames[0]) || sender.equalsIgnoreCase(opNames[1]) || sender.equalsIgnoreCase(opNames[2]) || sender.equalsIgnoreCase(opNames[3])|| sender.equalsIgnoreCase(opNames[4]) || sender.equalsIgnoreCase(opNames[5]) || sender.equalsIgnoreCase(opNames[6]) || sender.equalsIgnoreCase(opNames[7])){
+			op(channel, sender);
+		}
+		
+		
 		String Hello = "Hello ";
 		if (sender.equals("Zatch")){
 			sender = "";
@@ -65,7 +75,6 @@ public class ZatchBot extends PircBot
 		DateFormat dF = new SimpleDateFormat("HH:mm");
 		Date time = new Date();
 		String yourTime = dF.format(time);
-		   
 		String x = "xcriteria";
 		String d = "Dimitri";
 		String c = "Chanku";
@@ -77,6 +86,15 @@ public class ZatchBot extends PircBot
 				op(channel, c);
 			}
 		}
+		//Current Time Command
+		if(message.equals(".time")){
+			sendMessage(channel, "It is " + yourTime + " CST");
+		}
+		//Current Date Command
+		if(message.equals(".date")){
+			sendMessage(channel, "It is " + yourDate + " in the CST Timezone");
+		}
+		
 		//Random Response Toggle Code
 		if(sender.equals(c)|| sender.equals(w) || sender.equals(C) || sender.equals(x)) {
 			if(message.equals(".rrtoggle")){
@@ -418,6 +436,8 @@ public class ZatchBot extends PircBot
 				sendMessage(channel, ".code");
 				sendMessage(channel, ".rrstatus");
 				sendMessage(channel, ".rrtoggle");
+				sendMessage(channel, ".date");
+				sendMessage(channel, ".time");
 			}
 			else{
 				sendMessage(sender, "I am Zatch! A bot created in Java (using Pircbot"
@@ -436,6 +456,8 @@ public class ZatchBot extends PircBot
 				sendMessage(sender, ".code");
 				sendMessage(sender, ".site");
 				sendMessage(sender, ".rrstatus");
+				sendMessage(sender, ".date");
+				sendMessage(sender, ".time");
 			}
 		}
 		if (message.equals("&pie")){
