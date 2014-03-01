@@ -13,8 +13,6 @@ import java.text.SimpleDateFormat;
 import org.jibble.pircbot.*;
 public class ZatchBot extends PircBot
 {
-	String m = new String("");
-	int x = 0;
 	int rrtoggle = 0;
 	String g = "";
 	public ZatchBot(){
@@ -30,7 +28,6 @@ public class ZatchBot extends PircBot
 		if(sender.equalsIgnoreCase(opNames[0]) || sender.equalsIgnoreCase(opNames[1]) || sender.equalsIgnoreCase(opNames[2]) || sender.equalsIgnoreCase(opNames[3])|| sender.equalsIgnoreCase(opNames[4]) || sender.equalsIgnoreCase(opNames[5]) || sender.equalsIgnoreCase(opNames[6]) || sender.equalsIgnoreCase(opNames[7])){
 			op(channel, sender);
 		}
-		
 		
 		String Hello = "Hello ";
 		if (sender.equals("Zatch")){
@@ -145,6 +142,7 @@ public class ZatchBot extends PircBot
 		}
 		}
 		//auto-log code ends
+		//Random Response Code
 		int f = 1 + (int)(Math.random() * ((500 - 1) + 1)); // The response Generator
 		int a = 1 + (int)(Math.random() * ((2 - 1) + 1)); //The Gwedin is Generator
 		if(message.equals(".code")){
