@@ -90,6 +90,14 @@ public class ZatchBot extends PircBot
 					}
 			}
 		}
+		if(message.equals(".rrstatus")){
+			if(rrtoggle == 0){
+				sendMessage(channel, "The Random Responses are ON");
+			}
+			else if(rrtoggle == 1){
+				sendMessage(channel, "Random Responses are OFF");
+			}
+		}
 		//end of Toggle Code 
 		
 		//auto-log code begin
@@ -408,6 +416,8 @@ public class ZatchBot extends PircBot
 				sendMessage(channel, "$fish");
 				sendMessage(channel, ".site");
 				sendMessage(channel, ".code");
+				sendMessage(channel, ".rrstatus");
+				sendMessage(channel, ".rrtoggle");
 			}
 			else{
 				sendMessage(sender, "I am Zatch! A bot created in Java (using Pircbot"
@@ -425,6 +435,7 @@ public class ZatchBot extends PircBot
 				sendMessage(sender, "$fish");
 				sendMessage(sender, ".code");
 				sendMessage(sender, ".site");
+				sendMessage(sender, ".rrstatus");
 			}
 		}
 		if (message.equals("&pie")){
