@@ -6,25 +6,55 @@ import java.io.*;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
-
+import java.util.ArrayList;
+import java.util.HashMap; 
 
 
 import org.jibble.pircbot.*;
 public class ZatchBot extends PircBot
 {
 	int rrtoggle = 0;
+	//int voteCall = 0; 
+	//int ayeVotes= 0;
+	//int punishVote = 0; 
+	//int nayVotes = 0;
+	//int messageController = 0;
+	//int voteCancel = 0; 
+	//int voteBan = 0;
+	//int voteKick = 0;
+	//int voteNone = 0;
+	//int voteVoice = 0;
+	//int voteHalfOp = 0;
+	//int voteCall2 = 0;
 	String g = "";
+	ArrayList<String> hostnames = null;
 	public ZatchBot(){
 		this.setName("Zatch");
 		this.setLogin("Zatch");
 	}
+	public HashMap<String, String> patternMatch(String message, String pattern) {
+
+
+		  Pattern catoP = Pattern.compile(pattern);
+		  Matcher catoM = catoP.matcher(message);
+		  if (catoM.find()) {
+		    String type = new String("");
+		    String user = new String("");
+		    if (message.length()>6) {
+		      HashMap<String, String> map = new HashMap<String, String>();
+		      map.put("type", message.substring(6,12));
+		      map.put("user", message.substring(13));
+		      return map;
+		    }
+		  } return null;
+
+		}
 	protected void onJoin(String channel, String sender, String login, String hostname){
 		//Auto-op
 		String[] opNames = {
-				"Chanku", "xcriteria", "xcmobile", "xcmobile2", "MichaelMerging", /*"HeilKaiba8921", */ "Neue"
+				"Hansgrohe", "xcriteria", "xcmobile", "xc_laptop", /*"MichaelMerging", "HeilKaiba8921",  "Neue" */
 		};
-		//Note to self remove opNames[7] from the code, or comment it out later. 
+		//Note to self remove opNames[5] to opNames[7] from the code, or comment it out later. 
 		if(sender.equalsIgnoreCase(opNames[0]) || sender.equalsIgnoreCase(opNames[1]) || sender.equalsIgnoreCase(opNames[2]) || sender.equalsIgnoreCase(opNames[3])|| sender.equalsIgnoreCase(opNames[4]) || sender.equalsIgnoreCase(opNames[5]) || sender.equalsIgnoreCase(opNames[6]) || sender.equalsIgnoreCase(opNames[7])){
 			op(channel, sender);
 		}
@@ -78,6 +108,256 @@ public class ZatchBot extends PircBot
 		String w = "Wintermoot";
 		String l = "Leutheria";
 		String C = "Charax";
+		//int voteThreshold = 5; 
+		//int votePunish = 5; 
+		
+		// Below is the Voting code it is NOT complete and does not work feel free to dick around with it
+		/* if(sender.equals(c)){
+			voteCall2 = 1;
+		}
+		if(message.equals(".votecall")){
+			voteCall = 1;
+			voteCall2 = 0;
+		}
+		if(voteCall == 1){
+			sendMessage(channel, "A vote has been called by " + sender);
+			voteCall2 = 0;
+			sendMessage(channel, "Whom do you wish to punish?");
+			voteCall = 0;
+			voteCall2 = 0;
+		}
+		
+		if(voteCall2 == 1){
+			final String accused = message;
+			sendMessage(channel, "The Accused is " + accused);
+			sendMessage(channel, "A vote will now commence of if the user will be kicked");
+			if(message.equals("aye")){
+				ayeVotes = ayeVotes + 1;
+			}
+			if(message.equals("nay")){
+				nayVotes = nayVotes + 1;
+			}
+			int total = nayVotes + ayeVotes;
+			if(total == 1){
+				if(ayeVotes > nayVotes){
+				kick(channel, accused);
+				}
+				else
+					sendMessage(channel, "Vote failed");
+			}
+		}
+		
+		
+		/*if(message.equals(".voteopen")){
+			voteCall = 1;
+		}
+		if(voteCall == 1){
+		if(message.equals(".vote arg1 arg2")){
+			if(message.toLowerCase().startsWith(".vote")){
+				String[] args = message.substring(message.indexOf(" ") + 1).split(" "); // ignores ".vote", and only takes the arguments
+				switch(args[0]) {
+					case "punish":
+						sendMessage(channel, "Punishment vote has been called by " + sender +" against " + args[1]);
+						sendMessage(channel, "You may now vote if you belive the user should be punished or not. Aye and Nay are acceptible responses");
+						if(message.equalsIgnoreCase("aye")){
+							ayeVotes = ayeVotes + 1;
+						}
+						else if(message.equalsIgnoreCase("nay")){
+							nayVotes = nayVotes + 1;
+						}
+						int totalVoteMonitor = nayVotes + ayeVotes;
+						if(totalVoteMonitor == voteThreshold){
+							sendMessage(channel, "Votes are no longer being counted");
+							sendMessage(channel, "Calculating the votes");
+							if(ayeVotes > nayVotes){
+								sendMessage(channel, "The user has been shown to be thought of as guilty. The votes were " + ayeVotes + "-" + nayVotes);
+								sendMessage(channel, "Now please select a punishment, you may vote: Kick or None");
+								if(message.equalsIgnoreCase("None")){
+									voteNone = voteNone + 1;
+								}
+								if(message.equalsIgnoreCase("kick")){
+									voteKick = voteKick + 1;
+								}
+								int punishVoteMonitor = voteKick + voteNone;
+								if(punishVoteMonitor == votePunish){
+									if(voteKick > voteNone){
+										sendMessage(channel, args[1] + " has been voted to be kicked");
+										sendMessage(channel, voteKick + "-" + voteNone);
+										kick(channel, args[1]);
+									}
+									if(voteNone > voteKick){
+										sendMessage(channel, args[1] + " has been voted to remain unpunished.");
+										sendMessage(channel, voteKick + "-" + voteNone);
+									}
+								}
+							}
+							if(nayVotes > ayeVotes){
+								sendMessage(channel, "The user has been shown to be thought of as innocent. The votes were" + ayeVotes + "-" + nayVotes);
+								sendMessage(channel, "The vote has ended, have a nice day");
+							}
+						}
+						voteCall = 0;
+						break;
+					case "Reward":
+						sendMessage(channel, "Reward");
+					case "bleep":
+						sendMessage(channel, "bloop!");
+						break;
+					default:
+						sendMessage(channel, "unrecognized argument for .vote");
+				}	
+			}
+		}
+		}
+		 */
+		//true voting code
+		  /*HashMap<String, String> userType = this.patternMatch(message, "^\\.vote");
+		  if (userType != null && voteCall == 0) {
+		    String type = userType.get("user");
+		    String user = userType.get("type");
+		    sendMessage(channel, "A vote has been called by " + sender + " for " + type + " " + user);
+		    voteCall = 1; 
+		    globalUserType = userType; 
+		  }
+		
+		if(voteCall == 1){
+			String user = globalUserType.get("user");
+			String type = globelUserType.get("type");
+			if(type == "Punish" || type == "punish"){
+				sendMessage(channel, "Do you think that " + user + " should be Punished? Type Aye or Nay.");
+				if (hostnames.contains(hostname) && (message.equalsIgnoreCase("aye") || message.equalsIgnoreCase("nay"))) {
+					sendMessage(channel, "You have already voted!");
+				}
+				if(message.equalsIgnoreCase("aye")){
+					ayeVotes = ayeVotes + 1;
+					hostnames.add(hostname);
+				}
+				else if(message.equalsIgnoreCase("nay")){
+					nayVotes = nayVotes + 1;
+					hostnames.add(hostname);
+				}
+				int threshholdMonitor = nayVotes + ayeVotes;
+				if(threshholdMonitor == voteThreshold){
+					sendMessage(channel, "Votes are no longer being counted");
+					if(ayeVotes > nayVotes){
+						sendMessage(channel, "The majority of users think they should be punished");
+						sendMessage(channel, "The total votes are: " + ayeVotes + "-" + nayVotes);
+						threshholdMonitor = 0;
+						nayVotes = 0;
+						ayeVotes = 0; 
+						hostnames = null; 
+						punishVote = 1; 
+					}
+					else{
+						sendMessage(channel, "The majority of users think they should not be punished");
+						sendMessage(channel, "The total votes are: " + ayeVotes + "-" + nayVotes);
+						threshholdMonitor = 0; 
+						nayVotes = 0;
+						ayeVotes = 0;
+						hostnames = null; 
+					}
+			}
+			}
+			if(punishVote == 1){
+				hostnames = new ArrayList<String>();
+				if (hostnames.contains(hostname) && (message.equalsIgnoreCase("ban") || message.equalsIgnoreCase("kick") || message.equalsIgnoreCase("none"))) {
+					sendMessage(channel, "You have already voted!");
+				}
+				sendMessage(channel, "It is at this time that the punishment will be decided you may vote: Ban, Kick, and None");
+					if(message.equalsIgnoreCase("ban")){
+						voteBan = voteBan + 1;
+						hostnames.add(hostname);
+					}
+					else if(message.equalsIgnoreCase("None")){
+						voteNone = voteNone + 1;
+						hostnames.add(hostname);
+					}
+					else if(message.equalsIgnoreCase("Kick")){
+						voteKick = voteKick + 1;
+						hostnames.add(hostname);
+					}
+				int punishMonitor = voteKick + voteBan + voteNone;
+				if(punishMonitor == votePunish){
+					sendMessage(channel, "Votes are no longer being counted");
+					if(voteKick > voteBan && voteKick > voteNone){
+						sendMessage(channel, "The majority of users think they should be kicked");
+						sendMessage(channel, "The total votes are: " + voteBan + " ban votes, " + voteKick + " kick votes, " + voteNone + "votes for No punishment");
+						kick(channel, user);
+						voteCall = 0;
+						punishMonitor = 0;
+						nayVotes = 0;
+						ayeVotes = 0; 
+						hostnames = null; 
+						punishVote = 1; 
+					}
+					else if(voteBan > voteKick && voteBan > voteNone){
+						sendMessage(channel, "The majority of users think they should be kicked");
+						sendMessage(channel, "The total votes are: " + voteBan + " ban votes, " + voteKick + " kick votes, " + voteNone + "votes for No punishment");
+						ban(channel, user);
+						voteCall = 0;
+						punishVote = 0;
+						punishMonitor = 0; 
+						nayVotes = 0;
+						ayeVotes = 0;
+						hostnames = null; 
+					}
+					else if(voteNone > voteKick && voteNone > voteBan){
+							sendMessage(channel, "The Majority of users think that they should be free");
+							sendMessage(channel, "The total votes are: "  + voteBan +  "ban votes, " + voteKick  + "kick votes, " + voteNone + "votes for No punishment");
+							voteCall = 0;
+							punishVote = 0;
+							punishMonitor = 0; 
+							nayVotes = 0;
+							ayeVotes = 0;
+							hostnames = null; 
+					}
+					else{
+						sendMessage(channel, "No vote could be decided as there was either tie between two of the votes");
+						voteCall = 0;
+						punishVote = 0;
+						punishMonitor = 0; 
+						nayVotes = 0;
+						ayeVotes = 0;
+						hostnames = null; 
+					}
+					if(message.equals(".vote cancel")){
+						sendMessage(channel, "The vote has been canceled by " + sender);
+						voteCall = 0;
+						punishVote = 0;
+						nayVotes = 0;
+						ayeVotes = 0;
+						punishMonitor = 0; 
+						hostnames = null; 
+						
+					}
+				}
+			else if(type == "Reward" || type == "reward"){
+				hostnames = new ArrayList<String>();
+				sendMessage(channel, "Someone called for a vote to reward " + user);
+				sendMessage(channel, "A vote shall begin to decide his reward, you may vote: Half-Op or Voice");
+				if (hostnames.contains(hostname) && (message.equalsIgnoreCase("halfOp") || message.equalsIgnoreCase("Voice"))) {
+					sendMessage(channel, "You have already voted!");
+				}
+				else if(message.equalsIgnoreCase("halfOp")){
+					voteHalfOp = voteHalfOp + 1;
+					hostnames.add(hostname);
+					if(message.equals(".vote cancel")){
+						sendMessage(channel, "The vote has been canceled by " + sender);
+						voteCall = 0; 
+						
+				}
+			}
+			if(message.equals(".vote cancel")){
+				sendMessage(channel, "The vote has been canceled by " + sender);
+				voteCall = 0; 
+			}
+			}
+			}
+		}
+		*/
+		
+		//end of true voting code
+		
 		if(sender.equals(c)){
 			if(message.equals(".opa")){
 				op(channel, c);
