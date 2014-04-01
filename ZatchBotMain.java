@@ -9,7 +9,6 @@ public class ZatchBotMain {
    //bot.connect("irc.esper.net");
     //bot.joinChannel("#ZatchCore");      // join your channel
     //bot.joinChannel("#testDenth");
-<<<<<<< HEAD
   bot.joinChannel("#wintreath");
    //bot.connect("irc.rizon.net");  // connect to your IRC server (fill in your own)
   //bot.joinChannel("#schoolsurvival"); 
