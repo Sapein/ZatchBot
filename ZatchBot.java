@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import org.jibble.pircbot.*;
 public class ZatchBot extends PircBot
 {
-	int rrtoggle = 0;
+	boolean rrtoggle = true;
 	//int messageController = 0;
 	String g = "";
 	ArrayList<String> hostnames = null;
@@ -98,21 +98,21 @@ public class ZatchBot extends PircBot
 		//Random Response Toggle Code
 		if(sender.equals(c)|| sender.equals(w) || sender.equals(C) || sender.equals(x)) {
 			if(message.equals(".rrtoggle")){
-				if(rrtoggle == 1){
-					rrtoggle = 0;
+				if(rrtoggle == false){
+					rrtoggle = true;
 					sendMessage(channel, "Random Response: ON");
 				}
-				else if(rrtoggle == 0){
-					rrtoggle = 1;
+				else if(rrtoggle == true){
+					rrtoggle = false;
 					sendMessage(channel, "Random Response: OFF");
 					}
 			}
 		}
 		if(message.equals(".rrstatus")){
-			if(rrtoggle == 0){
+			if(rrtoggle == true){
 				sendMessage(channel, "The Random Responses are ON");
 			}
-			else if(rrtoggle == 1){
+			else if(rrtoggle == false){
 				sendMessage(channel, "Random Responses are OFF");
 			}
 		}
@@ -145,14 +145,15 @@ public class ZatchBot extends PircBot
 		}
 		}
 		//auto-log code ends
-		//Random Response Code
-		int f = 1 + (int)(Math.random() * ((500 - 1) + 1)); // The response Generator
-		int a = 1 + (int)(Math.random() * ((2 - 1) + 1)); //The Gwedin is Generator
 		if(message.equals(".code")){
 			sendMessage(channel, "https://github.com/Sapein/ZatchBot");
 		}
+		//Random Response Code
+		int f = 1 + (int)(Math.random() * ((500 - 1) + 1)); // The response Generator
+		int a = 1 + (int)(Math.random() * ((2 - 1) + 1)); //The Gwedin is Generator
+		
 		//checks to see if rrtoggle will allow it or not
-		if(rrtoggle == 0){
+		if(rrtoggle == true){
 			// The random responses
 			if(a == 1){ 
 				g = "Cool"; //Gwedin is cool
