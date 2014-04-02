@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
+import java.util.Arrays;
+
 import org.jibble.pircbot.*;
 public class ZatchBot extends PircBot
 {
@@ -197,11 +199,15 @@ public class ZatchBot extends PircBot
 			if(crossM.find()){
 				String chanl = new String("");
 				String ms = new String("");
-				if(message.length()>5){
-					chanl = message.substring(6,26);
-					ms = mssg.substring(28);
+				if(message.length()>5) {
+					ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.split(" ")));
+					chanl = list.remove(0);
+					for (String s : list)
+					{
+						ms += s + " ";
+					}
 				}
-			sendMessage(chanl, channel + sender);
+				sendMessage(chanl, channel + " " + sender + ": " + ms);
 			}
 		
 		if(message.equals("$fish")){
