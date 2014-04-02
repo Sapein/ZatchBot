@@ -193,7 +193,7 @@ public class ZatchBot extends PircBot
 			sendMessage(channel, "http://sapein.us.to");
 		}
 		//Cross Channel Communication Code 
-		Pattern crossP = Pattern.compile("^\\.ccha");
+		Pattern crossP = Pattern.compile("^\\.x-chan");
 		Matcher crossM = crossP.matcher(message);
 			if(crossM.find()){
 				String chanl = new String("");
@@ -207,7 +207,7 @@ public class ZatchBot extends PircBot
 						ms += s + " ";
 					}
 				}
-				sendMessage(chanl, channel + " " + sender + ": " + ms);
+				sendMessage(chanl, channel + " - " + sender + ": " + ms);
 			}
 		//End of Cross Channel Communication Code
 			
@@ -447,6 +447,7 @@ public class ZatchBot extends PircBot
 				sendMessage(channel, ".rrtoggle");
 				sendMessage(channel, ".date");
 				sendMessage(channel, ".time");
+				sendMessage(channel, ".x-chan");
 			}
 			else{
 				sendMessage(sender, "I am Zatch! A bot created in Java (using Pircbot"
@@ -467,6 +468,7 @@ public class ZatchBot extends PircBot
 				sendMessage(sender, ".rrstatus");
 				sendMessage(sender, ".date");
 				sendMessage(sender, ".time");
+				sendMessage(sender, ".x-chan");
 			}
 		}
 		if (message.equals("&pie")){
