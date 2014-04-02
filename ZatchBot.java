@@ -192,16 +192,16 @@ public class ZatchBot extends PircBot
 		if(message.equalsIgnoreCase(".site")){
 			sendMessage(channel, "http://sapein.us.to");
 		}
-		//NOTE: .ccha is still in alpha and is incomplete(only works with one word). 
+		//Cross Channel Communication Code 
 		Pattern crossP = Pattern.compile("^\\.ccha");
 		Matcher crossM = crossP.matcher(message);
-		String mssg = message;
 			if(crossM.find()){
 				String chanl = new String("");
 				String ms = new String("");
 				if(message.length()>5) {
 					ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.split(" ")));
-					chanl = list.remove(0);
+					list.remove(0);
+					chanl = list.remove(1);
 					for (String s : list)
 					{
 						ms += s + " ";
@@ -209,7 +209,8 @@ public class ZatchBot extends PircBot
 				}
 				sendMessage(chanl, channel + " " + sender + ": " + ms);
 			}
-		
+		//End of Cross Channel Communication Code
+			
 		if(message.equals("$fish")){
 			sendMessage(channel, "FISH");
 		}
