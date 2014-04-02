@@ -193,16 +193,16 @@ public class ZatchBot extends PircBot
 		//NOTE: .ccha is still in alpha and is incomplete(only works with one word). 
 		Pattern crossP = Pattern.compile("^\\.ccha");
 		Matcher crossM = crossP.matcher(message);
+		String mssg = message;
 			if(crossM.find()){
 				String chanl = new String("");
 				String ms = new String("");
-				String chl = chanl;
-				if(message.length()>18){
-					chanl = message.substring(5);
+				if(message.length()>5){
+					chanl = message.substring(6,26);
+					ms = mssg.substring(28);
 				}
-			sendMessage(chanl, ms + " was said by " + sender + chl);
+			sendMessage(chanl, channel + sender);
 			}
-		
 		
 		if(message.equals("$fish")){
 			sendMessage(channel, "FISH");
@@ -476,7 +476,6 @@ public class ZatchBot extends PircBot
 	  }
 	  sendMessage(channel,"Hello"+carthago);
 	}
-
 	//Removed Code
 	/* if (message.equals("I hate you Zatch")){
 	sendMessage(channel, "I hate you too, bitch");
