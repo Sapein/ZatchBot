@@ -201,7 +201,7 @@ public class ZatchBot extends PircBot
 				if(message.length()>5) {
 					ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.split(" ")));
 					list.remove(0);
-					chanl = list.remove(1);
+					chanl = list.remove(0);
 					for (String s : list)
 					{
 						ms += s + " ";
