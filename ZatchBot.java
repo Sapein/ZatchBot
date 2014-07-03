@@ -22,7 +22,6 @@ public class ZatchBot extends PircBot
 		this.setName("Zatch");
 		this.setLogin("Zatch");
 	}
-
 	protected void onJoin(String channel, String sender, String login, String hostname){
 		//Auto-op
 		String[] opNames = {
