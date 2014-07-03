@@ -7,13 +7,13 @@ public class ZatchBotMain {
     ZatchBot bot = new ZatchBot();      // this starts your bot
     bot.setVerbose(true);             // enable debugging, useful during programming
     //Esper
-    bot.connect("irc.esper.net");
-    bot.joinChannel("#ZatchCore");      // join your channel
+    //bot.connect("irc.esper.net");
+    //bot.joinChannel("#ZatchCore");      // join your channel
     //bot.joinChannel("#testDenth");
-    bot.joinChannel("#wintreath");
+    //bot.joinChannel("#wintreath");
     //Rizon
-    //bot.connect("irc.rizon.net");
+    bot.connect("irc.rizon.net");
     //bot.joinChannel("#schoolsurvival"); 
-    //bot.joinChannel("#ZatchTest");
+    bot.joinChannel("#ZatchTest");
   }
 }
