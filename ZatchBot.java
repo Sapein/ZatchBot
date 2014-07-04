@@ -15,9 +15,11 @@ public class ZatchBot extends PircBot
 {
 	static String Master = ""; 
 	static String BotNick = "";
+	static String OpNick = ""; 
+	static String OpHostname = "";
+    String[] OpNicks = OpNick.split(",");
+    String[] OpHostnames = OpHostname.split(",");
 	ArrayList<String> hostnames = null;
-
-
 	
 	public ZatchBot() throws Exception{
 			
@@ -33,14 +35,13 @@ public class ZatchBot extends PircBot
 	    saveFile.readLine();
 	    BotNick = saveFile.readLine();
 	    saveFile.readLine();
-	    saveFile.readLine();
 	    Master = saveFile.readLine();
 	    saveFile.readLine();
 	    saveFile.readLine();
-	   String OpNick = saveFile.readLine();
+	    OpNick = saveFile.readLine();
 	    saveFile.readLine();
 	    saveFile.readLine();
-	   String OpHostname = saveFile.readLine();
+	    OpHostname = saveFile.readLine();
 	    saveFile.close();
 	    
 	    this.setName(BotNick);
@@ -49,7 +50,7 @@ public class ZatchBot extends PircBot
 	}
 	protected void onJoin(String channel, String sender, String login, String hostname){
 		String Hello = "Hello ";
-		if (sender.equals("Zatch")){
+		if (sender.equals(BotNick)){
 			sender = "";
 			Hello = "";
 			sendMessage(channel, sender + Hello);
@@ -96,7 +97,6 @@ public class ZatchBot extends PircBot
 				sendMessage(channel, "&pie");
 				sendMessage(channel, "&quit");
 				sendMessage(channel, "Goodbye");
-				sendMessage(channel, "&quit");
 				sendMessage(channel, "&fishslap user");
 				sendMessage(channel, "&fish");
 				sendMessage(channel, "&code");

@@ -32,9 +32,9 @@ public class ZatchBotMain {
 		bw.write("Zatch" + "\r\n");
 		bw.write("--Master--" + "\r\n");
 		bw.write("Chanku" + "\r\n");
-		bw.write("--Op Nicks--");
+		bw.write("--Op Nicks--" + "\r\n");
 		bw.write(""  + "\r\n");
-		bw.write("--Op Hostnames");
+		bw.write("--Op Hostnames" + "\r\n");
 		bw.write("" + "\r\n");
 		bw.close(); //closes the writer. 
 		}
