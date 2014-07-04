@@ -37,18 +37,26 @@ public class ZatchBot extends PircBot
 	    saveFile.readLine();
 	    Master = saveFile.readLine();
 	    saveFile.readLine();
-	    saveFile.readLine();
 	    OpNick = saveFile.readLine();
-	    saveFile.readLine();
 	    saveFile.readLine();
 	    OpHostname = saveFile.readLine();
 	    saveFile.close();
+	    
+	    OpNicks = OpNick.split(",");
+	    OpHostnames = OpHostname.split(",");
 	    
 	    this.setName(BotNick);
 		this.setLogin("Zatch");
 		
 	}
 	protected void onJoin(String channel, String sender, String login, String hostname){
+		//Auto-op
+		for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) { //This makes sure that all Channels listed are joined as we stored it in a variable earlier.
+			if(sender.equalsIgnoreCase(Master) || sender.equalsIgnoreCase(OpNicks[OpNumber])){ //Actually Joins the channels. 
+				op(channel, sender);
+			}
+	  	}
+		
 		String Hello = "Hello ";
 		if (sender.equals(BotNick)){
 			sender = "";
