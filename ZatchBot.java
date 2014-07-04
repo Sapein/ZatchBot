@@ -13,62 +13,74 @@ import org.jibble.pircbot.*;
 
 public class ZatchBot extends PircBot
 {
-	static String Master = ""; 
-	static String BotNick = "";
-	static String OpNick = ""; 
-	static String OpHostname = "";
-	boolean OpNickUsed;
-	boolean OpHostnameUsed;
-    String[] OpNicks = OpNick.split(",");
-    String[] OpHostnames = OpHostname.split(",");
-	ArrayList<String> hostnames = null;
+	static String Master; //This is the master's name it is replaced upon the loading of the config file
+	static String BotNick; //This is the bot's name, it is replaced upon the loading of the config file 
+	static String OpNick; //This is the line of the Op's Nicks, this is only temporary to store it.
+	static String OpHostname; //This is the entire line of the Op's Hostnames. This is only to temporarily store it
+	static String LogsLocation; //This is the location where you save the logs too
+	boolean OpNickUsed = false; //Checks to see if the Nicks of the Ops are to be used in authentication or not
+	boolean OpHostnameUsed; //Checks to see if the hostnames should be used in authentication or not
+	boolean toggleLogs; //Checks to see if you have enabled logs
+    String[] OpNicks; //creates the array for the Nicks
+    String[] OpHostnames; //creates an array for the hostnames
 	
 	public ZatchBot() throws Exception{
 			
 		BufferedReader saveFile;
 		saveFile = new BufferedReader(new FileReader("Config.txt"));
 		saveFile.readLine(); //1st line 
-		saveFile.readLine(); //2nd 
-		saveFile.readLine(); //3rd 
-	    saveFile.readLine(); //4th
-	    saveFile.readLine(); //5th
-	    saveFile.readLine(); //6th 
-	    saveFile.readLine(); //7th 
-	    OpNickUsed = Boolean.parseBoolean(saveFile.readLine()); //8th 
-	    saveFile.readLine(); //9th 
-	    OpHostnameUsed = Boolean.parseBoolean(saveFile.readLine()); //10th 
-	    saveFile.readLine(); //11th
-	    BotNick = saveFile.readLine(); //12th
-	    saveFile.readLine(); //13th 
-	    Master = saveFile.readLine(); //14th
-	    saveFile.readLine(); //15th
-	    OpNick = saveFile.readLine(); //16th
-	    saveFile.readLine(); //17th 
-	    OpHostname = saveFile.readLine(); //18h 
+		saveFile.readLine(); //2nd line 
+		saveFile.readLine(); //3rd line
+	    saveFile.readLine(); //4th line
+	    saveFile.readLine(); //5th line
+	    saveFile.readLine(); //6th line
+	    saveFile.readLine(); //7th line
+	    saveFile.readLine(); //8th line
+	    OpHostnameUsed = Boolean.parseBoolean(saveFile.readLine()); //9th line
+	    saveFile.readLine(); //10th line
+	    OpNickUsed = Boolean.parseBoolean(saveFile.readLine()); //11th line
+	    saveFile.readLine(); //12th line
+	    BotNick = saveFile.readLine(); //13th line
+	    saveFile.readLine(); //14th line
+	    Master = saveFile.readLine(); //15th line
+	    saveFile.readLine(); //16th line
+	    OpNick = saveFile.readLine(); //17th line
+	    saveFile.readLine(); //18th line
+	    OpHostname = saveFile.readLine(); //19h line 
+	    saveFile.readLine(); //20th line 
+	    toggleLogs = Boolean.parseBoolean(saveFile.readLine()); //21st line
+	    saveFile.readLine(); //22nd Line
+	    if(toggleLogs == true){
+	    	LogsLocation = saveFile.readLine(); //23rd line
+	    }
+	    else{
+	    	saveFile.readLine(); //23rd line
+	    }
 	    saveFile.close();
 	    
 	    OpNicks = OpNick.split(",");
 	    OpHostnames = OpHostname.split(",");
-	    
+
 	    this.setName(BotNick);
 		this.setLogin("Zatch");
 		
 	}
 	protected void onJoin(String channel, String sender, String login, String hostname){
 		//Auto-op
-		for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) { //This makes sure that all Channels listed are joined as we stored it in a variable earlier.
+		for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) { 
 			
 			if(OpHostnameUsed == false && (sender.equalsIgnoreCase(Master) || sender.equalsIgnoreCase(OpNicks[OpNumber]))){ //Actually Joins the channels. 
 				op(channel, sender);
 			}
-			else if(OpHostnameUsed == true && (sender.equalsIgnoreCase(Master) || sender.equalsIgnoreCase(OpNicks[OpNumber]))){
+			if(OpHostnameUsed == true && (sender.equalsIgnoreCase(Master) || (OpNickUsed == true && sender.equalsIgnoreCase(OpNicks[OpNumber])) || (OpNickUsed == false))){
 				for(int opHostnameNumber = 0; opHostnameNumber < OpHostnames.length; ++opHostnameNumber){
-					if(sender.equalsIgnoreCase(Master) || hostname.equals(OpHostnames[opHostnameNumber])){
+					if(hostname.equals(OpHostnames[opHostnameNumber])){
 						op(channel, sender);
 					}
 				}
 			}
 	  	}
+
 		
 		String Hello = "Hello ";
 		if (sender.equals(BotNick)){
@@ -302,31 +314,42 @@ public class ZatchBot extends PircBot
 		
 		//Begin Proccess that Zatch Does Automatically
 		//auto-log code begin
-		Pattern change2 = Pattern.compile("^");
-		Matcher change1 = change2.matcher(message);
-		if (change1.find()){
-			String chanl1 = new String("");
-			if (message.length()>0) {
-			    chanl1 = message.substring(0);
-			}
-			try {
-	
-	 
-				File file = new File("C:/Documents and Settings/bob/Desktop/logs/" + channel + " " + yourDate + " " + "log.txt");
-				
-				if (!file.exists()) {
-					file.createNewFile();
+		if(toggleLogs == true){
+			Pattern change2 = Pattern.compile("^");
+			Matcher change1 = change2.matcher(message);
+			if (change1.find()){
+				String chanl1 = new String("");
+				if (message.length()>0) {
+					chanl1 = message.substring(0);
 				}
-	
-				FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
-				BufferedWriter bw = new BufferedWriter(fw);
-				bw.write(channel +" " + " " + yourTime + " " + sender + ":" + chanl1 + "\r\n");
-				bw.close();
-	 
-			} catch (IOException e) {
-				e.printStackTrace();
+				try {
+					File file = new File(LogsLocation + channel + " " + yourDate + " " + "log.txt");
+					if (!file.exists()) {
+						file.createNewFile();
+					}
+					FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+					BufferedWriter bw = new BufferedWriter(fw);
+					bw.write(channel +" " + " " + yourTime + " " + sender + ":" + chanl1 + "\r\n");
+					bw.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
-		}
+		//Auto-op
+		for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) { 
+			
+			if(OpHostnameUsed == false && (sender.equalsIgnoreCase(Master) || sender.equalsIgnoreCase(OpNicks[OpNumber]))){ //Actually Joins the channels. 
+				op(channel, sender);
+			}
+			if(OpHostnameUsed == true && (sender.equalsIgnoreCase(Master) || (OpNickUsed == true && sender.equalsIgnoreCase(OpNicks[OpNumber])) || (OpNickUsed == false))){
+				for(int opHostnameNumber = 0; opHostnameNumber < OpHostnames.length; ++opHostnameNumber){
+					if(hostname.equals(OpHostnames[opHostnameNumber])){
+						op(channel, sender);
+					}
+				}
+			}
+	  	}
 		//auto-log code ends
 
 		//End Processes that Zatch Does Automatically
