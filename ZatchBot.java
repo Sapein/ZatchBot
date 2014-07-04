@@ -17,6 +17,8 @@ public class ZatchBot extends PircBot
 	static String BotNick = "";
 	static String OpNick = ""; 
 	static String OpHostname = "";
+	boolean OpNickUsed;
+	boolean OpHostnameUsed;
     String[] OpNicks = OpNick.split(",");
     String[] OpHostnames = OpHostname.split(",");
 	ArrayList<String> hostnames = null;
@@ -25,21 +27,24 @@ public class ZatchBot extends PircBot
 			
 		BufferedReader saveFile;
 		saveFile = new BufferedReader(new FileReader("Config.txt"));
-		saveFile.readLine();
-		saveFile.readLine();
-		saveFile.readLine();
-	    saveFile.readLine(); 
-	    saveFile.readLine(); 
-	    saveFile.readLine();
-	    saveFile.readLine();
-	    saveFile.readLine();
-	    BotNick = saveFile.readLine();
-	    saveFile.readLine();
-	    Master = saveFile.readLine();
-	    saveFile.readLine();
-	    OpNick = saveFile.readLine();
-	    saveFile.readLine();
-	    OpHostname = saveFile.readLine();
+		saveFile.readLine(); //1st line 
+		saveFile.readLine(); //2nd 
+		saveFile.readLine(); //3rd 
+	    saveFile.readLine(); //4th
+	    saveFile.readLine(); //5th
+	    saveFile.readLine(); //6th 
+	    saveFile.readLine(); //7th 
+	    OpNickUsed = Boolean.parseBoolean(saveFile.readLine()); //8th 
+	    saveFile.readLine(); //9th 
+	    OpHostnameUsed = Boolean.parseBoolean(saveFile.readLine()); //10th 
+	    saveFile.readLine(); //11th
+	    BotNick = saveFile.readLine(); //12th
+	    saveFile.readLine(); //13th 
+	    Master = saveFile.readLine(); //14th
+	    saveFile.readLine(); //15th
+	    OpNick = saveFile.readLine(); //16th
+	    saveFile.readLine(); //17th 
+	    OpHostname = saveFile.readLine(); //18h 
 	    saveFile.close();
 	    
 	    OpNicks = OpNick.split(",");
@@ -52,8 +57,16 @@ public class ZatchBot extends PircBot
 	protected void onJoin(String channel, String sender, String login, String hostname){
 		//Auto-op
 		for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) { //This makes sure that all Channels listed are joined as we stored it in a variable earlier.
-			if(sender.equalsIgnoreCase(Master) || sender.equalsIgnoreCase(OpNicks[OpNumber])){ //Actually Joins the channels. 
+			
+			if(OpHostnameUsed == false && (sender.equalsIgnoreCase(Master) || sender.equalsIgnoreCase(OpNicks[OpNumber]))){ //Actually Joins the channels. 
 				op(channel, sender);
+			}
+			else if(OpHostnameUsed == true && (sender.equalsIgnoreCase(Master) || sender.equalsIgnoreCase(OpNicks[OpNumber]))){
+				for(int opHostnameNumber = 0; opHostnameNumber < OpHostnames.length; ++opHostnameNumber){
+					if(sender.equalsIgnoreCase(Master) || hostname.equals(OpHostnames[opHostnameNumber])){
+						op(channel, sender);
+					}
+				}
 			}
 	  	}
 		

@@ -27,15 +27,19 @@ public class ZatchBotMain {
 		bw.write("--Channels--" + "\r\n"); //puts this on the third line of the file
 		bw.write("== To add Multipul Channels use a comma(,) inbetween with no spaces ==" + "\r\n"); //puts this on the fourth line of the file
 		bw.write("#SchoolSurvival" + "\r\n"); //puts this on the fifth line of the file
-		bw.write("		==--IRC Bot--==" + "\r\n"); //creates the final line
-		bw.write("--Bot Name--" +"\r\n");
-		bw.write("Zatch" + "\r\n");
-		bw.write("--Master--" + "\r\n");
-		bw.write("Chanku" + "\r\n");
-		bw.write("--Op Nicks--" + "\r\n");
-		bw.write(""  + "\r\n");
-		bw.write("--Op Hostnames" + "\r\n");
-		bw.write("" + "\r\n");
+		bw.write("		==--IRC Bot--==" + "\r\n"); //creates the sixth line of the file
+		bw.write("--Enable Hostname Verification for Ops--" + "\r\n"); //puts this on the Seventh line of the file
+		bw.write("False " + "\r\n"); //makes Hostname Verification False by default
+		bw.write("--Enable Nick Verification for Ops--" + "\r\n"); //puts this on the Ninth line of the file
+		bw.write("True " + "\r\n"); //Sets the Nick verification to true
+		bw.write("--Bot Name--" +"\r\n"); //puts this on the Eleventh line of the file
+		bw.write("Zatch" + "\r\n"); //puts this on the twelfth line of the file
+		bw.write("--Master--" + "\r\n"); //puts this on the thirteenth line of the file
+		bw.write("Chanku" + "\r\n"); //puts this on the fourteenth line of the file
+		bw.write("--Op Nicks--" + "\r\n"); //puts this on the fifteenth line of the file
+		bw.write("\r\n"); //generates a blank space
+		bw.write("--Op Hostnames" + "\r\n"); //puts this on the Seventeenth line of the file
+		bw.write("\r\n"); //generates blank space on the Eighteenth line of the file
 		bw.close(); //closes the writer. 
 		}
 		//End Config Creation Code  
