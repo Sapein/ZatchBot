@@ -197,6 +197,7 @@ public class ZatchBot extends PircBot
 			if(message.equals("&quit")){
 				quitServer();
 			}
+		}
 			//Cross Channel Communication Code 
 			Pattern crossP = Pattern.compile("^\\&x-chan");
 			Matcher crossM = crossP.matcher(message);
@@ -267,7 +268,6 @@ public class ZatchBot extends PircBot
 				chanl = "";
 				}
 			sendMessage(channel, "I hate you too, bitch." + chanl);
-			}
 		}
 		//End of "I Hate you Code"	
 		
