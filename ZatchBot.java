@@ -24,13 +24,13 @@ public class ZatchBot extends PircBot
 	}
 	protected void onJoin(String channel, String sender, String login, String hostname){
 		//Auto-op
-		String[] opNames = {
-				"Hansgrohe", "xcriteria", "xcmobile", "xc_laptop", /*"MichaelMerging", "HeilKaiba8921",  "Neue" */
-		};
+		//String[] opNames = {
+		//		"Hansgrohe", "xcriteria", "xcmobile", "xc_laptop", /*"MichaelMerging", "HeilKaiba8921",  "Neue" */
+		//};
 		//Note to self remove opNames[5] to opNames[7] from the code, or comment it out later. 
-		if(sender.equalsIgnoreCase(opNames[0]) || sender.equalsIgnoreCase(opNames[1]) || sender.equalsIgnoreCase(opNames[2]) || sender.equalsIgnoreCase(opNames[3])|| sender.equalsIgnoreCase(opNames[4]) || sender.equalsIgnoreCase(opNames[5]) || sender.equalsIgnoreCase(opNames[6]) || sender.equalsIgnoreCase(opNames[7])){
-			op(channel, sender);
-		}
+		//if(sender.equalsIgnoreCase(opNames[0]) || sender.equalsIgnoreCase(opNames[1]) || sender.equalsIgnoreCase(opNames[2]) || sender.equalsIgnoreCase(opNames[3])|| sender.equalsIgnoreCase(opNames[4]) || sender.equalsIgnoreCase(opNames[5]) || sender.equalsIgnoreCase(opNames[6]) || sender.equalsIgnoreCase(opNames[7])){
+		//	op(channel, sender);
+		//}
 		
 		String Hello = "Hello ";
 		if (sender.equals("Zatch")){
