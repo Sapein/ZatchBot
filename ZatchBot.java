@@ -23,6 +23,7 @@ public class ZatchBot extends PircBot
 	boolean toggleLogs; //Checks to see if you have enabled logs
     String[] OpNicks; //creates the array for the Nicks
     String[] OpHostnames; //creates an array for the hostnames
+    ArrayList<String> OpAddHostnames = null; 
 	
 	public ZatchBot() throws Exception{
 			
@@ -120,23 +121,22 @@ public class ZatchBot extends PircBot
 		
 		if (message.equalsIgnoreCase("&Help")){
 			if (sender.equals(Master)){
-				channel = sender;
-				sendMessage(channel, "Hello, Master. Need a refresher?");
-				sendMessage(channel, "Well here are my commands:");
-				sendMessage(channel, "&join channel");
-				sendMessage(channel, "&leave channel");;
-				sendMessage(channel, "Hello Zatch");
-				sendMessage(channel, "Goodnight.");
-				sendMessage(channel, "&pie");
-				sendMessage(channel, "&quit");
-				sendMessage(channel, "Goodbye");
-				sendMessage(channel, "&fishslap user");
-				sendMessage(channel, "&fish");
-				sendMessage(channel, "&code");
-				sendMessage(channel, "&date");
-				sendMessage(channel, "&time");
-				sendMessage(channel, "&x-chan");
-				sendMessage(channel, "&Op");
+				sendMessage(sender, "Hello, Master. Do you need a refresher?");
+				sendMessage(sender, "Well here are my commands:");
+				sendMessage(sender, "&join channel");
+				sendMessage(sender, "&leave channel");;
+				sendMessage(sender, "Hello Zatch");
+				sendMessage(sender, "Goodnight.");
+				sendMessage(sender, "&pie");
+				sendMessage(sender, "&quit");
+				sendMessage(sender, "Goodbye");
+				sendMessage(sender, "&fishslap user");
+				sendMessage(sender, "&fish");
+				sendMessage(sender, "&code");
+				sendMessage(sender, "&date");
+				sendMessage(sender, "&time");
+				sendMessage(sender, "&x-chan");
+				sendMessage(sender, "&Op");
 			}
 			else{
 				sendMessage(sender, "I am Zatch! A bot created in Java (using Pircbot"
@@ -158,7 +158,36 @@ public class ZatchBot extends PircBot
 		}
 		//end Help Code
 		
-		//Begin Special Commands
+		//Begin Special Commands	
+		//Add Op Command
+		/*if(sender.equals(Master)){
+			if (sender.equals(Master)){
+				if(message.startsWith("&OpAdd")){
+					String[] OpAdd = message.substring(message.indexOf(" ") + 1).split(" "); 
+					OpAddHostnames.add(hostname);
+					for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber){
+						for(int OpAddNumber = 0; OpAddNumber < OpAdd.length; ++OpAddNumber){
+							if(OpNicks[OpNumber] == OpAdd[OpAddNumber]){
+								for(int OpNumberHostname = 0; OpNumberHostname < OpHostnames.length; ++OpNumberHostname){
+								}								
+							}
+						}
+					}
+				}
+			}
+		}
+		else if(OpNickUsed == true){
+			if(OpHostnameUsed == true){
+			
+			}
+			
+		}
+		else if(OpNickUsed == false){
+			if(OpHostnameUsed == true){
+				
+			}
+		}*/
+		//End Add Op Command
 		
 		//Begin Channel and Server Movement Commands
 		//Leave Command
@@ -244,7 +273,7 @@ public class ZatchBot extends PircBot
 			sendMessage(channel,"Hello, " + sender);
 		}
 		//End of Hello Code
-		
+				
 		//Goodbye Code
 		Pattern byeC = Pattern.compile("^Goodbye");
 		Matcher byeM = byeC.matcher(message);
