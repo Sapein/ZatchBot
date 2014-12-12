@@ -157,6 +157,10 @@ public class ZatchBot extends PircBot
 				sendMessage(sender, "&time");
 				sendMessage(sender, "&x-chan");
 				sendMessage(sender, "&Op");
+				sendMessage(sender, "&conn-start");
+				sendMessage(sender, "&conn-term");
+				sendMessage(sender, "&conn-add");
+				sendMessage(sender, "&conn-del");
 			}
 			else{
 				sendMessage(sender, "I am Zatch! A bot created in Java (using Pircbot"
@@ -235,6 +239,35 @@ public class ZatchBot extends PircBot
 				joinChannel("#" + chanl);
 			}
 		}
+		
+		for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) { 
+			if(OpHostnameUsed == false && (sender.equalsIgnoreCase(Master) || sender.equalsIgnoreCase(OpNicks[OpNumber]))){
+				Pattern joinP = Pattern.compile("^\\&join");
+				Matcher joinM = joinP.matcher(message);
+				if (joinM.find()) {
+					String chanl = new String("");
+					if (message.length()>6) {
+						chanl = message.substring(6);
+					} 
+					joinChannel("#" + chanl);
+				}
+			}
+			if(OpHostnameUsed == true && (sender.equalsIgnoreCase(Master) || (OpNickUsed == true && sender.equalsIgnoreCase(OpNicks[OpNumber])) || (OpNickUsed == false))){
+				for(int opHostnameNumber = 0; opHostnameNumber < OpHostnames.length; ++opHostnameNumber){
+					if(hostname.equals(OpHostnames[opHostnameNumber])){
+						Pattern joinP = Pattern.compile("^\\&join");
+						Matcher joinM = joinP.matcher(message);
+						if (joinM.find()) {
+							String chanl = new String("");
+							if (message.length()>6) {
+								chanl = message.substring(6);
+							} 
+							joinChannel("#" + chanl);
+						}
+					}
+				}
+			}
+		}
 		//Op Command
 		if(sender.equals(Master)){
 			if (message.equals("&op")){
@@ -265,64 +298,180 @@ public class ZatchBot extends PircBot
 					sendMessage(chanl, channel + " - " + sender + ": " + ms);
 			}
 			//End of Cross Channel Communication Code
-				
-		//Begin of Channel Connection Code
-				Pattern cross2P = Pattern.compile("^\\&chan-connect");
-				Matcher cross2M = cross2P.matcher(message);
-					if(cross2M.find()){
-						//String chanl = new String("");
-						//String ms = new String("");
-						if(message.length()>5) {
-							//ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.split(" ")));
-							includedChannels = new ArrayList<String>(Arrays.asList(message.split(" ")));
-							includedChannels.remove(0);					
-						}
-						//sendMessage(chanl, channel + " - " + sender + ": " + ms);
-						xChan = true;
-				}
-				if(xChan == true){
-					int x = 0;
-					while (x <= includedChannels.size()){
-						sendMessage(includedChannels.get(x), channel + " - " + sender + ": " + message);
-						x++;
-					}
-				}
-		//Channel Connection Code End
-				
-		//Channel Communication Code Drop Begin
-				Pattern cross3P = Pattern.compile("^\\&conn-Term");
-				Matcher cross3M = cross3P.matcher(message);
-					if(cross3M.find()){
-						//String chanl = new String("");
-						//String ms = new String("");
-						if(message.length()>5) {
-
-							//ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.split(" ")));
-							includedChannels = new ArrayList<String>(Arrays.asList(message.split(" ")));
-							includedChannels.remove(0);					
-						}
-						//sendMessage(chanl, channel + " - " + sender + ": " + ms);
-						includedChannels = null;
-						xChan = false;
-				}
-		//Channel Communication Code Drop End
-					Pattern cross4P = Pattern.compile("^\\&conn-add");
-					Matcher cross4M = cross4P.matcher(message);
-						if(cross4M.find()){
-							if(message.length()>5) {
-								int x = 1;
-								String[] t = message.split(" ");				
-								while(x < t.length){
-									includedChannels.add(t[1]);
+				for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) { 
+					if(OpHostnameUsed == false && (sender.equalsIgnoreCase(Master) || sender.equalsIgnoreCase(OpNicks[OpNumber]))){
+						//Begin of Channel Connection Code
+						Pattern cross2P = Pattern.compile("^\\&conn-start");
+						Matcher cross2M = cross2P.matcher(message);
+							if(cross2M.find()){
+								if(message.length()>5) {
+									includedChannels = new ArrayList<String>(Arrays.asList(message.split(" ")));
+									includedChannels.remove(0);	
+									int x = 0;
+									while(x < includedChannels.size()){
+										sendMessage(includedChannels.get(x), "A channel Connection has been started by: " + sender + " - " + channel);
+										x++;
+									}
+									includedChannels.add(channel);
 								}
+								xChan = true;
 							}
-							//sendMessage(chanl, channel + " - " + sender + ": " + ms);
+							//End of Channel Connection Code
+							//Channel Communication Code Drop Begin
+							Pattern cross3P = Pattern.compile("^\\&conn-term");
+							Matcher cross3M = cross3P.matcher(message);
+								if(cross3M.find()){
+									if(message.length()>5) {
+										int x = 0;
+										while(x < includedChannels.size()){
+											sendMessage(includedChannels.get(x), "The Connection has been terminated by: " + sender + " - " + channel);
+											x++;
+										}
+									}
+									includedChannels = null;
+									xChan = false;
+								}
+					//Channel Communication Code Drop End
+								
+					//Channel Connection Code Add Begin
+							Pattern cross4P = Pattern.compile("^\\&conn-add");
+							Matcher cross4M = cross4P.matcher(message);
+								if(cross4M.find()){
+									if(message.length()>5) {
+										int x = 0;
+										ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.split(" ")));
+										list.remove(0);
+										while(x <= list.size()){
+											includedChannels.add(list.get(x));
+											sendMessage(list.get(x), "You have been added to a Channel-Connection! Connection Established By: " + sender + " - " + channel);
+											x++;
+										}
+									}
+								}
+
+								
+					//Channel Connection Code Add End
+								
+					//Channel Connection Code Remove Begin
+								Pattern cross5P = Pattern.compile("^\\&conn-del");
+								Matcher cross5M = cross5P.matcher(message);
+									if(cross5M.find()){
+										if(message.length()>5) {
+											int x = 0;
+											ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.split(" ")));
+											list.remove(0);
+											while(x <= list.size()){
+												if(includedChannels.get(x).equals(list.get(x))){
+													sendMessage(list.get(x), "You have been removed from the Channel-Connection! Removed By: " + sender + " - " + channel);
+													includedChannels.remove(x);
+												}
+												x++;
+											}
+										}
+									}
+					//Channel Connection Code Remove End
+									
+					//Begin of Channel Connection Send Code
+								if(xChan == true){
+									int x = 0;
+										while (x < includedChannels.size()){
+											if(!channel.equals(includedChannels.get(x))){
+												sendMessage(includedChannels.get(x), channel + " - " + sender + ": " + message);
+											}
+											x++;
+										}
+									}
+					//Channel Connection Send Code End
+											
 					}
-		//Channel Connection Code Add Begin
+					if(OpHostnameUsed == true && (sender.equalsIgnoreCase(Master) || (OpNickUsed == true && sender.equalsIgnoreCase(OpNicks[OpNumber])) || (OpNickUsed == false))){
+						for(int opHostnameNumber = 0; opHostnameNumber < OpHostnames.length; ++opHostnameNumber){
+							//Begin of Channel Connection Code
+							Pattern cross2P = Pattern.compile("^\\&conn-start");
+							Matcher cross2M = cross2P.matcher(message);
+								if(cross2M.find()){
+									if(message.length()>5) {
+										includedChannels = new ArrayList<String>(Arrays.asList(message.split(" ")));
+										includedChannels.remove(0);	
+										int x = 0;
+										while(x < includedChannels.size()){
+											sendMessage(includedChannels.get(x), "A channel Connection has been started by: " + sender + " - " + channel);
+											x++;
+										}
+										includedChannels.add(channel);
+									}
+									xChan = true;
+								}
+							//End of Channel Connection Code
+							//Channel Communication Code Drop Begin
+							Pattern cross3P = Pattern.compile("^\\&conn-term");
+							Matcher cross3M = cross3P.matcher(message);
+								if(cross3M.find()){
+									if(message.length()>5) {
+										int x = 0;
+										while(x < includedChannels.size()){
+											sendMessage(includedChannels.get(x), "The Connection has been terminated by: " + sender + " - " + channel);
+											x++;
+										}
+									}
+									includedChannels = null;
+									xChan = false;
+								}
+							//Channel Communication Code Drop End
+								
+							//Channel Connection Code Add Begin
+							Pattern cross4P = Pattern.compile("^\\&conn-add");
+							Matcher cross4M = cross4P.matcher(message);
+								if(cross4M.find()){
+									if(message.length()>5) {
+										int x = 0;
+										ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.split(" ")));
+										list.remove(0);
+										while(x <= list.size()){
+											includedChannels.add(list.get(x));
+											sendMessage(list.get(x), "You have been added to a Channel-Connection! Connection Established By: " + sender + " - " + channel);
+											x++;
+										}
+									}
+								}	
+							//Channel Connection Code Add End
+								
+							//Channel Connection Code Remove Begin
+							Pattern cross5P = Pattern.compile("^\\&conn-del");
+							Matcher cross5M = cross5P.matcher(message);
+								if(cross5M.find()){
+									if(message.length()>5) {
+										int x = 0;
+										ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.split(" ")));
+										list.remove(0);
+										while(x <= list.size()){
+											if(includedChannels.get(x).equals(list.get(x))){
+												sendMessage(list.get(x), "You have been removed from the Channel-Connection! Removed By: " + sender + " - " + channel);
+												includedChannels.remove(x);
+											}
+											x++;
+										}
+									}
+								}
+							//Channel Connection Code Remove End
 					
-		//Channel Connection Code Add End
+							//Begin of Channel Connection Send Code
+							if(xChan == true){
+								int x = 0;
+									while (x < includedChannels.size()){
+										if(!channel.equals(includedChannels.get(x))){
+											sendMessage(includedChannels.get(x), channel + " - " + sender + ": " + message);
+										}
+										x++;
+									}
+							}
+							//Channel Connection Send Code End				
+						}
+					}
+				}
+		
 				
-		//End Channel and Server Movement and CommunicationCommands
+		/*End Channel and Server Movement and Communication Commands*/
 		
 		//Begin Trigger Statements
 				
