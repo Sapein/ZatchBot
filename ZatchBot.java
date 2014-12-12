@@ -39,6 +39,8 @@ public class ZatchBot extends PircBot
 	boolean OpNickUsed = false; //Checks to see if the Nicks of the Ops are to be used in authentication or not
 	boolean OpHostnameUsed; //Checks to see if the hostnames should be used in authentication or not
 	boolean toggleLogs; //Checks to see if you have enabled logs
+	boolean xChan; //Boolean for cross-channel Communication
+	ArrayList<String> includedChannels;
     String[] OpNicks; //creates the array for the Nicks
     String[] OpHostnames; //creates an array for the hostnames
     ArrayList<String> OpAddHostnames = null; 
@@ -263,7 +265,62 @@ public class ZatchBot extends PircBot
 					sendMessage(chanl, channel + " - " + sender + ": " + ms);
 			}
 			//End of Cross Channel Communication Code
+				
+		//Begin of Channel Connection Code
+				Pattern cross2P = Pattern.compile("^\\&chan-connect");
+				Matcher cross2M = cross2P.matcher(message);
+					if(cross2M.find()){
+						//String chanl = new String("");
+						//String ms = new String("");
+						if(message.length()>5) {
+							//ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.split(" ")));
+							includedChannels = new ArrayList<String>(Arrays.asList(message.split(" ")));
+							includedChannels.remove(0);					
+						}
+						//sendMessage(chanl, channel + " - " + sender + ": " + ms);
+						xChan = true;
+				}
+				if(xChan == true){
+					int x = 0;
+					while (x <= includedChannels.size()){
+						sendMessage(includedChannels.get(x), channel + " - " + sender + ": " + message);
+						x++;
+					}
+				}
+		//Channel Connection Code End
+				
+		//Channel Communication Code Drop Begin
+				Pattern cross3P = Pattern.compile("^\\&conn-Term");
+				Matcher cross3M = cross3P.matcher(message);
+					if(cross3M.find()){
+						//String chanl = new String("");
+						//String ms = new String("");
+						if(message.length()>5) {
 
+							//ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.split(" ")));
+							includedChannels = new ArrayList<String>(Arrays.asList(message.split(" ")));
+							includedChannels.remove(0);					
+						}
+						//sendMessage(chanl, channel + " - " + sender + ": " + ms);
+						includedChannels = null;
+						xChan = false;
+				}
+		//Channel Communication Code Drop End
+					Pattern cross4P = Pattern.compile("^\\&conn-add");
+					Matcher cross4M = cross4P.matcher(message);
+						if(cross4M.find()){
+							if(message.length()>5) {
+								int x = 1;
+								String[] t = message.split(" ");				
+								while(x < t.length){
+									includedChannels.add(t[1]);
+								}
+							}
+							//sendMessage(chanl, channel + " - " + sender + ": " + ms);
+					}
+		//Channel Connection Code Add Begin
+					
+		//Channel Connection Code Add End
 				
 		//End Channel and Server Movement and CommunicationCommands
 		

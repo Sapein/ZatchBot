@@ -1,0 +1,12 @@
+# Compiled Source #
+###################
+*.exe
+
+# Scripts #
+###########
+*.bat
+*.batch
+
+# Other Stuff #
+###############
+.metadata
