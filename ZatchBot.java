@@ -370,8 +370,7 @@ public class ZatchBot extends PircBot
 										}
 									}
 					//Channel Connection Code Remove End
-									
-											
+																				
 					}
 					if(OpHostnameUsed == true && (sender.equalsIgnoreCase(Master) || (OpNickUsed == true && sender.equalsIgnoreCase(OpNicks[OpNumber])) || (OpNickUsed == false))){
 						for(int opHostnameNumber = 0; opHostnameNumber < OpHostnames.length; ++opHostnameNumber){
@@ -450,17 +449,13 @@ public class ZatchBot extends PircBot
 				//Begin of Channel Connection Send Code
 				if(xChan == true){
 					int x = 0;
-					int y = 0;
-					while (y < includedChannels.size()){
-						if(!channel.equals(includedChannels.get(y))){
-							while (x < includedChannels.size()){
-								if(channel.equals(includedChannels.get(x))){
-									sendMessage(includedChannels.get(x), channel + " - " + sender + ": " + message);
-								}											
-								x++;
-							}
+					if(includedChannels.contains(channel)){
+						while (x < includedChannels.size()){
+							if(!channel.equals(includedChannels.get(x))){
+								sendMessage(includedChannels.get(x), channel + " - " + sender + ": " + message);
+							}											
+							x++;
 						}
-						y++;
 					}		
 				}
 				//Channel Connection Send Code End	
