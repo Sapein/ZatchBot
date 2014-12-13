@@ -371,17 +371,6 @@ public class ZatchBot extends PircBot
 									}
 					//Channel Connection Code Remove End
 									
-					//Begin of Channel Connection Send Code
-								if(xChan == true){
-									int x = 0;
-										while (x < includedChannels.size()){
-											if(!channel.equals(includedChannels.get(x))){
-												sendMessage(includedChannels.get(x), channel + " - " + sender + ": " + message);
-											}
-											x++;
-										}
-									}
-					//Channel Connection Send Code End
 											
 					}
 					if(OpHostnameUsed == true && (sender.equalsIgnoreCase(Master) || (OpNickUsed == true && sender.equalsIgnoreCase(OpNicks[OpNumber])) || (OpNickUsed == false))){
@@ -453,24 +442,28 @@ public class ZatchBot extends PircBot
 										}
 									}
 								}
-							//Channel Connection Code Remove End
-					
-							//Begin of Channel Connection Send Code
-							if(xChan == true){
-								int x = 0;
-									while (x < includedChannels.size()){
-										if(!channel.equals(includedChannels.get(x))){
-											sendMessage(includedChannels.get(x), channel + " - " + sender + ": " + message);
-										}
-										x++;
-									}
-							}
-							//Channel Connection Send Code End				
 						}
 					}
 				}
-		
+				//Channel Connection Code Remove End
 				
+				//Begin of Channel Connection Send Code
+				if(xChan == true){
+					int x = 0;
+					int y = 0;
+					while (y < includedChannels.size()){
+						if(!channel.equals(includedChannels.get(y))){
+							while (x < includedChannels.size()){
+								if(channel.equals(includedChannels.get(x))){
+									sendMessage(includedChannels.get(x), channel + " - " + sender + ": " + message);
+								}											
+								x++;
+							}
+						}
+						y++;
+					}		
+				}
+				//Channel Connection Send Code End	
 		/*End Channel and Server Movement and Communication Commands*/
 		
 		//Begin Trigger Statements
