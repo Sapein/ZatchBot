@@ -41,7 +41,7 @@ public class ZatchBotMain {
 			bw.write("--IRC Server--" + "\r\n"); //puts this on the first line of the file
 			bw.write("irc.rizon.net" + "\r\n"); //puts this on the second line of the file
 			bw.write("--Channels--" + "\r\n"); //puts this on the third line of the file
-			bw.write("== To add Multipul Channels use a comma(,) inbetween with no spaces ==" + "\r\n"); //puts this on the fourth line of the file
+			bw.write("== To add Multiple Channels use a comma(,) inbetween with no spaces ==" + "\r\n"); //puts this on the fourth line of the file
 			bw.write("#chat" + "\r\n"); //puts this on the fifth line of the file
 			bw.write("		==--IRC Bot--==" + "\r\n"); //creates the sixth line of the file
 			bw.write("--Toggle Hostname Verification for Ops--" + "\r\n"); //puts this on the Seventh line of the file
