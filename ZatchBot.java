@@ -41,8 +41,9 @@ public class ZatchBot extends PircBot
 	boolean toggleLogs; //Checks to see if you have enabled logs
 	boolean xChan; //Boolean for cross-channel Communication
 	ArrayList<String> includedChannels;
-    String[] OpNicks; //creates the array for the Nicks
+    String[] OpNicks = null; //creates the array for the Nicks
     String[] OpHostnames; //creates an array for the hostnames
+    String commandChannel; 
     ArrayList<String> OpAddHostnames = null; 
 	
 	public ZatchBot() throws Exception{
@@ -54,7 +55,7 @@ public class ZatchBot extends PircBot
 		saveFile.readLine(); //3rd line
 	    saveFile.readLine(); //4th line
 	    saveFile.readLine(); //5th line
-	    saveFile.readLine(); //6th line
+	    commandChannel = saveFile.readLine(); //6th line
 	    saveFile.readLine(); //7th line
 	    saveFile.readLine(); //8th line
 	    OpHostnameUsed = Boolean.parseBoolean(saveFile.readLine()); //9th line
@@ -71,6 +72,7 @@ public class ZatchBot extends PircBot
 	    saveFile.readLine(); //20th line 
 	    toggleLogs = Boolean.parseBoolean(saveFile.readLine()); //21st line
 	    saveFile.readLine(); //22nd Line
+	    
 	    if(toggleLogs == true){
 	    	LogsLocation = saveFile.readLine(); //23rd line
 	    }
@@ -81,7 +83,10 @@ public class ZatchBot extends PircBot
 	    
 	    OpNicks = OpNick.split(",");
 	    OpHostnames = OpHostname.split(",");
-
+	    
+	    String[] Channels = commandChannel.split(",");
+	    commandChannel = Channels[0];
+	    
 	    this.setName(BotNick);
 		this.setLogin("Zatch");
 		
@@ -107,10 +112,15 @@ public class ZatchBot extends PircBot
 		if (sender.equals(BotNick)){
 			sender = "";
 			Hello = "";
-			sendMessage(channel, sender + Hello);
+			if(!channel.equals(commandChannel)){
+				sendMessage(channel, "Hello!, I am Korporal Zatch B. Kaizer from the WHR!");
+			}
+			else{
+				sendMessage(channel, sender + Hello);
+			}
 		}
 		else if(sender.equalsIgnoreCase(Master)){
-			sendMessage(channel, "MASTER!");
+			sendMessage(channel, "Welcome " + Master);
 		}
 		else{
 		sendMessage(channel, Hello + sender);
@@ -163,9 +173,10 @@ public class ZatchBot extends PircBot
 				sendMessage(sender, "&conn-del");
 			}
 			else{
-				sendMessage(sender, "I am Zatch! A bot created in Java (using Pircbot"
-						+ " as a base.) My Master is" + Master + ". I am still in testing and "
-						+ "development.");
+				sendMessage(sender, "I am Korporal Zatch of the Wintreath Hvitt Riddaral."
+						+ "I am a bot designed by Cheiftan Chanku L. Kaizer of the Hvitt Riddaral."
+						+ "I am being designed specially for Military Use, although I have recreational features"
+						+ "ON at this time.");
 				sendMessage(sender, "Here are my Commands:");
 				sendMessage(sender, "Hello Zatch");
 				sendMessage(sender, "Goodnight");
@@ -183,35 +194,7 @@ public class ZatchBot extends PircBot
 		//end Help Code
 		
 		//Begin Special Commands	
-		//Add Op Command
-		/*if(sender.equals(Master)){
-			if (sender.equals(Master)){
-				if(message.startsWith("&OpAdd")){
-					String[] OpAdd = message.substring(message.indexOf(" ") + 1).split(" "); 
-					OpAddHostnames.add(hostname);
-					for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber){
-						for(int OpAddNumber = 0; OpAddNumber < OpAdd.length; ++OpAddNumber){
-							if(OpNicks[OpNumber] == OpAdd[OpAddNumber]){
-								for(int OpNumberHostname = 0; OpNumberHostname < OpHostnames.length; ++OpNumberHostname){
-								}								
-							}
-						}
-					}
-				}
-			}
-		}
-		else if(OpNickUsed == true){
-			if(OpHostnameUsed == true){
-			
-			}
-			
-		}
-		else if(OpNickUsed == false){
-			if(OpHostnameUsed == true){
-				
-			}
-		}*/
-		//End Add Op Command
+
 		
 		//Begin Channel and Server Movement Commands
 		//Leave Command
