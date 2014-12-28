@@ -17,7 +17,7 @@
 */
 
 //Created by Sapein.
-//Zatchbot v 2.0 BETA
+//Zatchbot v 1.0
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.*;
@@ -43,6 +43,7 @@ public class ZatchBot extends PircBot
     String[] OpHostnames; //creates an array for the hostnames
     ArrayList<String> OpAddHostnames = null; 
     ArrayList<String> includedChannels;
+    final static String version = "1.0";
 	
 	public ZatchBot() throws Exception{
 			
@@ -140,75 +141,79 @@ public class ZatchBot extends PircBot
 		//Help code stays on top
 		
 		if (message.equalsIgnoreCase("&Help")){
-			if (sender.equals(Master)){
-				sendMessage(sender, "Hello, Master. Do you need a refresher?");
-				sendMessage(sender, "Well here are my commands:");
-				sendMessage(sender, "&join channel");
-				sendMessage(sender, "&leave channel");;
-				sendMessage(sender, "Hello Zatch");
-				sendMessage(sender, "Goodnight.");
-				sendMessage(sender, "&pie");
-				sendMessage(sender, "&quit");
-				sendMessage(sender, "Goodbye");
-				sendMessage(sender, "&fishslap user");
-				sendMessage(sender, "&fish");
-				sendMessage(sender, "&code");
-				sendMessage(sender, "&date");
-				sendMessage(sender, "&time");
-				sendMessage(sender, "&x-chan");
-				sendMessage(sender, "&Op");
-			}
-			else{
-				sendMessage(sender, "I am Zatch! A bot created in Java (using Pircbot"
-						+ " as a base.) My Master is" + Master + ". I am still in testing and "
-						+ "development.");
-				sendMessage(sender, "Here are my Commands:");
-				sendMessage(sender, "Hello Zatch");
-				sendMessage(sender, "Goodnight");
-				sendMessage(sender, "I hate you Zatch");
-				sendMessage(sender, "&pie");
-				sendMessage(sender, "Goodbye");
-				sendMessage(sender, "&fishslap user");
-				sendMessage(sender, "&fish");
-				sendMessage(sender, "&code");
-				sendMessage(sender, "&date");
-				sendMessage(sender, "&time");
-				sendMessage(sender, "&x-chan");
+			for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) {
+				if (sender.equals(Master)){
+					sendMessage(sender, "Hello, Master. Do you need a refresher?");
+					sendMessage(sender, "Well here are my commands:");
+					sendMessage(sender, "&join channel");
+					sendMessage(sender, "&leave channel");;
+					sendMessage(sender, "Hello Zatch");
+					sendMessage(sender, "Goodnight.");
+					sendMessage(sender, "&pie");
+					sendMessage(sender, "&quit");
+					sendMessage(sender, "Goodbye");
+					sendMessage(sender, "&fishslap user");
+					sendMessage(sender, "&fish");
+					sendMessage(sender, "&code");
+					sendMessage(sender, "&date");
+					sendMessage(sender, "&time");
+					sendMessage(sender, "&x-chan");
+					sendMessage(sender, "&Op");
+					sendMessage(sender, "&leave");
+					sendMessage(sender, "&conn-start");
+					sendMessage(sender, "&conn-term");
+					sendMessage(sender, "&conn-add");
+					sendMessage(sender, "&conn-del");
+					sendMessage(sender, "&version");
+				}	
+				if(OpHostnameUsed == false || sender.equalsIgnoreCase(OpNicks[OpNumber])){
+					sendMessage(sender, "Hello " + sender + " I am " + BotNick + ". It seems that you have been designated as an Op"
+							+ " by my master, " + Master + " as such you are granted to see more commands");
+					sendMessage(sender, "Operator Commands");
+					sendMessage(sender, "&join");
+					sendMessage(sender, "&leave");
+					sendMessage(sender, "&conn-start");
+					sendMessage(sender, "&conn-term");
+					sendMessage(sender, "&conn-add");
+					sendMessage(sender, "&conn-del");
+					sendMessage(sender, " ");
+					sendMessage(sender, "Standard Commands");
+					sendMessage(sender, " ");
+					sendMessage(sender, "Hello Zatch");
+					sendMessage(sender, "Goodnight");
+					sendMessage(sender, "I hate you Zatch");
+					sendMessage(sender, "&pie");
+					sendMessage(sender, "Goodbye");
+					sendMessage(sender, "&fishslap user");
+					sendMessage(sender, "&fish");
+					sendMessage(sender, "&code");
+					sendMessage(sender, "&date");
+					sendMessage(sender, "&time");
+					sendMessage(sender, "&x-chan");
+					sendMessage(sender, "&version");
+				}
+				else{
+					sendMessage(sender, "Hello! I am " + BotNick + " a Zatch IRC bot! My Base was written by Sapein"
+							+ "however, my master is " + Master + ".");
+					sendMessage(sender, "Here are my Commands:");
+					sendMessage(sender, "Hello Zatch");
+					sendMessage(sender, "Goodnight");
+					sendMessage(sender, "I hate you Zatch");
+					sendMessage(sender, "&pie");
+					sendMessage(sender, "Goodbye");
+					sendMessage(sender, "&fishslap user");
+					sendMessage(sender, "&fish");
+					sendMessage(sender, "&code");
+					sendMessage(sender, "&date");
+					sendMessage(sender, "&time");
+					sendMessage(sender, "&x-chan");
+					sendMessage(sender, "&version");
+				}
 			}
 		}
 		//end Help Code
 		
-		//Begin Special Commands	
-		//Add Op Command
-		/*if(sender.equals(Master)){
-			if (sender.equals(Master)){
-				if(message.startsWith("&OpAdd")){
-					String[] OpAdd = message.substring(message.indexOf(" ") + 1).split(" "); 
-					OpAddHostnames.add(hostname);
-					for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber){
-						for(int OpAddNumber = 0; OpAddNumber < OpAdd.length; ++OpAddNumber){
-							if(OpNicks[OpNumber] == OpAdd[OpAddNumber]){
-								for(int OpNumberHostname = 0; OpNumberHostname < OpHostnames.length; ++OpNumberHostname){
-								}								
-							}
-						}
-					}
-				}
-			}
-		}
-		else if(OpNickUsed == true){
-			if(OpHostnameUsed == true){
-			
-			}
-			
-		}
-		else if(OpNickUsed == false){
-			if(OpHostnameUsed == true){
-				
-			}
-		}*/
-		//End Add Op Command
-		
+
 		//Begin Channel and Server Movement Commands
 		//Leave Command
 		if (sender.equals(Master)){//Checks to see if the sender is Master
@@ -483,10 +488,21 @@ public class ZatchBot extends PircBot
 		//End Commands About Zatch 
 		
 		//Begin Fun IRC commands
-		if (message.equals("&pie")){
+		
+		//Begin Version Command
+		if(message.equalsIgnoreCase("&version")){
+			sendMessage(channel, "PIRCBOT: " + VERSION);
+			sendMessage(channel, "Zatch: " + version);
+		}
+		//End Version Command
+		
+		//Begin Pie Command
+		if (message.equalsIgnoreCase("&pie")){
 			sendAction(channel, "Throws pie in " + sender + "'s " + "face.");
 		}
+		//End Pie Command
 		
+		//Begin Fish Slap command
 		Pattern fishP = Pattern.compile("^\\&fishslap");
 		Matcher fishM = fishP.matcher(message);
 		if(fishM.find()){
@@ -498,17 +514,20 @@ public class ZatchBot extends PircBot
             sendAction(channel, "slaps " +fslap+ " with a trout.");
             sendAction(channel, "laughs evily");
 		}
+		//End Fishslap Command
 		
-		if(message.equals("&fish")){
+		//Begin Fish Command
+		if(message.equalsIgnoreCase("&fish")){
 			sendMessage(channel, "FISH");
 		}
+		//End Fish Command
 		
 		//Current Time Command
-		if(message.equals("&time")){
+		if(message.equalsIgnoreCase("&time")){
 			sendMessage(channel, "It is " + yourTime + " CST");
 		}
 		//Current Date Command
-		if(message.equals("&date")){
+		if(message.equalsIgnoreCase("&date")){
 			sendMessage(channel, "It is " + yourDate + " in the CST Timezone");
 		}
 		//End Fun IRC Commands
