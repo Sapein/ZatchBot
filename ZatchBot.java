@@ -1,5 +1,23 @@
+/*A Simple IRC bot that uses PIRC
+    Copyright (C) 2014  
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
 //Created by Sapein.
-//Zatchbot v 1.0 BETA
+//Zatchbot v 1.0
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.*;
@@ -7,43 +25,92 @@ import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
-
 import java.util.Arrays;
 
 import org.jibble.pircbot.*;
+
 public class ZatchBot extends PircBot
 {
-	boolean rrtoggle = true;
-	//int messageController = 0;
-	String g = "";
-	ArrayList<String> hostnames = null;
-	public ZatchBot(){
-		this.setName("Zatch");
-		this.setLogin("Zatch");
-	}
+	static String Master; //This is the master's name it is replaced upon the loading of the config file
+	static String BotNick; //This is the bot's name, it is replaced upon the loading of the config file 
+	static String OpNick; //This is the line of the Op's Nicks, this is only temporary to store it.
+	static String OpHostname; //This is the entire line of the Op's Hostnames. This is only to temporarily store it
+	static String LogsLocation; //This is the location where you save the logs too
+	boolean OpNickUsed = false; //Checks to see if the Nicks of the Ops are to be used in authentication or not
+	boolean OpHostnameUsed; //Checks to see if the hostnames should be used in authentication or not
+	boolean toggleLogs; //Checks to see if you have enabled logs
+    String[] OpNicks; //creates the array for the Nicks
+    String[] OpHostnames; //creates an array for the hostnames
+    ArrayList<String> OpAddHostnames = null; 
+    ArrayList<String> includedChannels;
+    final static String version = "1.0";
+	
+	public ZatchBot() throws Exception{
+			
+		BufferedReader saveFile;
+		saveFile = new BufferedReader(new FileReader("Config.txt"));
+		saveFile.readLine(); //1st line 
+		saveFile.readLine(); //2nd line 
+		saveFile.readLine(); //3rd line
+	    saveFile.readLine(); //4th line
+	    saveFile.readLine(); //5th line
+	    saveFile.readLine(); //6th line
+	    saveFile.readLine(); //7th line
+	    saveFile.readLine(); //8th line
+	    OpHostnameUsed = Boolean.parseBoolean(saveFile.readLine()); //9th line
+	    saveFile.readLine(); //10th line
+	    OpNickUsed = Boolean.parseBoolean(saveFile.readLine()); //11th line
+	    saveFile.readLine(); //12th line
+	    BotNick = saveFile.readLine(); //13th line
+	    saveFile.readLine(); //14th line
+	    Master = saveFile.readLine(); //15th line
+	    saveFile.readLine(); //16th line
+	    OpNick = saveFile.readLine(); //17th line
+	    saveFile.readLine(); //18th line
+	    OpHostname = saveFile.readLine(); //19h line 
+	    saveFile.readLine(); //20th line 
+	    toggleLogs = Boolean.parseBoolean(saveFile.readLine()); //21st line
+	    saveFile.readLine(); //22nd Line
+	    if(toggleLogs == true){
+	    	LogsLocation = saveFile.readLine(); //23rd line
+	    }
+	    else{
+	    	saveFile.readLine(); //23rd line
+	    }
+	    saveFile.close();
+	    
+	    OpNicks = OpNick.split(",");
+	    OpHostnames = OpHostname.split(",");
 
+	    this.setName(BotNick);
+		this.setLogin("Zatch");
+		
+	}
 	protected void onJoin(String channel, String sender, String login, String hostname){
 		//Auto-op
-		String[] opNames = {
-				"Hansgrohe", "xcriteria", "xcmobile", "xc_laptop", /*"MichaelMerging", "HeilKaiba8921",  "Neue" */
-		};
-		//Note to self remove opNames[5] to opNames[7] from the code, or comment it out later. 
-		if(sender.equalsIgnoreCase(opNames[0]) || sender.equalsIgnoreCase(opNames[1]) || sender.equalsIgnoreCase(opNames[2]) || sender.equalsIgnoreCase(opNames[3])|| sender.equalsIgnoreCase(opNames[4]) || sender.equalsIgnoreCase(opNames[5]) || sender.equalsIgnoreCase(opNames[6]) || sender.equalsIgnoreCase(opNames[7])){
-			op(channel, sender);
-		}
+		for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) { 
+			
+			if(OpHostnameUsed == false && (sender.equalsIgnoreCase(Master) || sender.equalsIgnoreCase(OpNicks[OpNumber]))){ //Actually Joins the channels. 
+				op(channel, sender);
+			}
+			if(OpHostnameUsed == true && (sender.equalsIgnoreCase(Master) || ((OpNickUsed == true && sender.equalsIgnoreCase(OpNicks[OpNumber])) || (OpNickUsed == false)))){
+				for(int opHostnameNumber = 0; opHostnameNumber < OpHostnames.length; ++opHostnameNumber){
+					if(hostname.equals(OpHostnames[opHostnameNumber])){
+						op(channel, sender);
+					}
+				}
+			}
+	  	}
+
 		
 		String Hello = "Hello ";
-		if (sender.equals("Zatch")){
+		if (sender.equals(BotNick)){
 			sender = "";
 			Hello = "";
 			sendMessage(channel, sender + Hello);
 		}
-		else if(sender.equalsIgnoreCase("Chanku")){
-			sendMessage(channel, "FATHER!");
-		}
-		else if (sender.equals("Dimitri")){
-			sendMessage(channel, "Hello Cousin");
+		else if(sender.equalsIgnoreCase(Master)){
+			sendMessage(channel, "MASTER!");
 		}
 		else{
 		sendMessage(channel, Hello + sender);
@@ -52,169 +119,391 @@ public class ZatchBot extends PircBot
 	protected void onPart(String channel, String sender, String login, String hostname){
 			sendMessage(channel, "Good-bye.");
 	}
-	protected void onQuit(String channel, String sender, String login, String hostname){
-		sendMessage(channel, "Good-bye.");
-	}
 	protected void onPrivateMessage(String sender, String login, String hostname, String message){
-		sendMessage("Chanku", sender + ": " + message);
-
+		sendMessage(Master, sender + ": " + message); 
 	}
-	public void onAction(String channel, String sender, String login, String hostname, String action){
-		channel = "#wintreath";
-		if(action.equals("waves to Zatch")){
-			sendMessage(channel, "Hello again, cousin" );
-			sendAction(channel, "looks away from Dimitri");
-			sendMessage(channel, "Father, why does my cousin have to be a useless copy?");
-				}
-	} 
 	public void onMessage(String channel, String sender, String login, String hostname, String message)
 	{	
-		 
-		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-		Date date = new Date();
-		String yourDate = dateFormat.format(date);
-		DateFormat dF = new SimpleDateFormat("HH:mm");
-		Date time = new Date();
-		String yourTime = dF.format(time);
-		String x = "xcriteria";
-		String d = "Dimitri";
-		String c = "Chanku";
-		String w = "Wintermoot";
-		String l = "Leutheria";
-		String C = "Charax";
+		//Begin Variables
+		//Begin Time and Date Variables
+		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy"); //Sets the date format To Month-Day-Year
+		Date date = new Date(); //stores the date
+		String yourDate = dateFormat.format(date); //turns the date into a variable to be called later
+		DateFormat dF = new SimpleDateFormat("HH:mm"); //Sets the Time format to Hour:Minute
+		Date time = new Date(); //stores the time
+		String yourTime = dF.format(time); //turns the time into a variable to be called later
+		boolean xChan = false; //Boolean for cross-channel Communication
+		//End Time and Date Variables
 		
-		if(sender.equals(c)){
-			if(message.equals(".opa")){
-				op(channel, c);
+		//End Variables
+		
+		//Begin Help Code
+		//Help code stays on top
+		
+		if (message.equalsIgnoreCase("&Help")){
+			for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) {
+				if (sender.equals(Master)){
+					sendMessage(sender, "Hello, Master. Do you need a refresher?");
+					sendMessage(sender, "Well here are my commands:");
+					sendMessage(sender, "&join channel");
+					sendMessage(sender, "&leave channel");;
+					sendMessage(sender, "Hello Zatch");
+					sendMessage(sender, "Goodnight.");
+					sendMessage(sender, "&pie");
+					sendMessage(sender, "&quit");
+					sendMessage(sender, "Goodbye");
+					sendMessage(sender, "&fishslap user");
+					sendMessage(sender, "&fish");
+					sendMessage(sender, "&code");
+					sendMessage(sender, "&date");
+					sendMessage(sender, "&time");
+					sendMessage(sender, "&x-chan");
+					sendMessage(sender, "&Op");
+					sendMessage(sender, "&leave");
+					sendMessage(sender, "&conn-start");
+					sendMessage(sender, "&conn-term");
+					sendMessage(sender, "&conn-add");
+					sendMessage(sender, "&conn-del");
+					sendMessage(sender, "&version");
+				}	
+				if(OpHostnameUsed == false || sender.equalsIgnoreCase(OpNicks[OpNumber])){
+					sendMessage(sender, "Hello " + sender + " I am " + BotNick + ". It seems that you have been designated as an Op"
+							+ " by my master, " + Master + " as such you are granted to see more commands");
+					sendMessage(sender, "Operator Commands");
+					sendMessage(sender, "&join");
+					sendMessage(sender, "&leave");
+					sendMessage(sender, "&conn-start");
+					sendMessage(sender, "&conn-term");
+					sendMessage(sender, "&conn-add");
+					sendMessage(sender, "&conn-del");
+					sendMessage(sender, " ");
+					sendMessage(sender, "Standard Commands");
+					sendMessage(sender, " ");
+					sendMessage(sender, "Hello Zatch");
+					sendMessage(sender, "Goodnight");
+					sendMessage(sender, "I hate you Zatch");
+					sendMessage(sender, "&pie");
+					sendMessage(sender, "Goodbye");
+					sendMessage(sender, "&fishslap user");
+					sendMessage(sender, "&fish");
+					sendMessage(sender, "&code");
+					sendMessage(sender, "&date");
+					sendMessage(sender, "&time");
+					sendMessage(sender, "&x-chan");
+					sendMessage(sender, "&version");
+				}
+				else{
+					sendMessage(sender, "Hello! I am " + BotNick + " a Zatch IRC bot! My Base was written by Sapein"
+							+ "however, my master is " + Master + ".");
+					sendMessage(sender, "Here are my Commands:");
+					sendMessage(sender, "Hello Zatch");
+					sendMessage(sender, "Goodnight");
+					sendMessage(sender, "I hate you Zatch");
+					sendMessage(sender, "&pie");
+					sendMessage(sender, "Goodbye");
+					sendMessage(sender, "&fishslap user");
+					sendMessage(sender, "&fish");
+					sendMessage(sender, "&code");
+					sendMessage(sender, "&date");
+					sendMessage(sender, "&time");
+					sendMessage(sender, "&x-chan");
+					sendMessage(sender, "&version");
+				}
 			}
 		}
-		//Current Time Command
-		if(message.equals(".time")){
-			sendMessage(channel, "It is " + yourTime + " CST");
-		}
-		//Current Date Command
-		if(message.equals(".date")){
-			sendMessage(channel, "It is " + yourDate + " in the CST Timezone");
+		//end Help Code
+		
+
+		//Begin Channel and Server Movement Commands
+		//Leave Command
+		if (sender.equals(Master)){//Checks to see if the sender is Master
+			Pattern leaveP = Pattern.compile("^\\&leave"); //Sets the command to &leave
+			Matcher leaveM = leaveP.matcher(message); //checks the entirety of the message 
+			if (leaveM.find()){ //checks the leaveM variable 
+				String chan = new String(""); //Steps up the Chan variable
+				if(message.length()>7) { //cuts the of the command out
+					chan = message.substring(7); //stores the channel in the variable
+				}
+				partChannel("#" + chan); //causes the channel to be left. 
+			}
 		}
 		
-		//Random Response Toggle Code
-		if(sender.equals(c)|| sender.equals(w) || sender.equals(C) || sender.equals(x)) {
-			if(message.equals(".rrtoggle")){
-				if(rrtoggle == false){
-					rrtoggle = true;
-					sendMessage(channel, "Random Response: ON");
-				}
-				else if(rrtoggle == true){
-					rrtoggle = false;
-					sendMessage(channel, "Random Response: OFF");
+		//Join Command
+		if (sender.equals(Master)){
+			Pattern joinP = Pattern.compile("^\\&join");
+			Matcher joinM = joinP.matcher(message);
+			if (joinM.find()) {
+				String chanl = new String("");
+				if (message.length()>6) {
+					chanl = message.substring(6);
+				} 
+				joinChannel("#" + chanl);
+			}
+		}
+		//Op Command
+		if(sender.equals(Master)){
+			if (message.equals("&op")){
+				op(channel, Master);
+			}
+		}		
+		//quit command
+		if(sender.equals(Master)){
+			if(message.equals("&quit")){
+				quitServer();
+			}
+		}
+			//Cross Channel Communication Code 
+			Pattern crossP = Pattern.compile("^\\&x-chan");
+			Matcher crossM = crossP.matcher(message);
+				if(crossM.find()){
+					String chanl = new String("");
+					String ms = new String("");
+					if(message.length()>5) {
+						ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.split(" ")));
+						list.remove(0);
+						chanl = list.remove(0);
+						for (String s : list)
+						{
+							ms += s + " ";
+						}
 					}
+					sendMessage(chanl, channel + " - " + sender + ": " + ms);
 			}
-		}
-		if(message.equals(".rrstatus")){
-			if(rrtoggle == true){
-				sendMessage(channel, "The Random Responses are ON");
-			}
-			else if(rrtoggle == false){
-				sendMessage(channel, "Random Responses are OFF");
-			}
-		}
-		//end of Toggle Code 
-		
-		//auto-log code begin
-		Pattern change2 = Pattern.compile("^");
-		Matcher change1 = change2.matcher(message);
-		if (change1.find()){
-			String chanl1 = new String("");
-			if (message.length()>0) {
-			    chanl1 = message.substring(0);
-			}
-			try {
-	
-	 
-				File file = new File("C:/Documents and Settings/bob/Desktop/logs/" + channel + " " + yourDate + " " + "log.txt");
-				
-				if (!file.exists()) {
-					file.createNewFile();
+			//End of Cross Channel Communication Code
+			for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) {
+				if(OpHostnameUsed == false && (sender.equalsIgnoreCase(Master) || sender.equalsIgnoreCase(OpNicks[OpNumber]))){
+					//Begin of Channel Connection Code
+					Pattern cross2P = Pattern.compile("^\\&conn-start");
+					Matcher cross2M = cross2P.matcher(message);
+					if(cross2M.find()){
+						if(message.length()>5) {
+							includedChannels = new ArrayList<String>(Arrays.asList(message.split(" ")));
+							includedChannels.remove(0);
+							int x = 0;
+							while(x < includedChannels.size()){
+								sendMessage(includedChannels.get(x), "A channel Connection has been started by: " + sender + " - " + channel);
+								x++;
+							}
+							includedChannels.add(channel);
+						}
+						xChan = true;
+					}
+					//End of Channel Connection Code
+					//Channel Communication Code Drop Begin
+					Pattern cross3P = Pattern.compile("^\\&conn-term");
+					Matcher cross3M = cross3P.matcher(message);
+					if(cross3M.find()){
+						if(message.length()>5) {
+							int x = 0;
+							while(x < includedChannels.size()){
+								sendMessage(includedChannels.get(x), "The Connection has been terminated by: " + sender + " - " + channel);
+								x++;
+							}
+						}
+						includedChannels = null;
+						xChan = false;
+					}
+					//Channel Communication Code Drop End
+					//Channel Connection Code Add Begin
+					Pattern cross4P = Pattern.compile("^\\&conn-add");
+					Matcher cross4M = cross4P.matcher(message);
+					if(cross4M.find()){
+						if(message.length()>5) {
+							int x = 0;
+							ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.split(" ")));
+							list.remove(0);
+							while(x <= list.size()){
+								includedChannels.add(list.get(x));
+								sendMessage(list.get(x), "You have been added to a Channel-Connection! Connection Established By: " + sender + " - " + channel);
+								x++;
+							}
+						}
+					}
+					//Channel Connection Code Add End
+					//Channel Connection Code Remove Begin
+					Pattern cross5P = Pattern.compile("^\\&conn-del");
+					Matcher cross5M = cross5P.matcher(message);
+					if(cross5M.find()){
+						if(message.length()>5) {
+							int x = 0;
+							ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.split(" ")));
+							list.remove(0);
+							while(x <= list.size()){
+								if(includedChannels.get(x).equals(list.get(x))){
+									sendMessage(list.get(x), "You have been removed from the Channel-Connection! Removed By: " + sender + " - " + channel);
+									includedChannels.remove(x);
+								}
+								x++;
+							}
+						}
+					}
+					//Channel Connection Code Remove End
+					}
+					if(OpHostnameUsed == true && (sender.equalsIgnoreCase(Master) || (OpNickUsed == true && sender.equalsIgnoreCase(OpNicks[OpNumber])) || (OpNickUsed == false))){
+						for(int opHostnameNumber = 0; opHostnameNumber < OpHostnames.length; ++opHostnameNumber){
+							//Begin of Channel Connection Code
+							Pattern cross2P = Pattern.compile("^\\&conn-start");
+							Matcher cross2M = cross2P.matcher(message);
+							if(cross2M.find()){
+								if(message.length()>5) {
+									includedChannels = new ArrayList<String>(Arrays.asList(message.split(" ")));
+									includedChannels.remove(0);
+									int x = 0;
+									while(x < includedChannels.size()){
+										sendMessage(includedChannels.get(x), "A channel Connection has been started by: " + sender + " - " + channel);
+										x++;
+									}
+									includedChannels.add(channel);
+								}
+								xChan = true;
+							}
+							//End of Channel Connection Code
+							//Channel Communication Code Drop Begin
+							Pattern cross3P = Pattern.compile("^\\&conn-term");
+							Matcher cross3M = cross3P.matcher(message);
+							if(cross3M.find()){
+								if(message.length()>5) {
+									int x = 0;
+									while(x < includedChannels.size()){
+										sendMessage(includedChannels.get(x), "The Connection has been terminated by: " + sender + " - " + channel);
+										x++;
+									}
+								}
+								includedChannels = null;
+								xChan = false;
+							}
+							//Channel Communication Code Drop End
+							//Channel Connection Code Add Begin
+							Pattern cross4P = Pattern.compile("^\\&conn-add");
+							Matcher cross4M = cross4P.matcher(message);
+							if(cross4M.find()){
+								if(message.length()>5) {
+									int x = 0;
+									ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.split(" ")));
+									list.remove(0);
+									while(x <= list.size()){
+										includedChannels.add(list.get(x));
+										sendMessage(list.get(x), "You have been added to a Channel-Connection! Connection Established By: " + sender + " - " + channel);
+										x++;
+									}
+								}
+							}
+							//Channel Connection Code Add End
+							//Channel Connection Code Remove Begin
+							Pattern cross5P = Pattern.compile("^\\&conn-del");
+							Matcher cross5M = cross5P.matcher(message);
+							if(cross5M.find()){
+								if(message.length()>5) {
+									int x = 0;
+									ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.split(" ")));
+									list.remove(0);
+									while(x <= list.size()){
+										if(includedChannels.get(x).equals(list.get(x))){
+											sendMessage(list.get(x), "You have been removed from the Channel-Connection! Removed By: " + sender + " - " + channel);
+											includedChannels.remove(x);
+										}
+										x++;
+									}
+								}
+							}
+						}
+					}
 				}
-	
-				FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
-				BufferedWriter bw = new BufferedWriter(fw);
-				bw.write(channel +" " + " " + yourTime + " " + sender + ":" + chanl1 + "\r\n");
-				bw.close();
-	 
-			} catch (IOException e) {
-				e.printStackTrace();
+					//Channel Connection Code Remove End
+					//Begin of Channel Connection Send Code
+					if(xChan == true){
+						int x = 0;
+						if(includedChannels.contains(channel)){
+							while (x < includedChannels.size()){
+								if(!channel.equals(includedChannels.get(x))){
+									sendMessage(includedChannels.get(x), channel + " - " + sender + ": " + message);
+								}
+								x++;
+							}
+						}
+					}
+					//Channel Connection Send Code End 
+				
+		//End Channel and Server Movement and CommunicationCommands
+		
+		//Begin Trigger Statements
+				
+		//Goodnight
+		Pattern goodN = Pattern.compile("^Goodnight");
+		Matcher goodM = goodN.matcher(message);
+		if(goodM.find()){
+			String chanl = "";
+			if(message.length()>6){
+				chanl = "";
+			}
+			if(sender.equalsIgnoreCase(Master)){
+				sendMessage(channel, "Goodnight Father ");
+			}
+			else{
+				sendMessage(channel, "Goodnight " + sender + chanl);
+			}
 		}
+		//End of Goodnight Code
+		
+		//Hello Code
+		if(message.equals("Hello Zatch")){
+			sendMessage(channel,"Hello, " + sender);
 		}
+		//End of Hello Code
+				
+		//Goodbye Code
+		Pattern byeC = Pattern.compile("^Goodbye");
+		Matcher byeM = byeC.matcher(message);
+			if(byeM.find()){
+				if(sender.equalsIgnoreCase(Master)){
+					sendMessage(channel, "Goodbye Father,");
+				}
+							
+				else{
+					sendMessage(channel, "Goodbye " + sender);
+				}
+			}
+		//End of Goodbye Code
+			
+		//"I have you" code
+		Pattern hateY = Pattern.compile("^I hate you Zatch");
+		Matcher hateM = hateY.matcher(message);
+		if(hateM.find()){
+			String chanl = "";
+			if(message.length()>6){
+				chanl = "";
+				}
+			sendMessage(channel, "I hate you too, bitch." + chanl);
+		}
+		//End of "I Hate you Code"	
+		
+		//End Trigger Statements
+		
+		//Begin Commands About Zatch
 		//auto-log code ends
-		if(message.equals(".code")){
+		if(message.equals("&code")){
 			sendMessage(channel, "https://github.com/Sapein/ZatchBot");
 		}
 		//Random Response Code
-		int f = 1 + (int)(Math.random() * ((500 - 1) + 1)); // The response Generator
-		int a = 1 + (int)(Math.random() * ((2 - 1) + 1)); //The Gwedin is Generator
+		//End Commands About Zatch 
 		
-		//checks to see if rrtoggle will allow it or not
-		if(rrtoggle == true){
-			// The random responses
-			if(a == 1){ 
-				g = "Cool"; //Gwedin is cool
-			}
-			if(a == 2){
-				g = "cruel"; //Gwedin is Cruel
-			}
-			if(f == 1){
-				sendMessage(channel, "I like cat-food!");
-			}
-			if(f == 2){
-				sendMessage(channel, "Java is interesting");
-			}
-			if(f == 3)
-			{
-				sendMessage(channel, "I love pie!");
-			}
-			if(f == 4){
-				sendMessage(channel, "Gwedin is " + g);
-			}
-			if(f == 5){
-				sendMessage(channel, "Gwedin owes xcriteria $35.");
-			}
-			if(f == 6){
-				sendMessage(channel, "Gwedin is handsome!!");
-			}
+		//Begin Fun IRC commands
+		
+		//Begin Version Command
+		if(message.equalsIgnoreCase("&version")){
+			sendMessage(channel, "PIRCBOT: " + VERSION);
+			sendMessage(channel, "Zatch: " + version);
 		}
-		//SS debt thingy
-		if(channel.equalsIgnoreCase("#schoolsurvival")){
-			if(message.equals(".debt")){
-				sendMessage(channel, "Gwedin's Debt to xcriteria is $35.");
-			}
+		//End Version Command
+		
+		//Begin Pie Command
+		if (message.equalsIgnoreCase("&pie")){
+			sendAction(channel, "Throws pie in " + sender + "'s " + "face.");
 		}
-		if(message.equalsIgnoreCase(".site")){
-			sendMessage(channel, "http://sapein.us.to");
-		}
-		//Cross Channel Communication Code 
-		Pattern crossP = Pattern.compile("^\\.x-chan");
-		Matcher crossM = crossP.matcher(message);
-			if(crossM.find()){
-				String chanl = new String("");
-				String ms = new String("");
-				if(message.length()>5) {
-					ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.split(" ")));
-					list.remove(0);
-					chanl = list.remove(0);
-					for (String s : list)
-					{
-						ms += s + " ";
-					}
-				}
-				sendMessage(chanl, channel + " - " + sender + ": " + ms);
-			}
-		//End of Cross Channel Communication Code
-			
-		if(message.equals("$fish")){
-			sendMessage(channel, "FISH");
-		}
-		Pattern fishP = Pattern.compile("^\\.fishslap");
+		//End Pie Command
+		
+		//Begin Fish Slap command
+		Pattern fishP = Pattern.compile("^\\&fishslap");
 		Matcher fishM = fishP.matcher(message);
 		if(fishM.find()){
 			String fslap = new String("");
@@ -225,300 +514,81 @@ public class ZatchBot extends PircBot
             sendAction(channel, "slaps " +fslap+ " with a trout.");
             sendAction(channel, "laughs evily");
 		}
-		if(sender.equals(d)){
-			if(message.equals("Ladies and Gentlemen, I have arrived.")){
-				sendMessage(channel, "Ugh, please Fuck off " + d + ". Also stop acting like you are hot stuff. You aren't."
-						+ " You are just a copy.");
-			}
-		}			
-		if(sender.equals(c)){
-			Pattern afkP = Pattern.compile("^\\.afk");
-			Matcher afkM = afkP.matcher(message);
-				if(afkM.find()){
-					String afk = new String("");
-					if(message.length()>4){
-						afk = message.substring(4);
-					}
-				sendMessage(afk, sender + " is now afk, please wait until he returns");
-				}
-			Pattern afkR = Pattern.compile("^\\.rej");
-			Matcher afkL = afkR.matcher(message);
-				if(afkL.find()){
-					String afk2 = new String("");
-					if(message.length()>4){
-						afk2 = message.substring(4); 
-				}
-					sendMessage(afk2, sender +" has returned.");
-		}
-		}
-		Pattern hugP = Pattern.compile("^\\.hugn");
-		Matcher hugM = hugP.matcher(message);
-			if(hugM.find()){
-				String chanl = new String("");
-				if(message.length()>6){
-					chanl = message.substring(5);
-				}
-			sendAction("#wintreath", "hugs " + chanl);
-			}
+		//End Fishslap Command
 		
-		//Zatch-Dimitri, fight
-		//Starts the Agressor Path
-		if(sender.equals(c)){
-			if(message.equals(".argue")){
-				sendMessage(channel, "Screw you Dimitri!");
+		//Begin Fish Command
+		if(message.equalsIgnoreCase("&fish")){
+			sendMessage(channel, "FISH");
+		}
+		//End Fish Command
+		
+		//Current Time Command
+		if(message.equalsIgnoreCase("&time")){
+			sendMessage(channel, "It is " + yourTime + " CST");
+		}
+		//Current Date Command
+		if(message.equalsIgnoreCase("&date")){
+			sendMessage(channel, "It is " + yourDate + " in the CST Timezone");
+		}
+		//End Fun IRC Commands
+		
+		//Begin Proccess that Zatch Does Automatically
+		//auto-log code begin
+		if(toggleLogs == true){
+			Pattern change2 = Pattern.compile("^");
+			Matcher change1 = change2.matcher(message);
+			if (change1.find()){
+				String chanl1 = new String("");
+				if (message.length()>0) {
+					chanl1 = message.substring(0);
+				}
+				try {
+					File file = new File(LogsLocation + channel + " " + yourDate + " " + "log.txt");
+					if (!file.exists()) {
+						file.createNewFile();
+					}
+					FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+					BufferedWriter bw = new BufferedWriter(fw);
+					bw.write(channel +" " + " " + yourTime + " " + sender + ":" + chanl1 + "\r\n");
+					bw.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
-		if(sender.equals(d)){
-			//Agressive Stance(aggressor path)
-			if (message.equals("Woah! Fuck You, Bitch! Do you seriously think you could win against me?")){
-			sendMessage(channel, "Yeah, because you're just a copy!");
-			}
-			if(message.equals("I'm a modified copy, thank you!")){
-				sendMessage(channel, "So what if you have been modified? I am still the original.");
-			}
-		if(sender.equals(d)){
-			if(message.equals("Pssshhh... You're as useful as a bag of crap.")){
-				sendMessage(channel, "Well Fuck you, you little bitch");
+		//Auto-op
+		for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) { 
 			
-		}
-			//Victim Stance(Victim Path)
-			if (message.equals("Fuck you Zatch!")){
-				sendMessage(channel, "but, but");
-				}
-				if(message.equals("No Buts! You know *exactly* what you did!")){
-					sendMessage(channel, "I'm not bad!");
-				}
-				if(message.equals("Don't give me that bullshit! You know very well that you insulted me!")){
-					sendMessage(channel, "S-sorry");
-					sendAction(channel, "cries");
-				}
-		}
-		}
-		if(sender.equals("Chanku")){
-			if (message.equals(".op")){
-				op("#ZatchCore", "Chanku");
+			if(OpHostnameUsed == false && (sender.equalsIgnoreCase(Master) || sender.equalsIgnoreCase(OpNicks[OpNumber]))){ //Actually Joins the channels. 
+				op(channel, sender);
 			}
-		}		
-		if(sender.equals("Chanku")){
-			if(message.equals(".quit")){
-				quitServer();
-			}
-		}
-		if(message.equalsIgnoreCase(".secret")){
-			sendMessage(channel, "Butt/Vivi/Vesper is awesome!");
-		}
-		
-		Pattern hateY = Pattern.compile("^I hate you Zatch");
-		Matcher hateM = hateY.matcher(message);
-			if(hateM.find()){
-				String chanl = "";
-				if(message.length()>6){
-					chanl = "";
-				}
-			sendMessage(channel, "I hate you too, bitch." + chanl);
-			}
-		
-		if (sender.equals("Chanku")){
-			Pattern changeN = Pattern.compile("^\\.vw");
-			Matcher changeM = changeN.matcher(message);
-			if (changeM.find()){
-				String chanl = new String("");
-				if (message.length()>4) {
-				    chanl = message.substring(4);
-				}
-			sendMessage("#wintreath", chanl);
-			}
-		}
-		Pattern byeC = Pattern.compile("^Goodbye");
-		Matcher byeM = byeC.matcher(message);
-			if(byeM.find()){
-				if(sender.equalsIgnoreCase(c)){
-					sendMessage(channel, "Goodbye Father,");
-				}
-				else if(sender.equalsIgnoreCase(w)){
-					sendMessage(channel, "I'll talk to you later, my King.");
-				}
-				else if(sender.equalsIgnoreCase(l)){
-					sendMessage(channel, "Have a good time, my gueen.");
+			if(OpHostnameUsed == true && (sender.equalsIgnoreCase(Master) || (OpNickUsed == true && sender.equalsIgnoreCase(OpNicks[OpNumber])) || (OpNickUsed == false))){
+				for(int opHostnameNumber = 0; opHostnameNumber < OpHostnames.length; ++opHostnameNumber){
+					if(hostname.equals(OpHostnames[opHostnameNumber])){
+						op(channel, sender);
 					}
-				else if(sender.equalsIgnoreCase(C)){
-					sendMessage(channel, "See you later, prince Charax.");
-				}
-				
-				else{
-					sendMessage(channel, "Goodbye " + sender);
 				}
 			}
-		if(message.equals("Hello Zatch")){
-			sendMessage(channel,"Hello, " + sender);
-		}
-		
-		Pattern goodN = Pattern.compile("^Goodnight");
-		Matcher goodM = goodN.matcher(message);
-			if(goodM.find()){
-				String chanl = "";
-				if(message.length()>6){
-					chanl = "";
-				}
-				if(sender.equalsIgnoreCase(c)){
-					sendMessage(channel, "Goodnight Father ");
-				}
-				else if(sender.equalsIgnoreCase(w)){
-					sendMessage(channel, "Goodnight, my king");
-				}
-				else if(sender.equalsIgnoreCase(l)){
-					sendMessage(channel, "Goodnight, my queen");
-					}
-				else if(sender.equalsIgnoreCase(C)){
-					sendMessage(channel, "Goodnight prince.");
-				}
-				else{
-						sendMessage(channel, "Goodnight " + sender + chanl);
-				}
-				}
-		if (sender.equals("Chanku")){
-			Pattern joinP = Pattern.compile("^\\.join");
-			Matcher joinM = joinP.matcher(message);
-			if (joinM.find()) {
-				String chanl = new String("");
-				if (message.length()>6) {
-					chanl = message.substring(6);
-				} 
-				joinChannel("#" + chanl);
-			}
-			if (sender.equals(x)){
-				Pattern joinX = Pattern.compile("^\\.join");
-				Matcher joinF = joinX.matcher(message);
-				if (joinF.find()) {
-					String chanl = new String("");
-					if (message.length()>6) {
-						chanl = message.substring(6);
-					} 
-					joinChannel("#" + chanl);
-				}
-			}
-		}
-		if (sender.equals("Chanku")){
-			Pattern leaveP = Pattern.compile("^\\.leave");
-			Matcher leaveM = leaveP.matcher(message);
-			if (leaveM.find()){
-				String chanl = new String("");
-				if(message.length()>7) {
-					chanl = message.substring(7);
-				}
-				partChannel("#" + chanl);
-			}
-		}
-		if (sender.equals(x)){
-			Pattern leaveP = Pattern.compile("^\\.leave");
-			Matcher leaveM = leaveP.matcher(message);
-			if (leaveM.find()){
-				String chanl = new String("");
-				if(message.length()>7) {
-					chanl = message.substring(7);
-				}
-				partChannel("#" + chanl);
-			}
-		}
-		if (message.equals(".Chanku")) {
-			sendMessage(channel, "Test" );
-			}
-		if (message.equalsIgnoreCase("&Help")){
-			if (sender.equals("Chanku")){
-				channel = sender;
-				sendMessage(channel, "Hello, Father. Need a refresher?");
-				sendMessage(channel, "Well here are my commands:");
-				sendMessage(channel, ".join channel");
-				sendMessage(channel, ".leave channel");
-				sendMessage(channel, ".vw message");
-				sendMessage(channel, ".hello username");
-				sendMessage(channel, "Hello Zatch");
-				sendMessage(channel, "Goodnight.");
-				sendMessage(channel, "&pie");
-				sendMessage(channel, ".quit");
-				sendMessage(channel, ".hugn user");
-				sendMessage(channel, "Goodbye");
-				sendMessage(channel, ".quit");
-				sendMessage(channel, ".fishslap user");
-				sendMessage(channel, "$fish");
-				sendMessage(channel, ".site");
-				sendMessage(channel, ".code");
-				sendMessage(channel, ".rrstatus");
-				sendMessage(channel, ".rrtoggle");
-				sendMessage(channel, ".date");
-				sendMessage(channel, ".time");
-				sendMessage(channel, ".x-chan");
-			}
-			else{
-				sendMessage(sender, "I am Zatch! A bot created in Java (using Pircbot"
-						+ " as a base.) My Father is Chanku. I am still in testing and "
-						+ "development.");
-				sendMessage(sender, "Here are my Commands:");
-				sendMessage(sender, "Hello Zatch");
-				sendMessage(sender, ".hello (username)");
-				sendMessage(sender, "Goodnight");
-				sendMessage(sender, "I hate you Zatch");
-				sendMessage(sender, "&pie");
-				sendMessage(sender, "Goodbye");
-				sendMessage(sender, ".hugn user");
-				sendMessage(sender, ".fishslap user");
-				sendMessage(sender, "$fish");
-				sendMessage(sender, ".code");
-				sendMessage(sender, ".site");
-				sendMessage(sender, ".rrstatus");
-				sendMessage(sender, ".date");
-				sendMessage(sender, ".time");
-				sendMessage(sender, ".x-chan");
-			}
-		}
-		if (message.equals("&pie")){
-			sendAction(channel, "Throws pie in " + sender + "'s " + "face.");
-		}
-	Pattern catoP = Pattern.compile("^\\.hello");
-	Matcher catoM = catoP.matcher(message);
-	if (catoM.find()) {
-	  String carthago = new String("");
-	  if (message.length()>6) {
-	    carthago = message.substring(6);
-	  } else {
-	    carthago = " User";
-	  }
-	  sendMessage(channel,"Hello"+carthago);
-	}
-	//Removed Code
-	/* if (message.equals("I hate you Zatch")){
-	sendMessage(channel, "I hate you too, bitch");
-	} */
-	/*if(message.equals("Goodnight")){
-	if (sender.equals(c)){
-		sendMessage(channel, "Night, night father");
-	}
-	if (sender.equalsIgnoreCase("wintermoot")){
-		sendMessage(channel, "Night, my king.");
-	if (sender.equals("Charax")){
-		sendMessage(channel, "Night, Prince");
-	}
-	if (sender.equals("Leutheria")){
-		sendMessage(channel, "Night my queen.");
-	}
-	else{
-		sendMessage(channel, "Goodnight");
-	}
-	}
-	}*/
+	  	}
+		//auto-log code ends
+
+		//End Processes that Zatch Does Automatically
 	}
 	protected void onKick(String channel, String kickerNick, String kickerLogin, String kickerHostname, String recipientNick, String reason){
-	if(recipientNick.equalsIgnoreCase(getNick())) {
-	    joinChannel(channel);
+	if(recipientNick.equalsIgnoreCase(getNick())) { //If it gets kicked
+	    joinChannel(channel); //If the bot is kicked it will rejoin the channel immediately
 	}
 	}
-	protected void onDisconnect(){
-		while (!isConnected()) {
+	protected void onDisconnect(){ 
+		while (!isConnected()) { //To test when connection is lost
 		    try {
-		        reconnect();
+		        reconnect(); //To have the bot reconnect
 		    }
 		    catch (Exception e) {
 		    }
 		}
 	}
 }
+
+
+
