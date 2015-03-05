@@ -735,9 +735,8 @@ public class ZatchBot extends PircBot
 					}if(mode == "nChange"){
 						bw.write(time + " " + sender + " changed their Nick to " + chanl1 + " on " + chan + "\r\n");
 					}if(mode == "kick"){
-						bw.write(time + " " + sender + " kicked " + sender1 + " for " + msg + "\r\n");
+						bw.write(time + " " + sender + " kicked " + sender1 + " on " + chan + " for " + msg + "\r\n");
 					}
-
 					bw.close();
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -745,7 +744,7 @@ public class ZatchBot extends PircBot
 			}
 		}
 	}
-}
+}	
 
 
 
