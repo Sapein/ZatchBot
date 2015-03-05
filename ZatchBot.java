@@ -551,6 +551,16 @@ public class ZatchBot extends PircBot
 				}
 			}
 		}
+		if(sender.equalsIgnoreCase(Master)){
+			if(message.equalsIgnoreCase("&updateConfig")){
+				try {
+					updateConfig();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 
 		//End Processes that Zatch Does Automatically
 	}
@@ -568,38 +578,109 @@ public class ZatchBot extends PircBot
 		    }
 		}
 	}
-	protected void loadConfig() throws Exception{
+	protected String loadConfig() throws Exception{
+		String configVersion;
 		BufferedReader saveFile;
 		saveFile = new BufferedReader(new FileReader("Config.txt"));
-		saveFile.readLine(); //1st line 
-		saveFile.readLine(); //2nd line 
-		saveFile.readLine(); //3rd line
-	    saveFile.readLine(); //4th line
-	    saveFile.readLine(); //5th line
-	    saveFile.readLine(); //6th line
-	    saveFile.readLine(); //7th line
-	    saveFile.readLine(); //8th line
-	    OpHostnameUsed = Boolean.parseBoolean(saveFile.readLine()); //9th line
-	    saveFile.readLine(); //10th line
-	    OpNickUsed = Boolean.parseBoolean(saveFile.readLine()); //11th line
-	    saveFile.readLine(); //12th line
-	    BotNick = saveFile.readLine(); //13th line
-	    saveFile.readLine(); //14th line
-	    Master = saveFile.readLine(); //15th line
-	    saveFile.readLine(); //16th line
-	    OpNick = saveFile.readLine(); //17th line
-	    saveFile.readLine(); //18th line
-	    OpHostname = saveFile.readLine(); //19h line 
-	    saveFile.readLine(); //20th line 
-	    toggleLogs = Boolean.parseBoolean(saveFile.readLine()); //21st line
-	    saveFile.readLine(); //22nd Line
-	    if(toggleLogs == true){
-	    	LogsLocation = saveFile.readLine(); //23rd line
-	    }
-	    else{
-	    	saveFile.readLine(); //23rd line
-	    }
-	    saveFile.close();
+		configVersion = saveFile.readLine(); //1st line
+		if(!configVersion.startsWith("Config Version")){
+			saveFile.readLine(); //3nd line 
+			saveFile.readLine(); //4rd line
+		    saveFile.readLine(); //5th line
+		    saveFile.readLine(); //6th line
+		    saveFile.readLine(); //7th line
+		    saveFile.readLine(); //8th line
+		    saveFile.readLine(); //9th line
+		    OpHostnameUsed = Boolean.parseBoolean(saveFile.readLine()); //10th line
+		    saveFile.readLine(); //11th line
+		    OpNickUsed = Boolean.parseBoolean(saveFile.readLine()); //12th line
+		    saveFile.readLine(); //13th line
+		    BotNick = saveFile.readLine(); //14th line
+		    saveFile.readLine(); //15th line
+		    Master = saveFile.readLine(); //16th line
+		    saveFile.readLine(); //17th line
+		    OpNick = saveFile.readLine(); //18th line
+		    saveFile.readLine(); //19th line
+		    OpHostname = saveFile.readLine(); //10h line 
+		    saveFile.readLine(); //21th line 
+		    toggleLogs = Boolean.parseBoolean(saveFile.readLine()); //22st line
+		    saveFile.readLine(); //23nd Line
+		    if(toggleLogs == true){
+		    	LogsLocation = saveFile.readLine(); //24rd line
+		    }
+		    else{
+		    	saveFile.readLine(); //24rd line
+		    }
+		    saveFile.close();
+		}else{
+			saveFile.readLine(); //2nd line
+			saveFile.readLine(); //3nd line 
+			saveFile.readLine(); //4rd line
+		    saveFile.readLine(); //5th line
+		    saveFile.readLine(); //6th line
+		    saveFile.readLine(); //7th line
+		    saveFile.readLine(); //8th line
+		    saveFile.readLine(); //9th line
+		    OpHostnameUsed = Boolean.parseBoolean(saveFile.readLine()); //10th line
+		    saveFile.readLine(); //11th line
+		    OpNickUsed = Boolean.parseBoolean(saveFile.readLine()); //12th line
+		    saveFile.readLine(); //13th line
+		    BotNick = saveFile.readLine(); //14th line
+		    saveFile.readLine(); //15th line
+		    Master = saveFile.readLine(); //16th line
+		    saveFile.readLine(); //17th line
+		    OpNick = saveFile.readLine(); //18th line
+		    saveFile.readLine(); //19th line
+		    OpHostname = saveFile.readLine(); //10h line 
+		    saveFile.readLine(); //21th line 
+		    toggleLogs = Boolean.parseBoolean(saveFile.readLine()); //22st line
+		    saveFile.readLine(); //23nd Line
+		    if(toggleLogs == true){
+		    	LogsLocation = saveFile.readLine(); //24rd line
+		    }
+		    else{
+		    	saveFile.readLine(); //24rd line
+		    }
+		    saveFile.close();
+		}
+
+	    return configVersion;
+	}
+	public void updateConfig() throws Exception{
+		String versionCheck = loadConfig();
+		File file = new File("Config.txt");
+		File oldFile = new File("Config-Backup.txt");
+		if(!versionCheck.equals(ZatchBotMain.getConfigVersion())){
+				file.renameTo(oldFile);
+				file.createNewFile(); //creates the file
+				FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+				BufferedWriter bw = new BufferedWriter(fw);
+				bw.write("Config Version: " + ZatchBotMain.getConfigVersion() +  "\r\n"); 
+				bw.write("		=--Connection--=" +"\r\n");
+				bw.write("--IRC Server--" + "\r\n"); //puts this on the first line of the file
+				bw.write(ZatchBotMain.Server + "\r\n"); //puts this on the second line of the file
+				bw.write("--Channels--" + "\r\n"); //puts this on the third line of the file
+				bw.write("== To add Multiple Channels use a comma(,) inbetween with no spaces ==" + "\r\n"); //puts this on the fourth line of the file
+				bw.write(ZatchBotMain.Channel + "\r\n"); //puts this on the fifth line of the file
+				bw.write("		==--IRC Bot--==" + "\r\n"); //creates the sixth line of the file
+				bw.write("--Toggle Hostname Verification for Ops--" + "\r\n"); //puts this on the Seventh line of the file
+				bw.write(OpHostnameUsed + "\r\n"); //makes Hostname Verification False by default
+				bw.write("--Toggle Nick Verification for Ops--" + "\r\n"); //puts this on the Ninth line of the file
+				bw.write(OpNickUsed + "\r\n"); //Sets the Nick verification to true
+				bw.write("--Bot Name--" +"\r\n"); //puts this on the Eleventh line of the file
+				bw.write(BotNick + "\r\n"); //puts this on the twelfth line of the file
+				bw.write("--Master--" + "\r\n"); //puts this on the thirteenth line of the file
+				bw.write(Master + "\r\n"); //puts this on the fourteenth line of the file
+				bw.write("--Op Nicks--" + "\r\n"); //puts this on the fifteenth line of the file
+				bw.write(OpNick + "\r\n"); //generates a blank space
+				bw.write("--Op Hostnames" + "\r\n"); //puts this on the Seventeenth line of the file
+				bw.write(OpHostname + "\r\n"); //generates blank space on the Eighteenth line of the file
+				bw.write("--Toggle Logs" +"\r\n"); 
+				bw.write(toggleLogs + "\r\n");
+				bw.write("--Logs Location--" + "\r\n");
+				bw.write(LogsLocation + "\r\n");
+				bw.close(); //closes the writer. 
+		}
 	}
 }
 

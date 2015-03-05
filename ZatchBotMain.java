@@ -24,11 +24,12 @@ import org.jibble.pircbot.*;
 
 public class ZatchBotMain {
 	static String Server; //This will be replaced by what is inputed in the Config upon start. This is the IRC server 
-	static String Channel; //This will be replaced by what is inputted in the Channel Line upon Start. These are the channels to Auto-Connect to. 
+	static String Channel; //This will be replaced by what is inputted in the Channel Line upon Start. These are the channels to Auto-Connect to.
+	private static String configVersion = "1.0";
 	
-
 	public static void main(String[] arg) throws Exception {
 		//Begin Config Creation Code
+		String conVersion;
 		File file = new File("Config.txt"); //sets the file name
 	
 		// NOTE: That the defaults set here are to prevent the bot from erroring out upon start-up, your changes will not be overwritten.
@@ -37,6 +38,7 @@ public class ZatchBotMain {
 
 			FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
 			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write("Config Version: " + configVersion+  "\r\n"); 
 			bw.write("		=--Connection--=" +"\r\n");
 			bw.write("--IRC Server--" + "\r\n"); //puts this on the first line of the file
 			bw.write("irc.rizon.net" + "\r\n"); //puts this on the second line of the file
@@ -65,9 +67,18 @@ public class ZatchBotMain {
 		//End Config Creation Code  
 		
 		//Begin Config Access Code
-		BufferedReader saveFile=
-		        new BufferedReader(new FileReader("Config.txt"));
+		BufferedReader saveFile= new BufferedReader(new FileReader("Config.txt"));
 		   // Get the integer value from the String.
+		conVersion = saveFile.readLine();
+		if(!conVersion.startsWith("Config Version")){
+			saveFile.readLine();
+			Server = saveFile.readLine();
+		    saveFile.readLine(); 
+		    saveFile.readLine(); 
+		    Channel = saveFile.readLine();
+		    // Not needed, but read blank line at the bottom.
+		    saveFile.close();
+		}else{
 			saveFile.readLine();
 			saveFile.readLine();
 			Server = saveFile.readLine();
@@ -76,6 +87,7 @@ public class ZatchBotMain {
 		    Channel = saveFile.readLine();
 		    // Not needed, but read blank line at the bottom.
 		    saveFile.close();
+		}
 		    String[] Channels = Channel.split(",");
 		//End Config Access Code
 		    
@@ -86,5 +98,8 @@ public class ZatchBotMain {
     for(int ChannelAmount = 0; ChannelAmount < Channels.length; ++ChannelAmount) { //This makes sure that all Channels listed are joined as we stored it in a variable earlier.
 		bot.joinChannel(Channels[ChannelAmount]); //Actually Joins the channels. 
   		}
+	}
+	public static String getConfigVersion(){
+		return configVersion;
 	}
 }
