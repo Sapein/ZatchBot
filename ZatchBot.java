@@ -47,7 +47,7 @@ public class ZatchBot extends PircBot
 	
 	public ZatchBot() throws Exception{
 	
-		loadConfig();
+		loadConfig("");
 	    OpNicks = OpNick.split(",");
 	    OpHostnames = OpHostname.split(",");
 
@@ -544,9 +544,8 @@ public class ZatchBot extends PircBot
 		if(sender.equalsIgnoreCase(Master)){
 			if(message.equalsIgnoreCase("&reloadConfigs")){
 				try {
-					loadConfig();
+					loadConfig(channel);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -554,9 +553,8 @@ public class ZatchBot extends PircBot
 		if(sender.equalsIgnoreCase(Master)){
 			if(message.equalsIgnoreCase("&updateConfig")){
 				try {
-					updateConfig();
+					updateConfig(channel);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -578,11 +576,12 @@ public class ZatchBot extends PircBot
 		    }
 		}
 	}
-	protected String loadConfig() throws Exception{
+	protected String loadConfig(String chan) throws Exception{
 		String configVersion;
 		BufferedReader saveFile;
 		saveFile = new BufferedReader(new FileReader("Config.txt"));
-		configVersion = saveFile.readLine(); //1st line
+		configVersion = saveFile.readLine(); //1st line;
+		sendMessage(chan, "RELOADING CONFIG");
 		if(!configVersion.startsWith("Config Version")){
 			saveFile.readLine(); //3nd line 
 			saveFile.readLine(); //4rd line
@@ -612,6 +611,7 @@ public class ZatchBot extends PircBot
 		    	saveFile.readLine(); //24rd line
 		    }
 		    saveFile.close();
+		    sendMessage(chan, "CONFIG SUCCESSFULLY RELOADED");
 		}else{
 			saveFile.readLine(); //2nd line
 			saveFile.readLine(); //3nd line 
@@ -642,20 +642,17 @@ public class ZatchBot extends PircBot
 		    	saveFile.readLine(); //24rd line
 		    }
 		    saveFile.close();
+		    sendMessage(chan, "CONFIG SUCCESSFULLY RELOADED");
 		}
-
 	    return configVersion;
 	}
-	public void updateConfig() throws Exception{
-		String versionCheck = loadConfig();
+	public void updateConfig(String chan) throws Exception{
+		String versionCheck = loadConfig("");
 		File file = new File("Config.txt");
 		File oldFile = new File("Config-Backup.txt");
 		if(!versionCheck.equalsIgnoreCase("Config Version: " + ZatchBotMain.getConfigVersion())){
-				if(oldFile.exists()){
-					oldFile.delete();
-					file.renameTo(oldFile);
-				}
-				//file.renameTo(oldFile);
+				sendMessage(chan, "Now Updating the Config file.");
+				file.renameTo(oldFile);
 				file.createNewFile(); //creates the file
 				FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
 				BufferedWriter bw = new BufferedWriter(fw);
@@ -684,7 +681,11 @@ public class ZatchBot extends PircBot
 				bw.write("--Logs Location--" + "\r\n");
 				bw.write(LogsLocation + "\r\n");
 				bw.close(); //closes the writer. 
+				sendMessage(chan, "UPDATE SUCCESSFUL");
+		}else{
+			sendMessage(chan, "The Config is already up to date!");
 		}
+		loadConfig("");
 	}
 }
 
