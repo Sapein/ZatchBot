@@ -36,6 +36,7 @@ public class ZatchBot extends PircBot
 	static String OpNick; //This is the line of the Op's Nicks, this is only temporary to store it.
 	static String OpHostname; //This is the entire line of the Op's Hostnames. This is only to temporarily store it
 	static String LogsLocation; //This is the location where you save the logs too
+	static String chann; 
 	boolean OpNickUsed = false; //Checks to see if the Nicks of the Ops are to be used in authentication or not
 	boolean OpHostnameUsed; //Checks to see if the hostnames should be used in authentication or not
 	boolean toggleLogs; //Checks to see if you have enabled logs
@@ -43,10 +44,9 @@ public class ZatchBot extends PircBot
     String[] OpHostnames; //creates an array for the hostnames
     ArrayList<String> OpAddHostnames = null; 
     ArrayList<String> includedChannels;
-    final static String version = "1.0";
+    final static String version = "1.1";
 	
 	public ZatchBot() throws Exception{
-			
 		BufferedReader saveFile;
 		saveFile = new BufferedReader(new FileReader("Config.txt"));
 		saveFile.readLine(); //1st line 
@@ -84,9 +84,15 @@ public class ZatchBot extends PircBot
 
 	    this.setName(BotNick);
 		this.setLogin("Zatch");
+		System.out.println(toggleLogs);
+		System.out.println(LogsLocation);
 		
 	}
 	protected void onJoin(String channel, String sender, String login, String hostname){
+		String time = getTime();
+		String date = getDate();
+		//Logging
+		logging(" ", channel, date, time, sender, "join");
 		//Auto-op
 		for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) { 
 			
@@ -117,21 +123,29 @@ public class ZatchBot extends PircBot
 		}
 	}
 	protected void onPart(String channel, String sender, String login, String hostname){
-			sendMessage(channel, "Good-bye.");
+		String time = getTime();
+		String date = getDate();
+		logging(" ", channel, date, time, sender, "part");
+		sendMessage(channel, "Good-bye.");
 	}
 	protected void onPrivateMessage(String sender, String login, String hostname, String message){
 		sendMessage(Master, sender + ": " + message); 
 	}
+	protected void onAction(String sender, String login, String hostname, String target, String action){
+		String date = getDate();
+		String time = getTime();
+		logging(action, target, date, time, sender, "action");
+	}
 	public void onMessage(String channel, String sender, String login, String hostname, String message)
 	{	
 		//Begin Variables
+		chann = channel;
+		String yourDate;
+		String yourTime;
 		//Begin Time and Date Variables
-		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy"); //Sets the date format To Month-Day-Year
-		Date date = new Date(); //stores the date
-		String yourDate = dateFormat.format(date); //turns the date into a variable to be called later
-		DateFormat dF = new SimpleDateFormat("HH:mm"); //Sets the Time format to Hour:Minute
-		Date time = new Date(); //stores the time
-		String yourTime = dF.format(time); //turns the time into a variable to be called later
+		yourDate = getDate();
+		yourTime = getTime();
+		
 		boolean xChan = false; //Boolean for cross-channel Communication
 		//End Time and Date Variables
 		
@@ -534,28 +548,7 @@ public class ZatchBot extends PircBot
 		
 		//Begin Proccess that Zatch Does Automatically
 		//auto-log code begin
-		if(toggleLogs == true){
-			Pattern change2 = Pattern.compile("^");
-			Matcher change1 = change2.matcher(message);
-			if (change1.find()){
-				String chanl1 = new String("");
-				if (message.length()>0) {
-					chanl1 = message.substring(0);
-				}
-				try {
-					File file = new File(LogsLocation + channel + " " + yourDate + " " + "log.txt");
-					if (!file.exists()) {
-						file.createNewFile();
-					}
-					FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
-					BufferedWriter bw = new BufferedWriter(fw);
-					bw.write(channel +" " + " " + yourTime + " " + sender + ":" + chanl1 + "\r\n");
-					bw.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		logging(message, channel, yourDate, yourTime, sender, "message");
 		//Auto-op
 		for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) { 
 			
@@ -586,6 +579,65 @@ public class ZatchBot extends PircBot
 		    }
 		    catch (Exception e) {
 		    }
+		}
+	}
+	protected void onQuit(String sourceNick, String sourceLogin, String sourceHostname, String reason){
+		String time = getTime();
+		String date = getDate();
+		logging(reason, chann, date, time, sourceNick, "discon");
+	}
+	protected void onNickChange(String oldNick, String login, String hostname, String newNick){
+		String time = getTime();
+		String date = getDate();
+		logging(newNick, chann, date, time, oldNick, "nChange");
+	}
+	private String getDate(){
+		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy"); //Sets the date format To Month-Day-Year
+		Date date = new Date(); //stores the date
+		String yourDate = dateFormat.format(date); //turns the date into a variable to be called later
+		return yourDate;
+	}
+	private String getTime(){
+		DateFormat dF = new SimpleDateFormat("HH:mm"); //Sets the Time format to Hour:Minute
+		Date time = new Date(); //stores the time
+		String yourTime = dF.format(time); //turns the time into a variable to be called later
+		return yourTime;
+	}
+	private void logging(String msg, String chan, String date, String time, String sender, String mode){
+		if(toggleLogs == true){
+			Pattern change2 = Pattern.compile("^");
+			Matcher change1 = change2.matcher(msg);
+			if (change1.find()){
+				String chanl1 = new String("");
+				if (msg.length()>0) {
+					chanl1 = msg.substring(0);
+				}
+				try {
+					File file = new File(LogsLocation + chan + " " + date + " " + "log.txt");
+					if (!file.exists()) {
+						file.createNewFile();
+					}
+					FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+					BufferedWriter bw = new BufferedWriter(fw);
+					if(mode == "message"){
+						bw.write(chan +" " + time + " " + sender + ":" + chanl1 + "\r\n");
+					}if(mode == "action"){
+						bw.write(chan + " " + time + " * " + sender + " " + chanl1 + "\r\n");
+					}if(mode == "join"){
+						bw.write(time + " " + sender + " joined " + chan + "\r\n");
+					}if(mode == "part"){
+						bw.write(time + " " + sender + " left " + chan +"\r\n");
+					}if(mode == "discon"){
+						bw.write(time + " " + sender + " quit " + chan + " for " + chanl1 + "\r\n");
+					}if(mode == "nChange"){
+						bw.write(time + " " + sender + " changed their Nick to " + chanl1 + " on " + chan + "\r\n");
+					}
+
+					bw.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 }
