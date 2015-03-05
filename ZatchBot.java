@@ -95,7 +95,7 @@ public class ZatchBot extends PircBot
 	protected void onPart(String channel, String sender, String login, String hostname){
 		String time = getTime();
 		String date = getDate();
-		logging(" ", channel, date, time, sender, "part");
+		logging(" ", channel, date, time, sender, "part", " ");
 		sendMessage(channel, "Good-bye.");
 	}
 	protected void onPrivateMessage(String sender, String login, String hostname, String message){
@@ -104,7 +104,7 @@ public class ZatchBot extends PircBot
 	protected void onAction(String sender, String login, String hostname, String target, String action){
 		String date = getDate();
 		String time = getTime();
-		logging(action, target, date, time, sender, "action");
+		logging(action, target, date, time, sender, "action", " ");
 	}
 	public void onMessage(String channel, String sender, String login, String hostname, String message)
 	{	
@@ -518,7 +518,7 @@ public class ZatchBot extends PircBot
 		
 		//Begin Proccess that Zatch Does Automatically
 		//auto-log code begin
-		logging(message, channel, yourDate, yourTime, sender, "message");
+		logging(message, channel, yourDate, yourTime, sender, "message",  " ");
 		//Auto-op
 		for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) { 
 			
@@ -557,9 +557,12 @@ public class ZatchBot extends PircBot
 		//End Processes that Zatch Does Automatically
 	}
 	protected void onKick(String channel, String kickerNick, String kickerLogin, String kickerHostname, String recipientNick, String reason){
-	if(recipientNick.equalsIgnoreCase(getNick())) { //If it gets kicked
-	    joinChannel(channel); //If the bot is kicked it will rejoin the channel immediately
-	}
+		String time = getTime();
+		String date = getDate();
+		logging(reason, channel, date, time, kickerNick, "kick", recipientNick);
+		if(recipientNick.equalsIgnoreCase(getNick())) { //If it gets kicked
+			joinChannel(channel); //If the bot is kicked it will rejoin the channel immediately
+		}
 	}
 	protected void onDisconnect(){ 
 		while (!isConnected()) { //To test when connection is lost
@@ -684,12 +687,12 @@ public class ZatchBot extends PircBot
 	protected void onQuit(String sourceNick, String sourceLogin, String sourceHostname, String reason){
 		String time = getTime();
 		String date = getDate();
-		logging(reason, chann, date, time, sourceNick, "discon");
+		logging(reason, chann, date, time, sourceNick, "discon", null);
 	}
 	protected void onNickChange(String oldNick, String login, String hostname, String newNick){
 		String time = getTime();
 		String date = getDate();
-		logging(newNick, chann, date, time, oldNick, "nChange");
+		logging(newNick, chann, date, time, oldNick, "nChange", " ");
 	}
 	private String getDate(){
 		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy"); //Sets the date format To Month-Day-Year
@@ -703,7 +706,7 @@ public class ZatchBot extends PircBot
 		String yourTime = dF.format(time); //turns the time into a variable to be called later
 		return yourTime;
 	}
-	private void logging(String msg, String chan, String date, String time, String sender, String mode){
+	private void logging(String msg, String chan, String date, String time, String sender, String mode, String sender1){
 		if(toggleLogs == true){
 			Pattern change2 = Pattern.compile("^");
 			Matcher change1 = change2.matcher(msg);
@@ -731,6 +734,8 @@ public class ZatchBot extends PircBot
 						bw.write(time + " " + sender + " quit " + chan + " for " + chanl1 + "\r\n");
 					}if(mode == "nChange"){
 						bw.write(time + " " + sender + " changed their Nick to " + chanl1 + " on " + chan + "\r\n");
+					}if(mode == "kick"){
+						bw.write(time + " " + sender + " kicked " + sender1 + " for " + msg + "\r\n");
 					}
 
 					bw.close();
