@@ -650,8 +650,12 @@ public class ZatchBot extends PircBot
 		String versionCheck = loadConfig();
 		File file = new File("Config.txt");
 		File oldFile = new File("Config-Backup.txt");
-		if(!versionCheck.equals(ZatchBotMain.getConfigVersion())){
-				file.renameTo(oldFile);
+		if(!versionCheck.equalsIgnoreCase("Config Version: " + ZatchBotMain.getConfigVersion())){
+				if(oldFile.exists()){
+					oldFile.delete();
+					file.renameTo(oldFile);
+				}
+				//file.renameTo(oldFile);
 				file.createNewFile(); //creates the file
 				FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
 				BufferedWriter bw = new BufferedWriter(fw);
