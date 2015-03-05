@@ -62,7 +62,7 @@ public class ZatchBot extends PircBot
 		String time = getTime();
 		String date = getDate();
 		//Logging
-		logging(" ", channel, date, time, sender, "join");
+		logging(" ", channel, date, time, sender, "join", " ");
 		//Auto-op
 		for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) { 
 			
