@@ -541,7 +541,7 @@ public class ZatchBot extends PircBot
 	  	}
 		//auto-log code ends
 		
-		if(sender.equalsIgnoreCase("Chanku")){
+		if(sender.equalsIgnoreCase(Master)){
 			if(message.equalsIgnoreCase("&reloadConfigs")){
 				try {
 					loadConfig();
