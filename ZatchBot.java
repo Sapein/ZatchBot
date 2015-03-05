@@ -43,42 +43,11 @@ public class ZatchBot extends PircBot
     String[] OpHostnames; //creates an array for the hostnames
     ArrayList<String> OpAddHostnames = null; 
     ArrayList<String> includedChannels;
-    final static String version = "1.0";
+    final static String version = "1.1";
 	
 	public ZatchBot() throws Exception{
-			
-		BufferedReader saveFile;
-		saveFile = new BufferedReader(new FileReader("Config.txt"));
-		saveFile.readLine(); //1st line 
-		saveFile.readLine(); //2nd line 
-		saveFile.readLine(); //3rd line
-	    saveFile.readLine(); //4th line
-	    saveFile.readLine(); //5th line
-	    saveFile.readLine(); //6th line
-	    saveFile.readLine(); //7th line
-	    saveFile.readLine(); //8th line
-	    OpHostnameUsed = Boolean.parseBoolean(saveFile.readLine()); //9th line
-	    saveFile.readLine(); //10th line
-	    OpNickUsed = Boolean.parseBoolean(saveFile.readLine()); //11th line
-	    saveFile.readLine(); //12th line
-	    BotNick = saveFile.readLine(); //13th line
-	    saveFile.readLine(); //14th line
-	    Master = saveFile.readLine(); //15th line
-	    saveFile.readLine(); //16th line
-	    OpNick = saveFile.readLine(); //17th line
-	    saveFile.readLine(); //18th line
-	    OpHostname = saveFile.readLine(); //19h line 
-	    saveFile.readLine(); //20th line 
-	    toggleLogs = Boolean.parseBoolean(saveFile.readLine()); //21st line
-	    saveFile.readLine(); //22nd Line
-	    if(toggleLogs == true){
-	    	LogsLocation = saveFile.readLine(); //23rd line
-	    }
-	    else{
-	    	saveFile.readLine(); //23rd line
-	    }
-	    saveFile.close();
-	    
+	
+		loadConfig();
 	    OpNicks = OpNick.split(",");
 	    OpHostnames = OpHostname.split(",");
 
@@ -571,6 +540,17 @@ public class ZatchBot extends PircBot
 			}
 	  	}
 		//auto-log code ends
+		
+		if(sender.equalsIgnoreCase("Chanku")){
+			if(message.equalsIgnoreCase("&reloadConfigs")){
+				try {
+					loadConfig();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 
 		//End Processes that Zatch Does Automatically
 	}
@@ -587,6 +567,39 @@ public class ZatchBot extends PircBot
 		    catch (Exception e) {
 		    }
 		}
+	}
+	protected void loadConfig() throws Exception{
+		BufferedReader saveFile;
+		saveFile = new BufferedReader(new FileReader("Config.txt"));
+		saveFile.readLine(); //1st line 
+		saveFile.readLine(); //2nd line 
+		saveFile.readLine(); //3rd line
+	    saveFile.readLine(); //4th line
+	    saveFile.readLine(); //5th line
+	    saveFile.readLine(); //6th line
+	    saveFile.readLine(); //7th line
+	    saveFile.readLine(); //8th line
+	    OpHostnameUsed = Boolean.parseBoolean(saveFile.readLine()); //9th line
+	    saveFile.readLine(); //10th line
+	    OpNickUsed = Boolean.parseBoolean(saveFile.readLine()); //11th line
+	    saveFile.readLine(); //12th line
+	    BotNick = saveFile.readLine(); //13th line
+	    saveFile.readLine(); //14th line
+	    Master = saveFile.readLine(); //15th line
+	    saveFile.readLine(); //16th line
+	    OpNick = saveFile.readLine(); //17th line
+	    saveFile.readLine(); //18th line
+	    OpHostname = saveFile.readLine(); //19h line 
+	    saveFile.readLine(); //20th line 
+	    toggleLogs = Boolean.parseBoolean(saveFile.readLine()); //21st line
+	    saveFile.readLine(); //22nd Line
+	    if(toggleLogs == true){
+	    	LogsLocation = saveFile.readLine(); //23rd line
+	    }
+	    else{
+	    	saveFile.readLine(); //23rd line
+	    }
+	    saveFile.close();
 	}
 }
 
