@@ -62,7 +62,7 @@ public class ZatchBot extends PircBot
 		String time = getTime();
 		String date = getDate();
 		//Logging
-		logging(" ", channel, date, time, sender, "join", " ");
+		logging(" ", channel, sender, "join", " ");
 		//Auto-op
 		for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) { 
 			
@@ -93,18 +93,14 @@ public class ZatchBot extends PircBot
 		}
 	}
 	protected void onPart(String channel, String sender, String login, String hostname){
-		String time = getTime();
-		String date = getDate();
-		logging(" ", channel, date, time, sender, "part", " ");
+		logging(" ", channel, sender, "part", " ");
 		sendMessage(channel, "Good-bye.");
 	}
 	protected void onPrivateMessage(String sender, String login, String hostname, String message){
 		sendMessage(Master, sender + ": " + message); 
 	}
 	protected void onAction(String sender, String login, String hostname, String target, String action){
-		String date = getDate();
-		String time = getTime();
-		logging(action, target, date, time, sender, "action", " ");
+		logging(action, target, sender, "action", " ");
 	}
 	public void onMessage(String channel, String sender, String login, String hostname, String message)
 	{	
@@ -518,7 +514,7 @@ public class ZatchBot extends PircBot
 		
 		//Begin Proccess that Zatch Does Automatically
 		//auto-log code begin
-		logging(message, channel, yourDate, yourTime, sender, "message",  " ");
+		logging(message, channel, sender, "message",  " ");
 		//Auto-op
 		for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) { 
 			
@@ -557,9 +553,7 @@ public class ZatchBot extends PircBot
 		//End Processes that Zatch Does Automatically
 	}
 	protected void onKick(String channel, String kickerNick, String kickerLogin, String kickerHostname, String recipientNick, String reason){
-		String time = getTime();
-		String date = getDate();
-		logging(reason, channel, date, time, kickerNick, "kick", recipientNick);
+		logging(reason, channel, kickerNick, "kick", recipientNick);
 		if(recipientNick.equalsIgnoreCase(getNick())) { //If it gets kicked
 			joinChannel(channel); //If the bot is kicked it will rejoin the channel immediately
 		}
@@ -700,44 +694,40 @@ public class ZatchBot extends PircBot
 	 * The following functions are mainly for logging and cause nothing to really occur.
 	 */
 	protected void onQuit(String sourceNick, String sourceLogin, String sourceHostname, String reason){
-		String time = getTime();
-		String date = getDate();
-		logging(reason, chann, date, time, sourceNick, "discon", " ");
+		logging(reason, chann,  sourceNick, "discon", " ");
 	}
 	protected void onNickChange(String oldNick, String login, String hostname, String newNick){
-		String time = getTime();
-		String date = getDate();
-		logging(newNick, chann, date, time, oldNick, "nChange", " ");
+		logging(newNick, chann, oldNick, "nChange", " ");
 	}
 	protected void onDeVoice(String channel, String sourceNick, String sourceLogin, String sourceHostname, String recipient){
-		logging(recipient, channel, getDate(), getTime(), sourceNick, "voiceRemove", " ");
+		logging(recipient, channel, sourceNick, "voiceRemove", " ");
 	}
 	protected void onVoice(String channel, String sourceNick, String sourceLogin, String sourceHostname, String recipient){
-		logging(recipient, channel, getDate(), getTime(), sourceNick, "voiceGiven", " ");
+		logging(recipient, channel, sourceNick, "voiceGiven", " ");
 	}
 	protected void onSetChannelBan(String channel, String sourceNick, String sourceLogin, String sourceHostname, String hostmask){
-		logging(hostmask, channel, getDate(), getTime(), sourceNick, "banSet", " ");
+		logging(hostmask, channel,  sourceNick, "banSet", " ");
 	}
 	protected void onRemoveChannelBan(String channel, String sourceNick, String sourceLogin, String sourceHostname, String hostmask){
-		logging(hostmask, channel, getDate(), getTime(), sourceNick, "banRemoved", " ");
+		logging(hostmask, channel, sourceNick, "banRemoved", " ");
 	}
 	protected void onSetModerated(String channel, String sourceNick, String sourceLogin, String sourceHostname){
-		logging(" ", channel, getDate(), getTime(), sourceNick, "mModeSet", " ");
+		logging(" ", channel, sourceNick, "mModeSet", " ");
 	}
 	protected void onRemoveModerated(String channel, String sourceNick, String sourceLogin, String sourceHostname){
-		logging(" ", channel, getDate(), getTime(), sourceNick, "mModeRemoved", " ");
+		logging(" ", channel, sourceNick, "mModeRemoved", " ");
 	}
 	protected void onOp(String channel, String sourceNick, String sourceLogin, String sourceHostname, String recipient){
-		logging(recipient, channel, getDate(), getTime(), sourceNick, "opGiven", " ");
+		logging(recipient, channel, sourceNick, "opGiven", " ");
 	}
 	protected void onDeop(String channel, String sourceNick, String sourceLogin, String sourceHostname, String recipient){
-		logging(recipient, channel, getDate(), getTime(), sourceNick, "opRemoved", " ");
+		logging(recipient, channel, sourceNick, "opRemoved", " ");
 	}
 	protected void onTopic(String channel, String topic, String setBy, long date, boolean changed){
 		if(changed == false){
-			logging(setBy, channel, getDate(), getTime(), topic, "topic", " ");
+			logging(setBy, channel, topic, "topic", " ");
 		}else{
-			logging(topic, channel, getDate(), getTime(), setBy, "topicChange", " ");
+			logging(topic, channel,  setBy, "topicChange", " ");
 		}
 	}
 	
@@ -764,14 +754,14 @@ public class ZatchBot extends PircBot
 	/*
 	 * This handles the logging, this is in the process of being deprecated and replaced with newLogging()
 	 */
-	private void logging(String msg, String chan, String date, String time, String sender, String mode, String sender1){
-		newLogging(msg, chan, sender, mode, sender1);
+	private void oldlogging(String msg, String chan, String date, String time, String sender, String mode, String sender1){
+		logging(msg, chan, sender, mode, sender1);
 	}
 	
 	/*
 	 * Replacement logging function, it removes the time and date handling and moves it to inside of the logging. 
 	 */
-	private void newLogging(String msg, String chan, String sender, String mode, String sender1){
+	private void logging(String msg, String chan, String sender, String mode, String sender1){
 		String time = getTime();
 		String date = getDate();
 		
