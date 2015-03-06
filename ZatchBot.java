@@ -695,7 +695,35 @@ public class ZatchBot extends PircBot
 		logging(newNick, chann, date, time, oldNick, "nChange", " ");
 	}
 	protected void onDeVoice(String channel, String sourceNick, String sourceLogin, String sourceHostname, String recipient){
-		
+		logging(recipient, channel, getDate(), getTime(), sourceNick, "voiceRemove", " ");
+	}
+	protected void onVoice(String channel, String sourceNick, String sourceLogin, String sourceHostname, String recipient){
+		logging(recipient, channel, getDate(), getTime(), sourceNick, "voiceGiven", " ");
+	}
+	protected void onSetChannelBan(String channel, String sourceNick, String sourceLogin, String sourceHostname, String hostmask){
+		logging(hostmask, channel, getDate(), getTime(), sourceNick, "banSet", " ");
+	}
+	protected void onRemoveChannelBan(String channel, String sourceNick, String sourceLogin, String sourceHostname, String hostmask){
+		logging(hostmask, channel, getDate(), getTime(), sourceNick, "banRemoved", " ");
+	}
+	protected void onSetModerated(String channel, String sourceNick, String sourceLogin, String sourceHostname){
+		logging(" ", channel, getDate(), getTime(), sourceNick, "mModeSet", " ");
+	}
+	protected void onRemoveModerated(String channel, String sourceNick, String sourceLogin, String sourceHostname){
+		logging(" ", channel, getDate(), getTime(), sourceNick, "mModeRemoved", " ");
+	}
+	protected void onOp(String channel, String sourceNick, String sourceLogin, String sourceHostname, String recipient){
+		logging(recipient, channel, getDate(), getTime(), sourceNick, "opGiven", " ");
+	}
+	protected void onDeop(String channel, String sourceNick, String sourceLogin, String sourceHostname, String recipient){
+		logging(recipient, channel, getDate(), getTime(), sourceNick, "opRemoved", " ");
+	}
+	protected void onTopic(String channel, String topic, String setBy, long date, boolean changed){
+		if(changed == false){
+			logging(setBy, channel, getDate(), getTime(), topic, "topic", " ");
+		}else{
+			logging(topic, channel, getDate(), getTime(), setBy, "topicChange", " ");
+		}
 	}
 	private String getDate(){
 		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy"); //Sets the date format To Month-Day-Year
@@ -710,6 +738,9 @@ public class ZatchBot extends PircBot
 		return yourTime;
 	}
 	private void logging(String msg, String chan, String date, String time, String sender, String mode, String sender1){
+		time = getTime();
+		date = getDate();
+		
 		if(toggleLogs == true){
 			Pattern change2 = Pattern.compile("^");
 			Matcher change1 = change2.matcher(msg);
@@ -738,25 +769,27 @@ public class ZatchBot extends PircBot
 					}if(mode == "nChange"){
 						bw.write(time + " " + sender + " changed their Nick to " + chanl1 + " on " + chan + "\r\n");
 					}if(mode == "kick"){
-						bw.write(time + " " + sender + " kicked " + sender1 + " on " + chan + " for " + msg + "\r\n");
-					}if(mode == "topic"){
-						bw.write(chan + " " + time + " The topic was changed to " + msg + " by " + sender);
+						bw.write(time + " " + sender + " kicked " + sender1 + " on " + chan + " for " + chanl1 + "\r\n");
+					}if(mode == "topicChange"){
+						bw.write(chan + " " + time + " The topic was changed to " + chanl1 + " by " + sender);
 					}if(mode == "mModeSet"){
-						
+						bw.write(chan + " " + time + " +m flag set for the channel(Channel muted) by: " + sender);
 					}if(mode == "mModeRemoved"){
-						
+						bw.write(chan + " " + time + " -m flag was set for the channel(Channel Unmuted) by: " + sender);
 					}if(mode == "banRemoved"){
-						
+						bw.write(chan + " " + time + ": " + chanl1 + " was unbanned by " + sender);
 					}if(mode == "banSet"){
-						
+						bw.write(chan + " " + time + ": " + chanl1 + " was banned by " + sender);
 					}if(mode == "voiceGiven"){
-						
+						bw.write(chan + " " + time + " " + chanl1 + " was set to +v (has been given voice) by " + sender);
 					}if(mode == "voiceRemoved"){
-						
+						bw.write(chan + " " + time + " " + chanl1 + " was set to -v (has voice removed) by " + sender);
 					}if(mode == "opGiven"){
-						
+						bw.write(chan + " " + time + " " + chanl1 + " was given Op by " + sender);
 					}if(mode == "opRemoved"){
-						
+						bw.write(chan + " " + time + " " + chanl1 + " was removed from Op by " + sender);
+					}if(mode == "topic"){
+						bw.write(chan + " " + time + "The topic of the channel is " + sender + " and was set by " + chanl1);
 					}
 					bw.close();
 				} catch (IOException e) {
