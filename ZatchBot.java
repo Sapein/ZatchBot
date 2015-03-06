@@ -36,6 +36,7 @@ public class ZatchBot extends PircBot
 	static String OpNick; //This is the line of the Op's Nicks, this is only temporary to store it.
 	static String OpHostname; //This is the entire line of the Op's Hostnames. This is only to temporarily store it
 	static String LogsLocation; //This is the location where you save the logs too
+	static String chann; 
 	boolean OpNickUsed = false; //Checks to see if the Nicks of the Ops are to be used in authentication or not
 	boolean OpHostnameUsed; //Checks to see if the hostnames should be used in authentication or not
 	boolean toggleLogs; //Checks to see if you have enabled logs
@@ -53,9 +54,15 @@ public class ZatchBot extends PircBot
 
 	    this.setName(BotNick);
 		this.setLogin("Zatch");
+		System.out.println(toggleLogs);
+		System.out.println(LogsLocation);
 		
 	}
 	protected void onJoin(String channel, String sender, String login, String hostname){
+		String time = getTime();
+		String date = getDate();
+		//Logging
+		logging(" ", channel, date, time, sender, "join", " ");
 		//Auto-op
 		for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) { 
 			
@@ -86,21 +93,29 @@ public class ZatchBot extends PircBot
 		}
 	}
 	protected void onPart(String channel, String sender, String login, String hostname){
-			sendMessage(channel, "Good-bye.");
+		String time = getTime();
+		String date = getDate();
+		logging(" ", channel, date, time, sender, "part", " ");
+		sendMessage(channel, "Good-bye.");
 	}
 	protected void onPrivateMessage(String sender, String login, String hostname, String message){
 		sendMessage(Master, sender + ": " + message); 
 	}
+	protected void onAction(String sender, String login, String hostname, String target, String action){
+		String date = getDate();
+		String time = getTime();
+		logging(action, target, date, time, sender, "action", " ");
+	}
 	public void onMessage(String channel, String sender, String login, String hostname, String message)
 	{	
 		//Begin Variables
+		chann = channel;
+		String yourDate;
+		String yourTime;
 		//Begin Time and Date Variables
-		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy"); //Sets the date format To Month-Day-Year
-		Date date = new Date(); //stores the date
-		String yourDate = dateFormat.format(date); //turns the date into a variable to be called later
-		DateFormat dF = new SimpleDateFormat("HH:mm"); //Sets the Time format to Hour:Minute
-		Date time = new Date(); //stores the time
-		String yourTime = dF.format(time); //turns the time into a variable to be called later
+		yourDate = getDate();
+		yourTime = getTime();
+		
 		boolean xChan = false; //Boolean for cross-channel Communication
 		//End Time and Date Variables
 		
@@ -503,28 +518,7 @@ public class ZatchBot extends PircBot
 		
 		//Begin Proccess that Zatch Does Automatically
 		//auto-log code begin
-		if(toggleLogs == true){
-			Pattern change2 = Pattern.compile("^");
-			Matcher change1 = change2.matcher(message);
-			if (change1.find()){
-				String chanl1 = new String("");
-				if (message.length()>0) {
-					chanl1 = message.substring(0);
-				}
-				try {
-					File file = new File(LogsLocation + channel + " " + yourDate + " " + "log.txt");
-					if (!file.exists()) {
-						file.createNewFile();
-					}
-					FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
-					BufferedWriter bw = new BufferedWriter(fw);
-					bw.write(channel +" " + " " + yourTime + " " + sender + ":" + chanl1 + "\r\n");
-					bw.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		logging(message, channel, yourDate, yourTime, sender, "message",  " ");
 		//Auto-op
 		for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) { 
 			
@@ -563,9 +557,12 @@ public class ZatchBot extends PircBot
 		//End Processes that Zatch Does Automatically
 	}
 	protected void onKick(String channel, String kickerNick, String kickerLogin, String kickerHostname, String recipientNick, String reason){
-	if(recipientNick.equalsIgnoreCase(getNick())) { //If it gets kicked
-	    joinChannel(channel); //If the bot is kicked it will rejoin the channel immediately
-	}
+		String time = getTime();
+		String date = getDate();
+		logging(reason, channel, date, time, kickerNick, "kick", recipientNick);
+		if(recipientNick.equalsIgnoreCase(getNick())) { //If it gets kicked
+			joinChannel(channel); //If the bot is kicked it will rejoin the channel immediately
+		}
 	}
 	protected void onDisconnect(){ 
 		while (!isConnected()) { //To test when connection is lost
@@ -576,6 +573,11 @@ public class ZatchBot extends PircBot
 		    }
 		}
 	}
+	
+	/*
+	 * This handles loading and reloading of the config file. Please note that the config version return will be moved from 
+	 * this function and given it's own function as loadConfig is mainly supposed to load/reload the config. 
+	 */
 	protected String loadConfig(String chan) throws Exception{
 		String configVersion;
 		BufferedReader saveFile;
@@ -646,6 +648,12 @@ public class ZatchBot extends PircBot
 		}
 	    return configVersion;
 	}
+	
+	/*
+	 * It updates the config to the latest version, this allows for the bot to check and make sure that the latest
+	 * config is up-to-date. It also allows for me to make changes to the config file and not worry about breaking things
+	 * or having to have users update the config themselves and have something mess up.
+	 */
 	public void updateConfig(String chan) throws Exception{
 		String versionCheck = loadConfig("");
 		File file = new File("Config.txt");
@@ -687,7 +695,144 @@ public class ZatchBot extends PircBot
 		}
 		loadConfig("");
 	}
-}
+	
+	/*
+	 * The following functions are mainly for logging and cause nothing to really occur.
+	 */
+	protected void onQuit(String sourceNick, String sourceLogin, String sourceHostname, String reason){
+		String time = getTime();
+		String date = getDate();
+		logging(reason, chann, date, time, sourceNick, "discon", " ");
+	}
+	protected void onNickChange(String oldNick, String login, String hostname, String newNick){
+		String time = getTime();
+		String date = getDate();
+		logging(newNick, chann, date, time, oldNick, "nChange", " ");
+	}
+	protected void onDeVoice(String channel, String sourceNick, String sourceLogin, String sourceHostname, String recipient){
+		logging(recipient, channel, getDate(), getTime(), sourceNick, "voiceRemove", " ");
+	}
+	protected void onVoice(String channel, String sourceNick, String sourceLogin, String sourceHostname, String recipient){
+		logging(recipient, channel, getDate(), getTime(), sourceNick, "voiceGiven", " ");
+	}
+	protected void onSetChannelBan(String channel, String sourceNick, String sourceLogin, String sourceHostname, String hostmask){
+		logging(hostmask, channel, getDate(), getTime(), sourceNick, "banSet", " ");
+	}
+	protected void onRemoveChannelBan(String channel, String sourceNick, String sourceLogin, String sourceHostname, String hostmask){
+		logging(hostmask, channel, getDate(), getTime(), sourceNick, "banRemoved", " ");
+	}
+	protected void onSetModerated(String channel, String sourceNick, String sourceLogin, String sourceHostname){
+		logging(" ", channel, getDate(), getTime(), sourceNick, "mModeSet", " ");
+	}
+	protected void onRemoveModerated(String channel, String sourceNick, String sourceLogin, String sourceHostname){
+		logging(" ", channel, getDate(), getTime(), sourceNick, "mModeRemoved", " ");
+	}
+	protected void onOp(String channel, String sourceNick, String sourceLogin, String sourceHostname, String recipient){
+		logging(recipient, channel, getDate(), getTime(), sourceNick, "opGiven", " ");
+	}
+	protected void onDeop(String channel, String sourceNick, String sourceLogin, String sourceHostname, String recipient){
+		logging(recipient, channel, getDate(), getTime(), sourceNick, "opRemoved", " ");
+	}
+	protected void onTopic(String channel, String topic, String setBy, long date, boolean changed){
+		if(changed == false){
+			logging(setBy, channel, getDate(), getTime(), topic, "topic", " ");
+		}else{
+			logging(topic, channel, getDate(), getTime(), setBy, "topicChange", " ");
+		}
+	}
+	
+	/*
+	 * This simply allows us to get the date
+	 */
+	private String getDate(){
+		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy"); //Sets the date format To Month-Day-Year
+		Date date = new Date(); //stores the date
+		String yourDate = dateFormat.format(date); //turns the date into a variable to be called later
+		return yourDate;
+	}
+	
+	/*
+	 * This simply allows us to get the time
+	 */
+	private String getTime(){
+		DateFormat dF = new SimpleDateFormat("HH:mm"); //Sets the Time format to Hour:Minute
+		Date time = new Date(); //stores the time
+		String yourTime = dF.format(time); //turns the time into a variable to be called later
+		return yourTime;
+	}
+	
+	/*
+	 * This handles the logging, this is in the process of being deprecated and replaced with newLogging()
+	 */
+	private void logging(String msg, String chan, String date, String time, String sender, String mode, String sender1){
+		newLogging(msg, chan, sender, mode, sender1);
+	}
+	
+	/*
+	 * Replacement logging function, it removes the time and date handling and moves it to inside of the logging. 
+	 */
+	private void newLogging(String msg, String chan, String sender, String mode, String sender1){
+		String time = getTime();
+		String date = getDate();
+		
+		if(toggleLogs == true){
+			Pattern change2 = Pattern.compile("^");
+			Matcher change1 = change2.matcher(msg);
+			if (change1.find()){
+				String chanl1 = new String("");
+				if (msg.length()>0) {
+					chanl1 = msg.substring(0);
+				}
+				try {
+					File file = new File(LogsLocation + chan + " " + date + " " + "log.txt");
+					if (!file.exists()) {
+						file.createNewFile();
+					}
+					FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+					BufferedWriter bw = new BufferedWriter(fw);
+					if(mode == "message"){
+						bw.write(chan +" " + time + " " + sender + ":" + chanl1 + "\r\n");
+					}if(mode == "action"){
+						bw.write(chan + " " + time + " * " + sender + " " + chanl1 + "\r\n");
+					}if(mode == "join"){
+						bw.write(chan + " " + time + " " + sender + " joined the channel" + "\r\n");
+					}if(mode == "part"){
+						bw.write(chan + " " + time + " " + sender + " left the channel" + "\r\n");
+					}if(mode == "discon"){
+						bw.write(chan + time + " " + sender + " quit. Reason: " + chanl1 + "\r\n");
+					}if(mode == "nChange"){
+						bw.write(chan + " " + time + " " + sender + " changed their Nick to " + chanl1 + "\r\n");
+					}if(mode == "kick"){
+						bw.write(chan + time + " " + sender + " kicked " + sender1 + " for " + chanl1 + "\r\n");
+					}if(mode == "topicChange"){
+						bw.write(chan + " " + time + " The topic was changed to " + chanl1 + " by " + sender + "\r\n");
+					}if(mode == "mModeSet"){
+						bw.write(chan + " " + time + " +m flag set for the channel(Channel muted) by: " + sender + "\r\n");
+					}if(mode == "mModeRemoved"){
+						bw.write(chan + " " + time + " -m flag was set for the channel(Channel Unmuted) by: " + sender + "\r\n");
+					}if(mode == "banRemoved"){
+						bw.write(chan + " " + time + ": " + chanl1 + " was unbanned by " + sender + "\r\n");
+					}if(mode == "banSet"){
+						bw.write(chan + " " + time + ": " + chanl1 + " was banned by " + sender + "\r\n");
+					}if(mode == "voiceGiven"){
+						bw.write(chan + " " + time + " " + chanl1 + " was set to +v (has been given voice) by " + sender + "\r\n");
+					}if(mode == "voiceRemoved"){
+						bw.write(chan + " " + time + " " + chanl1 + " was set to -v (has voice removed) by " + sender + "\r\n");
+					}if(mode == "opGiven"){
+						bw.write(chan + " " + time + " " + chanl1 + " was given Op by " + sender + "\r\n");
+					}if(mode == "opRemoved"){
+						bw.write(chan + " " + time + " " + chanl1 + " was removed from Op by " + sender + "\r\n");
+					}if(mode == "topic"){
+						bw.write(chan + " " + time + "The topic of the channel is " + sender + " and was set by " + chanl1 + "\r\n");
+					}
+					bw.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+}	
 
 
 
