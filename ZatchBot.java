@@ -761,35 +761,35 @@ public class ZatchBot extends PircBot
 					}if(mode == "action"){
 						bw.write(chan + " " + time + " * " + sender + " " + chanl1 + "\r\n");
 					}if(mode == "join"){
-						bw.write(time + " " + sender + " joined " + chan + "\r\n");
+						bw.write(chan + " " + time + " " + sender + " joined the channel" + "\r\n");
 					}if(mode == "part"){
-						bw.write(time + " " + sender + " left " + chan +"\r\n");
+						bw.write(chan + " " + time + " " + sender + " left the channel" + "\r\n");
 					}if(mode == "discon"){
-						bw.write(time + " " + sender + " quit " + chan + " for " + chanl1 + "\r\n");
+						bw.write(chan + time + " " + sender + " quit. Reason: " + chanl1 + "\r\n");
 					}if(mode == "nChange"){
-						bw.write(time + " " + sender + " changed their Nick to " + chanl1 + " on " + chan + "\r\n");
+						bw.write(chan + " " + time + " " + sender + " changed their Nick to " + chanl1 + "\r\n");
 					}if(mode == "kick"){
-						bw.write(time + " " + sender + " kicked " + sender1 + " on " + chan + " for " + chanl1 + "\r\n");
+						bw.write(chan + time + " " + sender + " kicked " + sender1 + " for " + chanl1 + "\r\n");
 					}if(mode == "topicChange"){
-						bw.write(chan + " " + time + " The topic was changed to " + chanl1 + " by " + sender);
+						bw.write(chan + " " + time + " The topic was changed to " + chanl1 + " by " + sender + "\r\n");
 					}if(mode == "mModeSet"){
-						bw.write(chan + " " + time + " +m flag set for the channel(Channel muted) by: " + sender);
+						bw.write(chan + " " + time + " +m flag set for the channel(Channel muted) by: " + sender + "\r\n");
 					}if(mode == "mModeRemoved"){
-						bw.write(chan + " " + time + " -m flag was set for the channel(Channel Unmuted) by: " + sender);
+						bw.write(chan + " " + time + " -m flag was set for the channel(Channel Unmuted) by: " + sender + "\r\n");
 					}if(mode == "banRemoved"){
-						bw.write(chan + " " + time + ": " + chanl1 + " was unbanned by " + sender);
+						bw.write(chan + " " + time + ": " + chanl1 + " was unbanned by " + sender + "\r\n");
 					}if(mode == "banSet"){
-						bw.write(chan + " " + time + ": " + chanl1 + " was banned by " + sender);
+						bw.write(chan + " " + time + ": " + chanl1 + " was banned by " + sender + "\r\n");
 					}if(mode == "voiceGiven"){
-						bw.write(chan + " " + time + " " + chanl1 + " was set to +v (has been given voice) by " + sender);
+						bw.write(chan + " " + time + " " + chanl1 + " was set to +v (has been given voice) by " + sender + "\r\n");
 					}if(mode == "voiceRemoved"){
-						bw.write(chan + " " + time + " " + chanl1 + " was set to -v (has voice removed) by " + sender);
+						bw.write(chan + " " + time + " " + chanl1 + " was set to -v (has voice removed) by " + sender + "\r\n");
 					}if(mode == "opGiven"){
-						bw.write(chan + " " + time + " " + chanl1 + " was given Op by " + sender);
+						bw.write(chan + " " + time + " " + chanl1 + " was given Op by " + sender + "\r\n");
 					}if(mode == "opRemoved"){
-						bw.write(chan + " " + time + " " + chanl1 + " was removed from Op by " + sender);
+						bw.write(chan + " " + time + " " + chanl1 + " was removed from Op by " + sender + "\r\n");
 					}if(mode == "topic"){
-						bw.write(chan + " " + time + "The topic of the channel is " + sender + " and was set by " + chanl1);
+						bw.write(chan + " " + time + "The topic of the channel is " + sender + " and was set by " + chanl1 + "\r\n");
 					}
 					bw.close();
 				} catch (IOException e) {
