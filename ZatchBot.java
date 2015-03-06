@@ -687,7 +687,7 @@ public class ZatchBot extends PircBot
 	protected void onQuit(String sourceNick, String sourceLogin, String sourceHostname, String reason){
 		String time = getTime();
 		String date = getDate();
-		logging(reason, chann, date, time, sourceNick, "discon", null);
+		logging(reason, chann, date, time, sourceNick, "discon", " ");
 	}
 	protected void onNickChange(String oldNick, String login, String hostname, String newNick){
 		String time = getTime();
@@ -736,6 +736,8 @@ public class ZatchBot extends PircBot
 						bw.write(time + " " + sender + " changed their Nick to " + chanl1 + " on " + chan + "\r\n");
 					}if(mode == "kick"){
 						bw.write(time + " " + sender + " kicked " + sender1 + " on " + chan + " for " + msg + "\r\n");
+					}if(mode == "topic"){
+						bw.write(chan + " " + time + " The topic was changed to " + msg + " by " + sender);
 					}
 					bw.close();
 				} catch (IOException e) {
