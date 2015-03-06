@@ -694,6 +694,9 @@ public class ZatchBot extends PircBot
 		String date = getDate();
 		logging(newNick, chann, date, time, oldNick, "nChange", " ");
 	}
+	protected void onDeVoice(String channel, String sourceNick, String sourceLogin, String sourceHostname, String recipient){
+		
+	}
 	private String getDate(){
 		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy"); //Sets the date format To Month-Day-Year
 		Date date = new Date(); //stores the date
@@ -738,6 +741,22 @@ public class ZatchBot extends PircBot
 						bw.write(time + " " + sender + " kicked " + sender1 + " on " + chan + " for " + msg + "\r\n");
 					}if(mode == "topic"){
 						bw.write(chan + " " + time + " The topic was changed to " + msg + " by " + sender);
+					}if(mode == "mModeSet"){
+						
+					}if(mode == "mModeRemoved"){
+						
+					}if(mode == "banRemoved"){
+						
+					}if(mode == "banSet"){
+						
+					}if(mode == "voiceGiven"){
+						
+					}if(mode == "voiceRemoved"){
+						
+					}if(mode == "opGiven"){
+						
+					}if(mode == "opRemoved"){
+						
 					}
 					bw.close();
 				} catch (IOException e) {
