@@ -769,7 +769,7 @@ public class ZatchBot extends PircBot
 	}
 	
 	/*
-	 * replacement logging function, it removes the time and date handling and moves it to inside of the logging. 
+	 * Replacement logging function, it removes the time and date handling and moves it to inside of the logging. 
 	 */
 	private void newLogging(String msg, String chan, String sender, String mode, String sender1){
 		String time = getTime();
