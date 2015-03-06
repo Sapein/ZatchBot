@@ -573,6 +573,11 @@ public class ZatchBot extends PircBot
 		    }
 		}
 	}
+	
+	/*
+	 * This handles loading and reloading of the config file. Please note that the config version return will be moved from 
+	 * this function and given it's own function as loadConfig is mainly supposed to load/reload the config. 
+	 */
 	protected String loadConfig(String chan) throws Exception{
 		String configVersion;
 		BufferedReader saveFile;
@@ -643,6 +648,12 @@ public class ZatchBot extends PircBot
 		}
 	    return configVersion;
 	}
+	
+	/*
+	 * It updates the config to the latest version, this allows for the bot to check and make sure that the latest
+	 * config is up-to-date. It also allows for me to make changes to the config file and not worry about breaking things
+	 * or having to have users update the config themselves and have something mess up.
+	 */
 	public void updateConfig(String chan) throws Exception{
 		String versionCheck = loadConfig("");
 		File file = new File("Config.txt");
@@ -684,6 +695,10 @@ public class ZatchBot extends PircBot
 		}
 		loadConfig("");
 	}
+	
+	/*
+	 * The following functions are mainly for logging and cause nothing to really occur.
+	 */
 	protected void onQuit(String sourceNick, String sourceLogin, String sourceHostname, String reason){
 		String time = getTime();
 		String date = getDate();
@@ -725,21 +740,37 @@ public class ZatchBot extends PircBot
 			logging(topic, channel, getDate(), getTime(), setBy, "topicChange", " ");
 		}
 	}
+	
+	/*
+	 * This simply allows us to get the date
+	 */
 	private String getDate(){
 		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy"); //Sets the date format To Month-Day-Year
 		Date date = new Date(); //stores the date
 		String yourDate = dateFormat.format(date); //turns the date into a variable to be called later
 		return yourDate;
 	}
+	
+	/*
+	 * This simply allows us to get the time
+	 */
 	private String getTime(){
 		DateFormat dF = new SimpleDateFormat("HH:mm"); //Sets the Time format to Hour:Minute
 		Date time = new Date(); //stores the time
 		String yourTime = dF.format(time); //turns the time into a variable to be called later
 		return yourTime;
 	}
+	
+	/*
+	 * This handles the logging, this is in the process of being deprecated and replaced with newLogging()
+	 */
 	private void logging(String msg, String chan, String date, String time, String sender, String mode, String sender1){
 		newLogging(msg, chan, sender, mode, sender1);
 	}
+	
+	/*
+	 * replacement logging function, it removes the time and date handling and moves it to inside of the logging. 
+	 */
 	private void newLogging(String msg, String chan, String sender, String mode, String sender1){
 		String time = getTime();
 		String date = getDate();

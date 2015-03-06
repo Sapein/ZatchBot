@@ -99,6 +99,11 @@ public class ZatchBotMain {
 		bot.joinChannel(Channels[ChannelAmount]); //Actually Joins the channels. 
   		}
 	}
+	
+	/*
+	 * This is mainly designed to return the config version. This may be deprecated in the future and is only really used 
+	 * for getting the configVersion Variable. 
+	 */
 	public static String getConfigVersion(){
 		return configVersion;
 	}
