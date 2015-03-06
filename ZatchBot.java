@@ -683,7 +683,7 @@ public class ZatchBot extends PircBot
 			sendMessage(chan, "The Config is already up to date!");
 		}
 		loadConfig("");
-
+	}
 	protected void onQuit(String sourceNick, String sourceLogin, String sourceHostname, String reason){
 		String time = getTime();
 		String date = getDate();
