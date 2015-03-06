@@ -738,8 +738,11 @@ public class ZatchBot extends PircBot
 		return yourTime;
 	}
 	private void logging(String msg, String chan, String date, String time, String sender, String mode, String sender1){
-		time = getTime();
-		date = getDate();
+		newLogging(msg, chan, sender, mode, sender1);
+	}
+	private void newLogging(String msg, String chan, String sender, String mode, String sender1){
+		String time = getTime();
+		String date = getDate();
 		
 		if(toggleLogs == true){
 			Pattern change2 = Pattern.compile("^");
