@@ -38,7 +38,7 @@ public class ZatchBotMain {
 
 			FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
 			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write("Config Version: " + configVersion+  "\r\n"); 
+			bw.write("Config Version: " + configVersion+  "\r\n"); //This line is important as it's used to check the config version.
 			bw.write("		=--Connection--=" +"\r\n");
 			bw.write("--IRC Server--" + "\r\n"); //puts this on the first line of the file
 			bw.write("irc.rizon.net" + "\r\n"); //puts this on the second line of the file

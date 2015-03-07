@@ -42,7 +42,7 @@ public class ZatchBot extends PircBot
 	boolean toggleLogs; //Checks to see if you have enabled logs
     String[] OpNicks; //creates the array for the Nicks
     String[] OpHostnames; //creates an array for the hostnames
-    ArrayList<String> OpAddHostnames = null; 
+    //ArrayList<String> OpAddHostnames = null; 
     ArrayList<String> includedChannels;
     final static String version = "1.1";
 	
@@ -59,8 +59,6 @@ public class ZatchBot extends PircBot
 		
 	}
 	protected void onJoin(String channel, String sender, String login, String hostname){
-		String time = getTime();
-		String date = getDate();
 		//Logging
 		logging(" ", channel, sender, "join", " ");
 		//Auto-op
@@ -691,43 +689,27 @@ public class ZatchBot extends PircBot
 	}
 	
 	/*
-	 * The following functions are mainly for logging and cause nothing to really occur.
-	 */
-	protected void onQuit(String sourceNick, String sourceLogin, String sourceHostname, String reason){
-		logging(reason, chann,  sourceNick, "discon", " ");
+	 * This is done to get the mode of the change of channel things...this isn't as descriptive as I would want it to be though :/
+	 */	
+	protected void onMode(String channel, String sourceNick, String sourceLogin, String sourceHostname, String mode){
+		logging(mode, channel, sourceNick, "mode", " ");
 	}
+	
+	
+	protected void onQuit(String sourceNick, String sourceLogin, String sourceHostname, String reason){
+		logging(reason, chann, sourceNick, "discon", " ");
+	}
+	
 	protected void onNickChange(String oldNick, String login, String hostname, String newNick){
 		logging(newNick, chann, oldNick, "nChange", " ");
 	}
-	protected void onDeVoice(String channel, String sourceNick, String sourceLogin, String sourceHostname, String recipient){
-		logging(recipient, channel, sourceNick, "voiceRemove", " ");
-	}
-	protected void onVoice(String channel, String sourceNick, String sourceLogin, String sourceHostname, String recipient){
-		logging(recipient, channel, sourceNick, "voiceGiven", " ");
-	}
-	protected void onSetChannelBan(String channel, String sourceNick, String sourceLogin, String sourceHostname, String hostmask){
-		logging(hostmask, channel,  sourceNick, "banSet", " ");
-	}
-	protected void onRemoveChannelBan(String channel, String sourceNick, String sourceLogin, String sourceHostname, String hostmask){
-		logging(hostmask, channel, sourceNick, "banRemoved", " ");
-	}
-	protected void onSetModerated(String channel, String sourceNick, String sourceLogin, String sourceHostname){
-		logging(" ", channel, sourceNick, "mModeSet", " ");
-	}
-	protected void onRemoveModerated(String channel, String sourceNick, String sourceLogin, String sourceHostname){
-		logging(" ", channel, sourceNick, "mModeRemoved", " ");
-	}
-	protected void onOp(String channel, String sourceNick, String sourceLogin, String sourceHostname, String recipient){
-		logging(recipient, channel, sourceNick, "opGiven", " ");
-	}
-	protected void onDeop(String channel, String sourceNick, String sourceLogin, String sourceHostname, String recipient){
-		logging(recipient, channel, sourceNick, "opRemoved", " ");
-	}
+	
+	
 	protected void onTopic(String channel, String topic, String setBy, long date, boolean changed){
 		if(changed == false){
 			logging(setBy, channel, topic, "topic", " ");
 		}else{
-			logging(topic, channel,  setBy, "topicChange", " ");
+			logging(topic, channel, setBy, "topicChange", " ");
 		}
 	}
 	
@@ -752,19 +734,12 @@ public class ZatchBot extends PircBot
 	}
 	
 	/*
-	 * This handles the logging, this is in the process of being deprecated and replaced with newLogging()
-	 */
-	private void oldlogging(String msg, String chan, String date, String time, String sender, String mode, String sender1){
-		logging(msg, chan, sender, mode, sender1);
-	}
-	
-	/*
-	 * Replacement logging function, it removes the time and date handling and moves it to inside of the logging. 
+	 * This is the logging function, which handles all of the bot's logging capabilities, as all things that are logged
+	 * are done so through here.  
 	 */
 	private void logging(String msg, String chan, String sender, String mode, String sender1){
 		String time = getTime();
 		String date = getDate();
-		
 		if(toggleLogs == true){
 			Pattern change2 = Pattern.compile("^");
 			Matcher change1 = change2.matcher(msg);
@@ -800,20 +775,10 @@ public class ZatchBot extends PircBot
 						bw.write(chan + " " + time + " +m flag set for the channel(Channel muted) by: " + sender + "\r\n");
 					}if(mode == "mModeRemoved"){
 						bw.write(chan + " " + time + " -m flag was set for the channel(Channel Unmuted) by: " + sender + "\r\n");
-					}if(mode == "banRemoved"){
-						bw.write(chan + " " + time + ": " + chanl1 + " was unbanned by " + sender + "\r\n");
-					}if(mode == "banSet"){
-						bw.write(chan + " " + time + ": " + chanl1 + " was banned by " + sender + "\r\n");
-					}if(mode == "voiceGiven"){
-						bw.write(chan + " " + time + " " + chanl1 + " was set to +v (has been given voice) by " + sender + "\r\n");
-					}if(mode == "voiceRemoved"){
-						bw.write(chan + " " + time + " " + chanl1 + " was set to -v (has voice removed) by " + sender + "\r\n");
-					}if(mode == "opGiven"){
-						bw.write(chan + " " + time + " " + chanl1 + " was given Op by " + sender + "\r\n");
-					}if(mode == "opRemoved"){
-						bw.write(chan + " " + time + " " + chanl1 + " was removed from Op by " + sender + "\r\n");
 					}if(mode == "topic"){
 						bw.write(chan + " " + time + "The topic of the channel is " + sender + " and was set by " + chanl1 + "\r\n");
+					}if(mode == "mode"){
+						bw.write(chan + " " + time + " some user flags were changed! Flags and users are: " + chanl1 + " this was done by: " + sender );
 					}
 					bw.close();
 				} catch (IOException e) {
