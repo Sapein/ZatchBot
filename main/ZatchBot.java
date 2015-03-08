@@ -1,4 +1,5 @@
-package main;/*A Simple IRC bot that uses PIRC
+package main;
+/*A Simple IRC bot that uses PIRC
     Copyright (C) 2014  
 
     This program is free software; you can redistribute it and/or modify
@@ -42,10 +43,7 @@ public class ZatchBot extends PircBot
     ArrayList<String> includedChannels;
     ArrayList<ZatchBotModule> modules;
     final static String version = "1.1";
-
-    public static String getMaster() {
-        return Master;
-    }
+    ZatchBotConfigStartup ConfigStart;
 
     public String[] getOpNicks() {
         return OpNicks;
@@ -56,18 +54,24 @@ public class ZatchBot extends PircBot
     }
 
     public ZatchBot() throws Exception{
-		ZatchBotConfigStartup ConfigStart = new ZatchBotConfigStartup();
+        ConfigStart = new ZatchBotConfigStartup();
 		ZatchBotConfig Config = new ZatchBotConfig();
 		ConfigStart.loadConfigState2();
 		String OpNick = Config.getOpNick();
 		String OpHostname = Config.getOpHostname();
 		String BotNick = Config.getBotNick();
-		
-	    OpNicks = OpNick.split(",");
-	    OpHostnames = OpHostname.split(",");
 
-	    this.setName(BotNick);
-		this.setLogin("Zatch");
+        try {
+            OpNicks = OpNick.split(",");
+            OpHostnames = OpHostname.split(",");
+        } catch (NullPointerException e) {
+            OpNicks = new String[0];
+            OpHostnames = new String[0];
+        }
+
+        System.out.println("BotNick: "+ BotNick);
+        this.setName("Zatch-Wuufu");
+		this.setLogin("Zatch-Wuufu");
 
         // Load modules
         modules = new ArrayList<ZatchBotModule>();
@@ -500,7 +504,7 @@ public class ZatchBot extends PircBot
 		if(sender.equalsIgnoreCase(Master)){
 			if(message.equalsIgnoreCase("&updateConfig")){
 				try {
-					ConfigCommands.updateConfig(channel);
+					ConfigCommands.updateConfig(ConfigStart, channel);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

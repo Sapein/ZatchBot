@@ -52,7 +52,7 @@ public class ZatchBotConfigCommands extends ZatchBotConfig {
 		    saveFile.readLine(); //21th line 
 		    toggleLogs = Boolean.parseBoolean(saveFile.readLine()); //22st line
 		    saveFile.readLine(); //23nd Line
-		    if(toggleLogs == true){
+		    if(toggleLogs){
 		    	LogsLocation = saveFile.readLine(); //24rd line
 		    }
 		    else{
@@ -83,7 +83,7 @@ public class ZatchBotConfigCommands extends ZatchBotConfig {
 		    saveFile.readLine(); //21th line 
 		    toggleLogs = Boolean.parseBoolean(saveFile.readLine()); //22st line
 		    saveFile.readLine(); //23nd Line
-		    if(toggleLogs == true){
+		    if(toggleLogs){
 		    	LogsLocation = saveFile.readLine(); //24rd line
 		    }
 		    else{
@@ -100,7 +100,7 @@ public class ZatchBotConfigCommands extends ZatchBotConfig {
 	 * config is up-to-date. It also allows for me to make changes to the config file and not worry about breaking things
 	 * or having to have users update the config themselves and have something mess up.
 	 */
-	public void updateConfig(String chan) throws Exception{
+	public void updateConfig(ZatchBotConfigStartup startup, String chan) throws Exception{
 		String versionCheck = loadConfig("");
 		File file = new File("Config.txt");
 		File oldFile = new File("Config-Backup.txt");
@@ -113,10 +113,10 @@ public class ZatchBotConfigCommands extends ZatchBotConfig {
 				bw.write("Config Version: " + getConfigVersion() +  "\r\n"); 
 				bw.write("		=--Connection--=" +"\r\n");
 				bw.write("--IRC Server--" + "\r\n"); //puts this on the first line of the file
-				bw.write(ZatchBotMain.Server + "\r\n"); //puts this on the second line of the file
+				bw.write(startup.getServer() + "\r\n"); //puts this on the second line of the file
 				bw.write("--Channels--" + "\r\n"); //puts this on the third line of the file
 				bw.write("== To add Multiple Channels use a comma(,) inbetween with no spaces ==" + "\r\n"); //puts this on the fourth line of the file
-				bw.write(ZatchBotMain.Channel + "\r\n"); //puts this on the fifth line of the file
+				bw.write(startup.getChannel() + "\r\n"); //puts this on the fifth line of the file
 				bw.write("		==--IRC Bot--==" + "\r\n"); //creates the sixth line of the file
 				bw.write("--Toggle Hostname Verification for Ops--" + "\r\n"); //puts this on the Seventh line of the file
 				bw.write(OpHostnameUsed + "\r\n"); //makes Hostname Verification False by default
