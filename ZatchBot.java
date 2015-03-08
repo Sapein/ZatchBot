@@ -17,13 +17,10 @@
 */
 
 //Created by Sapein.
-//Zatchbot v 1.0
+//Zatchbot v 2.0-alpha
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.*;
-import java.util.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -31,6 +28,8 @@ import org.jibble.pircbot.*;
 
 public class ZatchBot extends PircBot
 {
+	static ZatchBotLogging logging = new ZatchBotLogging();
+	static ZatchBotDateAndTime dateandtime = new ZatchBotDateAndTime();
 	static String Master; //This is the master's name it is replaced upon the loading of the config file
 	static String BotNick; //This is the bot's name, it is replaced upon the loading of the config file 
 	static String OpNick; //This is the line of the Op's Nicks, this is only temporary to store it.
@@ -39,7 +38,7 @@ public class ZatchBot extends PircBot
 	static String chann; 
 	boolean OpNickUsed = false; //Checks to see if the Nicks of the Ops are to be used in authentication or not
 	boolean OpHostnameUsed; //Checks to see if the hostnames should be used in authentication or not
-	boolean toggleLogs; //Checks to see if you have enabled logs
+	static boolean toggleLogs; //Checks to see if you have enabled logs
     String[] OpNicks; //creates the array for the Nicks
     String[] OpHostnames; //creates an array for the hostnames
     //ArrayList<String> OpAddHostnames = null; 
@@ -59,8 +58,8 @@ public class ZatchBot extends PircBot
 		
 	}
 	protected void onJoin(String channel, String sender, String login, String hostname){
-		//Logging
-		logging(" ", channel, sender, "join", " ");
+		//logging.logging
+		logging.logging(" ", channel, sender, "join", " ");
 		//Auto-op
 		for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) { 
 			
@@ -91,14 +90,14 @@ public class ZatchBot extends PircBot
 		}
 	}
 	protected void onPart(String channel, String sender, String login, String hostname){
-		logging(" ", channel, sender, "part", " ");
+		logging.logging(" ", channel, sender, "part", " ");
 		sendMessage(channel, "Good-bye.");
 	}
 	protected void onPrivateMessage(String sender, String login, String hostname, String message){
 		sendMessage(Master, sender + ": " + message); 
 	}
 	protected void onAction(String sender, String login, String hostname, String target, String action){
-		logging(action, target, sender, "action", " ");
+		logging.logging(action, target, sender, "action", " ");
 	}
 	public void onMessage(String channel, String sender, String login, String hostname, String message)
 	{	
@@ -107,8 +106,8 @@ public class ZatchBot extends PircBot
 		String yourDate;
 		String yourTime;
 		//Begin Time and Date Variables
-		yourDate = getDate();
-		yourTime = getTime();
+		yourDate = dateandtime.getDate();
+		yourTime = dateandtime.getTime();
 		
 		boolean xChan = false; //Boolean for cross-channel Communication
 		//End Time and Date Variables
@@ -512,7 +511,7 @@ public class ZatchBot extends PircBot
 		
 		//Begin Proccess that Zatch Does Automatically
 		//auto-log code begin
-		logging(message, channel, sender, "message",  " ");
+		logging.logging(message, channel, sender, "message",  " ");
 		//Auto-op
 		for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) { 
 			
@@ -551,7 +550,7 @@ public class ZatchBot extends PircBot
 		//End Processes that Zatch Does Automatically
 	}
 	protected void onKick(String channel, String kickerNick, String kickerLogin, String kickerHostname, String recipientNick, String reason){
-		logging(reason, channel, kickerNick, "kick", recipientNick);
+		logging.logging(reason, channel, kickerNick, "kick", recipientNick);
 		if(recipientNick.equalsIgnoreCase(getNick())) { //If it gets kicked
 			joinChannel(channel); //If the bot is kicked it will rejoin the channel immediately
 		}
@@ -692,101 +691,30 @@ public class ZatchBot extends PircBot
 	 * This is done to get the mode of the change of channel things...this isn't as descriptive as I would want it to be though :/
 	 */	
 	protected void onMode(String channel, String sourceNick, String sourceLogin, String sourceHostname, String mode){
-		logging(mode, channel, sourceNick, "mode", " ");
+		logging.logging(mode, channel, sourceNick, "mode", " ");
 	}
 	
 	
 	protected void onQuit(String sourceNick, String sourceLogin, String sourceHostname, String reason){
-		logging(reason, chann, sourceNick, "discon", " ");
+		logging.logging(reason, chann, sourceNick, "discon", " ");
 	}
 	
 	protected void onNickChange(String oldNick, String login, String hostname, String newNick){
-		logging(newNick, chann, oldNick, "nChange", " ");
+		logging.logging(newNick, chann, oldNick, "nChange", " ");
 	}
 	
 	
 	protected void onTopic(String channel, String topic, String setBy, long date, boolean changed){
 		if(changed == false){
-			logging(setBy, channel, topic, "topic", " ");
+			logging.logging(setBy, channel, topic, "topic", " ");
 		}else{
-			logging(topic, channel, setBy, "topicChange", " ");
+			logging.logging(topic, channel, setBy, "topicChange", " ");
 		}
 	}
 	
-	/*
-	 * This simply allows us to get the date
-	 */
-	private String getDate(){
-		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy"); //Sets the date format To Month-Day-Year
-		Date date = new Date(); //stores the date
-		String yourDate = dateFormat.format(date); //turns the date into a variable to be called later
-		return yourDate;
-	}
 	
-	/*
-	 * This simply allows us to get the time
-	 */
-	private String getTime(){
-		DateFormat dF = new SimpleDateFormat("HH:mm"); //Sets the Time format to Hour:Minute
-		Date time = new Date(); //stores the time
-		String yourTime = dF.format(time); //turns the time into a variable to be called later
-		return yourTime;
-	}
+
 	
-	/*
-	 * This is the logging function, which handles all of the bot's logging capabilities, as all things that are logged
-	 * are done so through here.  
-	 */
-	private void logging(String msg, String chan, String sender, String mode, String sender1){
-		String time = getTime();
-		String date = getDate();
-		if(toggleLogs == true){
-			Pattern change2 = Pattern.compile("^");
-			Matcher change1 = change2.matcher(msg);
-			if (change1.find()){
-				String chanl1 = new String("");
-				if (msg.length()>0) {
-					chanl1 = msg.substring(0);
-				}
-				try {
-					File file = new File(LogsLocation + chan + " " + date + " " + "log.txt");
-					if (!file.exists()) {
-						file.createNewFile();
-					}
-					FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
-					BufferedWriter bw = new BufferedWriter(fw);
-					if(mode == "message"){
-						bw.write(chan +" " + time + " " + sender + ":" + chanl1 + "\r\n");
-					}if(mode == "action"){
-						bw.write(chan + " " + time + " * " + sender + " " + chanl1 + "\r\n");
-					}if(mode == "join"){
-						bw.write(chan + " " + time + " " + sender + " joined the channel" + "\r\n");
-					}if(mode == "part"){
-						bw.write(chan + " " + time + " " + sender + " left the channel" + "\r\n");
-					}if(mode == "discon"){
-						bw.write(chan + time + " " + sender + " quit. Reason: " + chanl1 + "\r\n");
-					}if(mode == "nChange"){
-						bw.write(chan + " " + time + " " + sender + " changed their Nick to " + chanl1 + "\r\n");
-					}if(mode == "kick"){
-						bw.write(chan + time + " " + sender + " kicked " + sender1 + " for " + chanl1 + "\r\n");
-					}if(mode == "topicChange"){
-						bw.write(chan + " " + time + " The topic was changed to " + chanl1 + " by " + sender + "\r\n");
-					}if(mode == "mModeSet"){
-						bw.write(chan + " " + time + " +m flag set for the channel(Channel muted) by: " + sender + "\r\n");
-					}if(mode == "mModeRemoved"){
-						bw.write(chan + " " + time + " -m flag was set for the channel(Channel Unmuted) by: " + sender + "\r\n");
-					}if(mode == "topic"){
-						bw.write(chan + " " + time + "The topic of the channel is " + sender + " and was set by " + chanl1 + "\r\n");
-					}if(mode == "mode"){
-						bw.write(chan + " " + time + " some user flags were changed! Flags and users are: " + chanl1 + " this was done by: " + sender );
-					}
-					bw.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
 }	
 
 
