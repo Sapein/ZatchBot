@@ -22,24 +22,21 @@ import java.io.*;
 
 import org.jibble.pircbot.*;
 
-public class ZatchBotMain extends ZatchBotConfigsStartup{
+public class ZatchBotMain extends ZatchBotConfigStartup{
 
-	
 	public static void main(String[] arg) throws Exception {
+		ZatchBotConfigStartup ConfigStartup = new ZatchBotConfigStartup();
 		
-    ZatchBot bot = new ZatchBot();      // this starts your bot
-    bot.setVerbose(true);             // enable debugging, useful during programming
-    bot.connect(Server); //Connect to the Server(The Server Variable is called here)
-    for(int ChannelAmount = 0; ChannelAmount < Channels.length; ++ChannelAmount) { //This makes sure that all Channels listed are joined as we stored it in a variable earlier.
-		bot.joinChannel(Channels[ChannelAmount]); //Actually Joins the channels. 
+		ConfigStartup.generateConfig();
+		ConfigStartup.loadConfigStage1();
+		String Server = ConfigStartup.getServer();
+		String[] Channels = ConfigStartup.getChannels();
+		
+		ZatchBot bot = new ZatchBot();      // this starts your bot
+		bot.setVerbose(true);             // enable debugging, useful during programming
+		bot.connect(Server); //Connect to the Server(The Server Variable is called here)
+		for(int ChannelAmount = 0; ChannelAmount < Channels.length; ++ChannelAmount) { //This makes sure that all Channels listed are joined as we stored it in a variable earlier.
+			bot.joinChannel(Channels[ChannelAmount]); //Actually Joins the channels. 
   		}
-	}
-	
-	/*
-	 * This is mainly designed to return the config version. This may be deprecated in the future and is only really used 
-	 * for getting the configVersion Variable. 
-	 */
-	public static String getConfigVersion(){
-		return configVersion;
 	}
 }

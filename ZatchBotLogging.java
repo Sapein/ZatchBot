@@ -7,6 +7,10 @@ import java.util.regex.Pattern;
 
 
 public class ZatchBotLogging {
+	
+	private boolean isLoggingActive = false;
+	private String loggingLocation = null;
+	
 	/*
 	 * This is the logging.logging function, which handles all of the bot's logging capabilities, as all things that are logged
 	 * are done so through here.  
@@ -15,7 +19,7 @@ public class ZatchBotLogging {
 		ZatchBotDateAndTime dateAndTime = new ZatchBotDateAndTime();
 		String time = dateAndTime.getTime();
 		String date = dateAndTime.getDate();
-		if(ZatchBot.toggleLogs == true){
+		if(isLoggingActive == true){
 			Pattern change2 = Pattern.compile("^");
 			Matcher change1 = change2.matcher(msg);
 			if (change1.find()){
@@ -24,7 +28,7 @@ public class ZatchBotLogging {
 					chanl1 = msg.substring(0);
 				}
 				try {
-					File file = new File(ZatchBot.LogsLocation + chan + " " + date + " " + "log.txt");
+					File file = new File(loggingLocation + chan + " " + date + " " + "log.txt");
 					if (!file.exists()) {
 						file.createNewFile();
 					}
@@ -61,5 +65,17 @@ public class ZatchBotLogging {
 				}
 			}
 		}
+	}
+	
+	public void setLoggingMode(boolean x){
+		x = isLoggingActive;
+	}
+	
+	public boolean getLoggingMode(){
+		return isLoggingActive;
+	}
+	
+	public void setLoggingLocation(String x){
+		x = loggingLocation;
 	}
 }

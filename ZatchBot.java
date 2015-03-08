@@ -31,9 +31,6 @@ public class ZatchBot extends PircBot
 	static ZatchBotLogging logging = new ZatchBotLogging();
 	static ZatchBotDateAndTime dateandtime = new ZatchBotDateAndTime();
 	static String Master; //This is the master's name it is replaced upon the loading of the config file
-	static String BotNick; //This is the bot's name, it is replaced upon the loading of the config file 
-	static String OpNick; //This is the line of the Op's Nicks, this is only temporary to store it.
-	static String OpHostname; //This is the entire line of the Op's Hostnames. This is only to temporarily store it
 	static String LogsLocation; //This is the location where you save the logs too
 	static String chann; 
 	boolean OpNickUsed = false; //Checks to see if the Nicks of the Ops are to be used in authentication or not
@@ -46,18 +43,24 @@ public class ZatchBot extends PircBot
     final static String version = "1.1";
 	
 	public ZatchBot() throws Exception{
-	
-		loadConfig("");
+		ZatchBotConfigStartup ConfigStart = new ZatchBotConfigStartup();
+		ZatchBotConfig Config = new ZatchBotConfig();
+		ConfigStart.loadConfigState2();
+		String OpNick = Config.getOpNick();
+		String OpHostname = Config.getOpHostname();
+		String BotNick = Config.getBotNick();
+		
 	    OpNicks = OpNick.split(",");
 	    OpHostnames = OpHostname.split(",");
 
 	    this.setName(BotNick);
 		this.setLogin("Zatch");
-		System.out.println(toggleLogs);
-		System.out.println(LogsLocation);
 		
 	}
 	protected void onJoin(String channel, String sender, String login, String hostname){
+		ZatchBotConfig Config = new ZatchBotConfig();
+		String BotNick = Config.getBotNick();
+		String Master = Config.getMaster();
 		//logging.logging
 		logging.logging(" ", channel, sender, "join", " ");
 		//Auto-op
@@ -94,6 +97,8 @@ public class ZatchBot extends PircBot
 		sendMessage(channel, "Good-bye.");
 	}
 	protected void onPrivateMessage(String sender, String login, String hostname, String message){
+		ZatchBotConfig Config = new ZatchBotConfig();
+		String Master = Config.getMaster();
 		sendMessage(Master, sender + ": " + message); 
 	}
 	protected void onAction(String sender, String login, String hostname, String target, String action){
@@ -101,8 +106,12 @@ public class ZatchBot extends PircBot
 	}
 	public void onMessage(String channel, String sender, String login, String hostname, String message)
 	{	
+		ZatchBotConfigCommands ConfigCommands = new ZatchBotConfigCommands();
+		ZatchBotConfig Config = new ZatchBotConfig();
+		
 		//Begin Variables
-		chann = channel;
+		String BotNick = Config.getBotNick();
+		String Master = Config.getMaster();
 		String yourDate;
 		String yourTime;
 		//Begin Time and Date Variables
@@ -531,7 +540,7 @@ public class ZatchBot extends PircBot
 		if(sender.equalsIgnoreCase(Master)){
 			if(message.equalsIgnoreCase("&reloadConfigs")){
 				try {
-					loadConfig(channel);
+					ConfigCommands.loadConfig(channel);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -540,7 +549,7 @@ public class ZatchBot extends PircBot
 		if(sender.equalsIgnoreCase(Master)){
 			if(message.equalsIgnoreCase("&updateConfig")){
 				try {
-					updateConfig(channel);
+					ConfigCommands.updateConfig(channel);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -564,128 +573,7 @@ public class ZatchBot extends PircBot
 		    }
 		}
 	}
-	
-	/*
-	 * This handles loading and reloading of the config file. Please note that the config version return will be moved from 
-	 * this function and given it's own function as loadConfig is mainly supposed to load/reload the config. 
-	 */
-	protected String loadConfig(String chan) throws Exception{
-		String configVersion;
-		BufferedReader saveFile;
-		saveFile = new BufferedReader(new FileReader("Config.txt"));
-		configVersion = saveFile.readLine(); //1st line;
-		sendMessage(chan, "RELOADING CONFIG");
-		if(!configVersion.startsWith("Config Version")){
-			saveFile.readLine(); //3nd line 
-			saveFile.readLine(); //4rd line
-		    saveFile.readLine(); //5th line
-		    saveFile.readLine(); //6th line
-		    saveFile.readLine(); //7th line
-		    saveFile.readLine(); //8th line
-		    saveFile.readLine(); //9th line
-		    OpHostnameUsed = Boolean.parseBoolean(saveFile.readLine()); //10th line
-		    saveFile.readLine(); //11th line
-		    OpNickUsed = Boolean.parseBoolean(saveFile.readLine()); //12th line
-		    saveFile.readLine(); //13th line
-		    BotNick = saveFile.readLine(); //14th line
-		    saveFile.readLine(); //15th line
-		    Master = saveFile.readLine(); //16th line
-		    saveFile.readLine(); //17th line
-		    OpNick = saveFile.readLine(); //18th line
-		    saveFile.readLine(); //19th line
-		    OpHostname = saveFile.readLine(); //10h line 
-		    saveFile.readLine(); //21th line 
-		    toggleLogs = Boolean.parseBoolean(saveFile.readLine()); //22st line
-		    saveFile.readLine(); //23nd Line
-		    if(toggleLogs == true){
-		    	LogsLocation = saveFile.readLine(); //24rd line
-		    }
-		    else{
-		    	saveFile.readLine(); //24rd line
-		    }
-		    saveFile.close();
-		    sendMessage(chan, "CONFIG SUCCESSFULLY RELOADED");
-		}else{
-			saveFile.readLine(); //2nd line
-			saveFile.readLine(); //3nd line 
-			saveFile.readLine(); //4rd line
-		    saveFile.readLine(); //5th line
-		    saveFile.readLine(); //6th line
-		    saveFile.readLine(); //7th line
-		    saveFile.readLine(); //8th line
-		    saveFile.readLine(); //9th line
-		    OpHostnameUsed = Boolean.parseBoolean(saveFile.readLine()); //10th line
-		    saveFile.readLine(); //11th line
-		    OpNickUsed = Boolean.parseBoolean(saveFile.readLine()); //12th line
-		    saveFile.readLine(); //13th line
-		    BotNick = saveFile.readLine(); //14th line
-		    saveFile.readLine(); //15th line
-		    Master = saveFile.readLine(); //16th line
-		    saveFile.readLine(); //17th line
-		    OpNick = saveFile.readLine(); //18th line
-		    saveFile.readLine(); //19th line
-		    OpHostname = saveFile.readLine(); //10h line 
-		    saveFile.readLine(); //21th line 
-		    toggleLogs = Boolean.parseBoolean(saveFile.readLine()); //22st line
-		    saveFile.readLine(); //23nd Line
-		    if(toggleLogs == true){
-		    	LogsLocation = saveFile.readLine(); //24rd line
-		    }
-		    else{
-		    	saveFile.readLine(); //24rd line
-		    }
-		    saveFile.close();
-		    sendMessage(chan, "CONFIG SUCCESSFULLY RELOADED");
-		}
-	    return configVersion;
-	}
-	
-	/*
-	 * It updates the config to the latest version, this allows for the bot to check and make sure that the latest
-	 * config is up-to-date. It also allows for me to make changes to the config file and not worry about breaking things
-	 * or having to have users update the config themselves and have something mess up.
-	 */
-	public void updateConfig(String chan) throws Exception{
-		String versionCheck = loadConfig("");
-		File file = new File("Config.txt");
-		File oldFile = new File("Config-Backup.txt");
-		if(!versionCheck.equalsIgnoreCase("Config Version: " + ZatchBotMain.getConfigVersion())){
-				sendMessage(chan, "Now Updating the Config file.");
-				file.renameTo(oldFile);
-				file.createNewFile(); //creates the file
-				FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
-				BufferedWriter bw = new BufferedWriter(fw);
-				bw.write("Config Version: " + ZatchBotMain.getConfigVersion() +  "\r\n"); 
-				bw.write("		=--Connection--=" +"\r\n");
-				bw.write("--IRC Server--" + "\r\n"); //puts this on the first line of the file
-				bw.write(ZatchBotMain.Server + "\r\n"); //puts this on the second line of the file
-				bw.write("--Channels--" + "\r\n"); //puts this on the third line of the file
-				bw.write("== To add Multiple Channels use a comma(,) inbetween with no spaces ==" + "\r\n"); //puts this on the fourth line of the file
-				bw.write(ZatchBotMain.Channel + "\r\n"); //puts this on the fifth line of the file
-				bw.write("		==--IRC Bot--==" + "\r\n"); //creates the sixth line of the file
-				bw.write("--Toggle Hostname Verification for Ops--" + "\r\n"); //puts this on the Seventh line of the file
-				bw.write(OpHostnameUsed + "\r\n"); //makes Hostname Verification False by default
-				bw.write("--Toggle Nick Verification for Ops--" + "\r\n"); //puts this on the Ninth line of the file
-				bw.write(OpNickUsed + "\r\n"); //Sets the Nick verification to true
-				bw.write("--Bot Name--" +"\r\n"); //puts this on the Eleventh line of the file
-				bw.write(BotNick + "\r\n"); //puts this on the twelfth line of the file
-				bw.write("--Master--" + "\r\n"); //puts this on the thirteenth line of the file
-				bw.write(Master + "\r\n"); //puts this on the fourteenth line of the file
-				bw.write("--Op Nicks--" + "\r\n"); //puts this on the fifteenth line of the file
-				bw.write(OpNick + "\r\n"); //generates a blank space
-				bw.write("--Op Hostnames" + "\r\n"); //puts this on the Seventeenth line of the file
-				bw.write(OpHostname + "\r\n"); //generates blank space on the Eighteenth line of the file
-				bw.write("--Toggle Logs" +"\r\n"); 
-				bw.write(toggleLogs + "\r\n");
-				bw.write("--Logs Location--" + "\r\n");
-				bw.write(LogsLocation + "\r\n");
-				bw.close(); //closes the writer. 
-				sendMessage(chan, "UPDATE SUCCESSFUL");
-		}else{
-			sendMessage(chan, "The Config is already up to date!");
-		}
-		loadConfig("");
-	}
+
 	
 	/*
 	 * This is done to get the mode of the change of channel things...this isn't as descriptive as I would want it to be though :/
