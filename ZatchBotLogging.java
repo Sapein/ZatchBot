@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class ZatchBotLogging {
 	
-	private static boolean isLoggingActive = false;
+	private  static boolean isLoggingActive = false;
 	private static String loggingLocation = null;
 	
 	/*
@@ -29,7 +29,6 @@ public class ZatchBotLogging {
 				}
 				try {
 					File file = new File(loggingLocation + chan + " " + date + " " + "log.txt");
-					System.out.println(file.canWrite());
 					if (!file.exists()) {
 						file.createNewFile();
 					}

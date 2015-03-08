@@ -7,14 +7,14 @@ import java.io.FileWriter;
 import org.jibble.pircbot.PircBot;
 
 
-public class ZatchBotConfigCommands{
-	ZatchBotConfig Config = new ZatchBotConfig();
+public class ZatchBotConfigCommands extends ZatchBotConfig{
+	/*ZatchBotConfig Config = new ZatchBotConfig();
 	private boolean OpHostnameUsed = Config.getOpHostnameUsed();
 	private boolean OpNickUsed = Config.getOpNickUsed();
 	private String BotNick = Config.getBotNick();
 	private String Master = Config.getMaster();
 	private String OpNick = Config.getOpNick();
-	private String OpHostname = Config.getOpHostname();
+	private String OpHostname = Config.getOpHostname();*/
 	
 	
 	/*
@@ -50,11 +50,11 @@ public class ZatchBotConfigCommands{
 		    boolean logsMode = Boolean.parseBoolean(saveFile.readLine()); //22st line
 		    saveFile.readLine(); //23nd Line
 		    if(logsMode == true){
-		    	Config.isLoggingActive(true);
+		    	isLoggingActive(true);
 		    	logging.setLoggingLocation(saveFile.readLine()); //24rd line
 		    }
 		    else{
-		    	Config.isLoggingActive(false);
+		    	isLoggingActive(false);
 		    	saveFile.readLine(); //24rd line
 		    }
 		    saveFile.close();
@@ -79,13 +79,12 @@ public class ZatchBotConfigCommands{
 		    saveFile.readLine(); //19th line
 		    OpHostname = saveFile.readLine(); //10h line 
 		    boolean logsMode = Boolean.parseBoolean(saveFile.readLine()); //22st line
-		    saveFile.readLine(); //23nd Line
 		    if(logsMode == true){
-		    	Config.isLoggingActive(true);
+		    	isLoggingActive(true);
 		    	logging.setLoggingLocation(saveFile.readLine()); //24rd line
 		    }
 		    else{
-		    	Config.isLoggingActive(false);
+		    	isLoggingActive(false);
 		    	saveFile.readLine(); //24rd line
 		    }
 		    saveFile.close();

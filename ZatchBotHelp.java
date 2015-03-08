@@ -1,14 +1,8 @@
 import org.jibble.pircbot.*;
 
-
-public class ZatchBotHelp{
-	private Queue _outQueue = new Queue();
-	public final void sendMessage(String target, String message) {
-		_outQueue.add("PRIVMSG " + target + " :" + message);
-    }
+public class ZatchBotHelp extends PircBot{
 	public void Help(String message, String sender, String[] OpNicks, String Master, String BotNick, boolean OpHostnameUsed){
 		if (message.equalsIgnoreCase("&Help")){
-			for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) {
 				if (sender.equals(Master)){
 					sendMessage(sender, "Hello, Master. Do you need a refresher?");
 					sendMessage(sender, "Well here are my commands:");
@@ -33,6 +27,7 @@ public class ZatchBotHelp{
 					sendMessage(sender, "&conn-del");
 					sendMessage(sender, "&version");
 				}	
+			for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) {
 				if(OpHostnameUsed == false || sender.equalsIgnoreCase(OpNicks[OpNumber])){
 					sendMessage(sender, "Hello " + sender + " I am " + BotNick + ". It seems that you have been designated as an Op"
 							+ " by my master, " + Master + " as such you are granted to see more commands");
@@ -75,7 +70,7 @@ public class ZatchBotHelp{
 					sendMessage(sender, "&time");
 					sendMessage(sender, "&x-chan");
 					sendMessage(sender, "&version");
-				}
+					}
 			}
 		}
 	}	
