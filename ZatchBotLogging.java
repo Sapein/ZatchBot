@@ -78,4 +78,7 @@ public class ZatchBotLogging {
 	public void setLoggingLocation(String x){
 		x = loggingLocation;
 	}
+	public String getLoggingLocation(){
+		return loggingLocation;
+	}
 }

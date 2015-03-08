@@ -22,7 +22,7 @@ import java.io.*;
 
 import org.jibble.pircbot.*;
 
-public class ZatchBotMain extends ZatchBotConfigStartup{
+public class ZatchBotMain{
 
 	public static void main(String[] arg) throws Exception {
 		ZatchBotConfigStartup ConfigStartup = new ZatchBotConfigStartup();

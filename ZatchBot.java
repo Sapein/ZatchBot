@@ -30,14 +30,9 @@ public class ZatchBot extends PircBot
 {
 	static ZatchBotLogging logging = new ZatchBotLogging();
 	static ZatchBotDateAndTime dateandtime = new ZatchBotDateAndTime();
-	static String Master; //This is the master's name it is replaced upon the loading of the config file
-	static String LogsLocation; //This is the location where you save the logs too
 	static String chann; 
-	boolean OpNickUsed = false; //Checks to see if the Nicks of the Ops are to be used in authentication or not
-	boolean OpHostnameUsed; //Checks to see if the hostnames should be used in authentication or not
-	static boolean toggleLogs; //Checks to see if you have enabled logs
-    String[] OpNicks; //creates the array for the Nicks
-    String[] OpHostnames; //creates an array for the hostnames
+    static String[] OpNicks; //creates the array for the Nicks
+    static String[] OpHostnames; //creates an array for the hostnames
     //ArrayList<String> OpAddHostnames = null; 
     ArrayList<String> includedChannels;
     final static String version = "1.1";
@@ -61,6 +56,8 @@ public class ZatchBot extends PircBot
 		ZatchBotConfig Config = new ZatchBotConfig();
 		String BotNick = Config.getBotNick();
 		String Master = Config.getMaster();
+		boolean OpHostnameUsed = Config.getOpHostnameUsed();
+		boolean OpNickUsed = Config.getOpNickUsed();
 		//logging.logging
 		logging.logging(" ", channel, sender, "join", " ");
 		//Auto-op
@@ -108,95 +105,27 @@ public class ZatchBot extends PircBot
 	{	
 		ZatchBotConfigCommands ConfigCommands = new ZatchBotConfigCommands();
 		ZatchBotConfig Config = new ZatchBotConfig();
+		ZatchBotHelp Help = new ZatchBotHelp();
+		ZatchBotCrossChannel xChan = new ZatchBotCrossChannel();
 		
 		//Begin Variables
+		boolean OpNickUsed = Config.getOpNickUsed();
 		String BotNick = Config.getBotNick();
 		String Master = Config.getMaster();
+		boolean OpHostnameUsed = Config.getOpHostnameUsed();
 		String yourDate;
 		String yourTime;
 		//Begin Time and Date Variables
 		yourDate = dateandtime.getDate();
 		yourTime = dateandtime.getTime();
 		
-		boolean xChan = false; //Boolean for cross-channel Communication
 		//End Time and Date Variables
 		
 		//End Variables
 		
 		//Begin Help Code
 		//Help code stays on top
-		
-		if (message.equalsIgnoreCase("&Help")){
-			for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) {
-				if (sender.equals(Master)){
-					sendMessage(sender, "Hello, Master. Do you need a refresher?");
-					sendMessage(sender, "Well here are my commands:");
-					sendMessage(sender, "&join channel");
-					sendMessage(sender, "&leave channel");;
-					sendMessage(sender, "Hello Zatch");
-					sendMessage(sender, "Goodnight.");
-					sendMessage(sender, "&pie");
-					sendMessage(sender, "&quit");
-					sendMessage(sender, "Goodbye");
-					sendMessage(sender, "&fishslap user");
-					sendMessage(sender, "&fish");
-					sendMessage(sender, "&code");
-					sendMessage(sender, "&date");
-					sendMessage(sender, "&time");
-					sendMessage(sender, "&x-chan");
-					sendMessage(sender, "&Op");
-					sendMessage(sender, "&leave");
-					sendMessage(sender, "&conn-start");
-					sendMessage(sender, "&conn-term");
-					sendMessage(sender, "&conn-add");
-					sendMessage(sender, "&conn-del");
-					sendMessage(sender, "&version");
-				}	
-				if(OpHostnameUsed == false || sender.equalsIgnoreCase(OpNicks[OpNumber])){
-					sendMessage(sender, "Hello " + sender + " I am " + BotNick + ". It seems that you have been designated as an Op"
-							+ " by my master, " + Master + " as such you are granted to see more commands");
-					sendMessage(sender, "Operator Commands");
-					sendMessage(sender, "&join");
-					sendMessage(sender, "&leave");
-					sendMessage(sender, "&conn-start");
-					sendMessage(sender, "&conn-term");
-					sendMessage(sender, "&conn-add");
-					sendMessage(sender, "&conn-del");
-					sendMessage(sender, " ");
-					sendMessage(sender, "Standard Commands");
-					sendMessage(sender, " ");
-					sendMessage(sender, "Hello Zatch");
-					sendMessage(sender, "Goodnight");
-					sendMessage(sender, "I hate you Zatch");
-					sendMessage(sender, "&pie");
-					sendMessage(sender, "Goodbye");
-					sendMessage(sender, "&fishslap user");
-					sendMessage(sender, "&fish");
-					sendMessage(sender, "&code");
-					sendMessage(sender, "&date");
-					sendMessage(sender, "&time");
-					sendMessage(sender, "&x-chan");
-					sendMessage(sender, "&version");
-				}
-				else{
-					sendMessage(sender, "Hello! I am " + BotNick + " a Zatch IRC bot! My Base was written by Sapein"
-							+ "however, my master is " + Master + ".");
-					sendMessage(sender, "Here are my Commands:");
-					sendMessage(sender, "Hello Zatch");
-					sendMessage(sender, "Goodnight");
-					sendMessage(sender, "I hate you Zatch");
-					sendMessage(sender, "&pie");
-					sendMessage(sender, "Goodbye");
-					sendMessage(sender, "&fishslap user");
-					sendMessage(sender, "&fish");
-					sendMessage(sender, "&code");
-					sendMessage(sender, "&date");
-					sendMessage(sender, "&time");
-					sendMessage(sender, "&x-chan");
-					sendMessage(sender, "&version");
-				}
-			}
-		}
+		Help.Help(message, sender, OpNicks, Master, BotNick, OpHostnameUsed);
 		//end Help Code
 		
 
@@ -238,178 +167,10 @@ public class ZatchBot extends PircBot
 				quitServer();
 			}
 		}
-			//Cross Channel Communication Code 
-			Pattern crossP = Pattern.compile("^\\&x-chan");
-			Matcher crossM = crossP.matcher(message);
-				if(crossM.find()){
-					String chanl = new String("");
-					String ms = new String("");
-					if(message.length()>5) {
-						ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.split(" ")));
-						list.remove(0);
-						chanl = list.remove(0);
-						for (String s : list)
-						{
-							ms += s + " ";
-						}
-					}
-					sendMessage(chanl, channel + " - " + sender + ": " + ms);
-			}
-			//End of Cross Channel Communication Code
-			for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) {
-				if(OpHostnameUsed == false && (sender.equalsIgnoreCase(Master) || sender.equalsIgnoreCase(OpNicks[OpNumber]))){
-					//Begin of Channel Connection Code
-					Pattern cross2P = Pattern.compile("^\\&conn-start");
-					Matcher cross2M = cross2P.matcher(message);
-					if(cross2M.find()){
-						if(message.length()>5) {
-							includedChannels = new ArrayList<String>(Arrays.asList(message.split(" ")));
-							includedChannels.remove(0);
-							int x = 0;
-							while(x < includedChannels.size()){
-								sendMessage(includedChannels.get(x), "A channel Connection has been started by: " + sender + " - " + channel);
-								x++;
-							}
-							includedChannels.add(channel);
-						}
-						xChan = true;
-					}
-					//End of Channel Connection Code
-					//Channel Communication Code Drop Begin
-					Pattern cross3P = Pattern.compile("^\\&conn-term");
-					Matcher cross3M = cross3P.matcher(message);
-					if(cross3M.find()){
-						if(message.length()>5) {
-							int x = 0;
-							while(x < includedChannels.size()){
-								sendMessage(includedChannels.get(x), "The Connection has been terminated by: " + sender + " - " + channel);
-								x++;
-							}
-						}
-						includedChannels = null;
-						xChan = false;
-					}
-					//Channel Communication Code Drop End
-					//Channel Connection Code Add Begin
-					Pattern cross4P = Pattern.compile("^\\&conn-add");
-					Matcher cross4M = cross4P.matcher(message);
-					if(cross4M.find()){
-						if(message.length()>5) {
-							int x = 0;
-							ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.split(" ")));
-							list.remove(0);
-							while(x <= list.size()){
-								includedChannels.add(list.get(x));
-								sendMessage(list.get(x), "You have been added to a Channel-Connection! Connection Established By: " + sender + " - " + channel);
-								x++;
-							}
-						}
-					}
-					//Channel Connection Code Add End
-					//Channel Connection Code Remove Begin
-					Pattern cross5P = Pattern.compile("^\\&conn-del");
-					Matcher cross5M = cross5P.matcher(message);
-					if(cross5M.find()){
-						if(message.length()>5) {
-							int x = 0;
-							ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.split(" ")));
-							list.remove(0);
-							while(x <= list.size()){
-								if(includedChannels.get(x).equals(list.get(x))){
-									sendMessage(list.get(x), "You have been removed from the Channel-Connection! Removed By: " + sender + " - " + channel);
-									includedChannels.remove(x);
-								}
-								x++;
-							}
-						}
-					}
-					//Channel Connection Code Remove End
-					}
-					if(OpHostnameUsed == true && (sender.equalsIgnoreCase(Master) || (OpNickUsed == true && sender.equalsIgnoreCase(OpNicks[OpNumber])) || (OpNickUsed == false))){
-						for(int opHostnameNumber = 0; opHostnameNumber < OpHostnames.length; ++opHostnameNumber){
-							//Begin of Channel Connection Code
-							Pattern cross2P = Pattern.compile("^\\&conn-start");
-							Matcher cross2M = cross2P.matcher(message);
-							if(cross2M.find()){
-								if(message.length()>5) {
-									includedChannels = new ArrayList<String>(Arrays.asList(message.split(" ")));
-									includedChannels.remove(0);
-									int x = 0;
-									while(x < includedChannels.size()){
-										sendMessage(includedChannels.get(x), "A channel Connection has been started by: " + sender + " - " + channel);
-										x++;
-									}
-									includedChannels.add(channel);
-								}
-								xChan = true;
-							}
-							//End of Channel Connection Code
-							//Channel Communication Code Drop Begin
-							Pattern cross3P = Pattern.compile("^\\&conn-term");
-							Matcher cross3M = cross3P.matcher(message);
-							if(cross3M.find()){
-								if(message.length()>5) {
-									int x = 0;
-									while(x < includedChannels.size()){
-										sendMessage(includedChannels.get(x), "The Connection has been terminated by: " + sender + " - " + channel);
-										x++;
-									}
-								}
-								includedChannels = null;
-								xChan = false;
-							}
-							//Channel Communication Code Drop End
-							//Channel Connection Code Add Begin
-							Pattern cross4P = Pattern.compile("^\\&conn-add");
-							Matcher cross4M = cross4P.matcher(message);
-							if(cross4M.find()){
-								if(message.length()>5) {
-									int x = 0;
-									ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.split(" ")));
-									list.remove(0);
-									while(x <= list.size()){
-										includedChannels.add(list.get(x));
-										sendMessage(list.get(x), "You have been added to a Channel-Connection! Connection Established By: " + sender + " - " + channel);
-										x++;
-									}
-								}
-							}
-							//Channel Connection Code Add End
-							//Channel Connection Code Remove Begin
-							Pattern cross5P = Pattern.compile("^\\&conn-del");
-							Matcher cross5M = cross5P.matcher(message);
-							if(cross5M.find()){
-								if(message.length()>5) {
-									int x = 0;
-									ArrayList<String> list = new ArrayList<String>(Arrays.asList(message.split(" ")));
-									list.remove(0);
-									while(x <= list.size()){
-										if(includedChannels.get(x).equals(list.get(x))){
-											sendMessage(list.get(x), "You have been removed from the Channel-Connection! Removed By: " + sender + " - " + channel);
-											includedChannels.remove(x);
-										}
-										x++;
-									}
-								}
-							}
-						}
-					}
-				}
-					//Channel Connection Code Remove End
-					//Begin of Channel Connection Send Code
-					if(xChan == true){
-						int x = 0;
-						if(includedChannels.contains(channel)){
-							while (x < includedChannels.size()){
-								if(!channel.equals(includedChannels.get(x))){
-									sendMessage(includedChannels.get(x), channel + " - " + sender + ": " + message);
-								}
-								x++;
-							}
-						}
-					}
-					//Channel Connection Send Code End 
-				
+		//Begin Code for Cross Channel Communication Commands
+		xChan.xchan(message, channel, sender); //this contains the command xChan
+		xChan.channelLinkingCommands(message, channel, sender, Master, OpHostnames, OpNicks, OpHostnameUsed, OpNickUsed);
+		xChan.crossChannelSend(channel, sender, message);
 		//End Channel and Server Movement and CommunicationCommands
 		
 		//Begin Trigger Statements
