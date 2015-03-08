@@ -24,11 +24,9 @@ public class ZatchBotConfig {
 	public void isLoggingActive(boolean x){
 		ZatchBotLogging logging = new ZatchBotLogging();
 		if(x == true){
-			boolean y = true;
-			logging.setLoggingMode(y);
+			logging.setLoggingMode(true);
 		}else{
-			boolean y = false;
-			logging.setLoggingMode(y);
+			logging.setLoggingMode(false);
 		}
 	}
 	

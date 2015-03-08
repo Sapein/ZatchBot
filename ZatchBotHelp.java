@@ -1,7 +1,11 @@
-import org.jibble.pircbot.PircBot;
+import org.jibble.pircbot.*;
 
 
-public class ZatchBotHelp extends PircBot{
+public class ZatchBotHelp{
+	private Queue _outQueue = new Queue();
+	public final void sendMessage(String target, String message) {
+		_outQueue.add("PRIVMSG " + target + " :" + message);
+    }
 	public void Help(String message, String sender, String[] OpNicks, String Master, String BotNick, boolean OpHostnameUsed){
 		if (message.equalsIgnoreCase("&Help")){
 			for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) {

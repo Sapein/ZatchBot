@@ -28,7 +28,7 @@ import org.jibble.pircbot.*;
 
 public class ZatchBot extends PircBot
 {
-	static ZatchBotLogging logging = new ZatchBotLogging();
+	ZatchBotLogging logging = new ZatchBotLogging();
 	static ZatchBotDateAndTime dateandtime = new ZatchBotDateAndTime();
 	static String chann; 
     static String[] OpNicks; //creates the array for the Nicks
