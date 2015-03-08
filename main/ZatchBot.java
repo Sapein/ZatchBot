@@ -1,4 +1,4 @@
-/*A Simple IRC bot that uses PIRC
+package main;/*A Simple IRC bot that uses PIRC
     Copyright (C) 2014  
 
     This program is free software; you can redistribute it and/or modify
@@ -20,10 +20,10 @@
 //Zatchbot v 2.0-alpha
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import modules.*;
 import org.jibble.pircbot.*;
 
 public class ZatchBot extends PircBot
@@ -40,9 +40,22 @@ public class ZatchBot extends PircBot
     String[] OpHostnames; //creates an array for the hostnames
     //ArrayList<String> OpAddHostnames = null; 
     ArrayList<String> includedChannels;
+    ArrayList<ZatchBotModule> modules;
     final static String version = "1.1";
-	
-	public ZatchBot() throws Exception{
+
+    public static String getMaster() {
+        return Master;
+    }
+
+    public String[] getOpNicks() {
+        return OpNicks;
+    }
+
+    public boolean isOpHostnameUsed() {
+        return OpHostnameUsed;
+    }
+
+    public ZatchBot() throws Exception{
 		ZatchBotConfigStartup ConfigStart = new ZatchBotConfigStartup();
 		ZatchBotConfig Config = new ZatchBotConfig();
 		ConfigStart.loadConfigState2();
@@ -55,8 +68,13 @@ public class ZatchBot extends PircBot
 
 	    this.setName(BotNick);
 		this.setLogin("Zatch");
+
+        // Load modules
+        modules = new ArrayList<ZatchBotModule>();
+        modules.add(new ZatchBotModuleHelp());
 		
 	}
+
 	protected void onJoin(String channel, String sender, String login, String hostname){
 		ZatchBotConfig Config = new ZatchBotConfig();
 		String BotNick = Config.getBotNick();
@@ -120,84 +138,17 @@ public class ZatchBot extends PircBot
 		
 		boolean xChan = false; //Boolean for cross-channel Communication
 		//End Time and Date Variables
-		
+        //Begin Module setup
+        ZatchBotMessage zatchBotMessage = new ZatchBotMessage(this, Config, ConfigCommands, BotNick, Master,
+                channel, sender, login, hostname, message);
+        //End Module Setup
 		//End Variables
 		
-		//Begin Help Code
-		//Help code stays on top
-		
-		if (message.equalsIgnoreCase("&Help")){
-			for(int OpNumber = 0; OpNumber < OpNicks.length; ++OpNumber) {
-				if (sender.equals(Master)){
-					sendMessage(sender, "Hello, Master. Do you need a refresher?");
-					sendMessage(sender, "Well here are my commands:");
-					sendMessage(sender, "&join channel");
-					sendMessage(sender, "&leave channel");;
-					sendMessage(sender, "Hello Zatch");
-					sendMessage(sender, "Goodnight.");
-					sendMessage(sender, "&pie");
-					sendMessage(sender, "&quit");
-					sendMessage(sender, "Goodbye");
-					sendMessage(sender, "&fishslap user");
-					sendMessage(sender, "&fish");
-					sendMessage(sender, "&code");
-					sendMessage(sender, "&date");
-					sendMessage(sender, "&time");
-					sendMessage(sender, "&x-chan");
-					sendMessage(sender, "&Op");
-					sendMessage(sender, "&leave");
-					sendMessage(sender, "&conn-start");
-					sendMessage(sender, "&conn-term");
-					sendMessage(sender, "&conn-add");
-					sendMessage(sender, "&conn-del");
-					sendMessage(sender, "&version");
-				}	
-				if(OpHostnameUsed == false || sender.equalsIgnoreCase(OpNicks[OpNumber])){
-					sendMessage(sender, "Hello " + sender + " I am " + BotNick + ". It seems that you have been designated as an Op"
-							+ " by my master, " + Master + " as such you are granted to see more commands");
-					sendMessage(sender, "Operator Commands");
-					sendMessage(sender, "&join");
-					sendMessage(sender, "&leave");
-					sendMessage(sender, "&conn-start");
-					sendMessage(sender, "&conn-term");
-					sendMessage(sender, "&conn-add");
-					sendMessage(sender, "&conn-del");
-					sendMessage(sender, " ");
-					sendMessage(sender, "Standard Commands");
-					sendMessage(sender, " ");
-					sendMessage(sender, "Hello Zatch");
-					sendMessage(sender, "Goodnight");
-					sendMessage(sender, "I hate you Zatch");
-					sendMessage(sender, "&pie");
-					sendMessage(sender, "Goodbye");
-					sendMessage(sender, "&fishslap user");
-					sendMessage(sender, "&fish");
-					sendMessage(sender, "&code");
-					sendMessage(sender, "&date");
-					sendMessage(sender, "&time");
-					sendMessage(sender, "&x-chan");
-					sendMessage(sender, "&version");
-				}
-				else{
-					sendMessage(sender, "Hello! I am " + BotNick + " a Zatch IRC bot! My Base was written by Sapein"
-							+ "however, my master is " + Master + ".");
-					sendMessage(sender, "Here are my Commands:");
-					sendMessage(sender, "Hello Zatch");
-					sendMessage(sender, "Goodnight");
-					sendMessage(sender, "I hate you Zatch");
-					sendMessage(sender, "&pie");
-					sendMessage(sender, "Goodbye");
-					sendMessage(sender, "&fishslap user");
-					sendMessage(sender, "&fish");
-					sendMessage(sender, "&code");
-					sendMessage(sender, "&date");
-					sendMessage(sender, "&time");
-					sendMessage(sender, "&x-chan");
-					sendMessage(sender, "&version");
-				}
-			}
-		}
-		//end Help Code
+        //Begin Check Module Actions
+        for (ZatchBotModule module : modules) {
+            module.onMessage(zatchBotMessage);
+        }
+        //End Check Module Actions
 		
 
 		//Begin Channel and Server Movement Commands

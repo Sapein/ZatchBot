@@ -1,4 +1,4 @@
-/*A Simple IRC bot that uses PIRC
+package main;/*A Simple IRC bot that uses PIRC
     Copyright (C) 2014  
 
     This program is free software; you can redistribute it and/or modify
@@ -17,10 +17,6 @@
 */
 //Created by Sapein
 //Zatchbot v 1.0
-
-import java.io.*;
-
-import org.jibble.pircbot.*;
 
 public class ZatchBotMain extends ZatchBotConfigStartup{
 
