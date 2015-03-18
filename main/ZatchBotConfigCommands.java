@@ -1,3 +1,5 @@
+package main;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -97,7 +99,7 @@ public class ZatchBotConfigCommands extends ZatchBotConfig{
 	 * config is up-to-date. It also allows for me to make changes to the config file and not worry about breaking things
 	 * or having to have users update the config themselves and have something mess up.
 	 */
-	public void updateConfig(String chan) throws Exception{
+	public void updateConfig(ZatchBotConfigStartup startup, String chan) throws Exception{
 		ZatchBotLogging logging = new ZatchBotLogging();
 		ZatchBotConfigStartup ConfigStartup = new ZatchBotConfigStartup();
 		
@@ -115,10 +117,10 @@ public class ZatchBotConfigCommands extends ZatchBotConfig{
 				bw.write("Config Version: " + "\r\n"); 
 				bw.write("		=--Connection--=" +"\r\n");
 				bw.write("--IRC Server--" + "\r\n"); //puts this on the first line of the file
-				bw.write(Server + "\r\n"); //puts this on the second line of the file
+				bw.write(startup.getServer() + "\r\n"); //puts this on the second line of the file
 				bw.write("--Channels--" + "\r\n"); //puts this on the third line of the file
 				bw.write("== To add Multiple Channels use a comma(,) inbetween with no spaces ==" + "\r\n"); //puts this on the fourth line of the file
-				bw.write(Channel + "\r\n"); //puts this on the fifth line of the file
+				bw.write(startup.getChannel() + "\r\n"); //puts this on the fifth line of the file
 				bw.write("		==--IRC Bot--==" + "\r\n"); //creates the sixth line of the file
 				bw.write("--Toggle Hostname Verification for Ops--" + "\r\n"); //puts this on the Seventh line of the file
 				bw.write(OpHostnameUsed + "\r\n"); //makes Hostname Verification False by default

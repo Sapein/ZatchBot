@@ -1,3 +1,4 @@
+package main;
 /*A Simple IRC bot that uses PIRC
     Copyright (C) 2014  
 
@@ -20,10 +21,10 @@
 //Zatchbot v 2.0-alpha
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import modules.*;
 import org.jibble.pircbot.*;
 
 public class ZatchBot extends PircBot
@@ -35,10 +36,20 @@ public class ZatchBot extends PircBot
     static String[] OpHostnames; //creates an array for the hostnames
     //ArrayList<String> OpAddHostnames = null; 
     ArrayList<String> includedChannels;
+    ArrayList<ZatchBotModule> modules;
     final static String version = "1.1";
-	
-	public ZatchBot() throws Exception{
-		ZatchBotConfigStartup ConfigStart = new ZatchBotConfigStartup();
+    ZatchBotConfigStartup ConfigStart;
+
+    public String[] getOpNicks() {
+        return OpNicks;
+    }
+
+    public boolean isOpHostnameUsed() {
+        return OpHostnameUsed;
+    }
+
+    public ZatchBot() throws Exception{
+        ConfigStart = new ZatchBotConfigStartup();
 		ZatchBotConfig Config = new ZatchBotConfig();
 		ConfigStart.loadConfigState2();
 		String OpNick = Config.getOpNick();
@@ -48,10 +59,24 @@ public class ZatchBot extends PircBot
 	    OpNicks = OpNick.split(",");
 	    OpHostnames = OpHostname.split(",");
 
-	    this.setName(BotNick);
-		this.setLogin("Zatch");
+        try {
+            OpNicks = OpNick.split(",");
+            OpHostnames = OpHostname.split(",");
+        } catch (NullPointerException e) {
+            OpNicks = new String[0];
+            OpHostnames = new String[0];
+        }
+
+        System.out.println("BotNick: "+ BotNick);
+        this.setName("Zatch-Wuufu");
+		this.setLogin("Zatch-Wuufu");
+
+        // Load modules
+        modules = new ArrayList<ZatchBotModule>();
+        modules.add(new ZatchBotModuleHelp());
 		
 	}
+
 	protected void onJoin(String channel, String sender, String login, String hostname){
 		ZatchBotConfig Config = new ZatchBotConfig();
 		String BotNick = Config.getBotNick();
@@ -120,13 +145,22 @@ public class ZatchBot extends PircBot
 		yourTime = dateandtime.getTime();
 		
 		//End Time and Date Variables
-		
+        //Begin Module setup
+        ZatchBotMessage zatchBotMessage = new ZatchBotMessage(this, Config, ConfigCommands, BotNick, Master,
+                channel, sender, login, hostname, message);
+        //End Module Setup
 		//End Variables
 		
 		//Begin Help Code
 		//Help code stays on top
 		Help.Help(message, sender, OpNicks, Master, BotNick, OpHostnameUsed);
-		//end Help Code
+        //end Help Code
+
+        //Begin Check Module Actions
+        for (ZatchBotModule module : modules) {
+            module.onMessage(zatchBotMessage);
+        }
+        //End Check Module Actions
 		
 
 		//Begin Channel and Server Movement Commands
@@ -310,7 +344,7 @@ public class ZatchBot extends PircBot
 		if(sender.equalsIgnoreCase(Master)){
 			if(message.equalsIgnoreCase("&updateConfig")){
 				try {
-					ConfigCommands.updateConfig(channel);
+					ConfigCommands.updateConfig(ConfigStart, channel);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

@@ -1,3 +1,5 @@
+package main;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -5,11 +7,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 
-public class ZatchBotConfigsStartup{
+public class ZatchBotConfigStartupOld{
 	static String Server; //This will be replaced by what is inputed in the Config upon start. This is the IRC server 
 	static String Channel; //This will be replaced by what is inputted in the Channel Line upon Start. These are the channels to Auto-Connect to.
 	static String[] Channels; 
-	public static String configVersion = "1.0";
 	public void createConfig() throws Exception{
 		File file = new File("Config.txt"); //sets the file name
 	
@@ -19,7 +20,7 @@ public class ZatchBotConfigsStartup{
 
 			FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
 			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write("Config Version: " + configVersion+  "\r\n"); //This line is important as it's used to check the config version.
+			bw.write("Config Version: " + "\r\n"); //This line is important as it's used to check the config version.
 			bw.write("		=--Connection--=" +"\r\n");
 			bw.write("--IRC Server--" + "\r\n"); //puts this on the first line of the file
 			bw.write("irc.rizon.net" + "\r\n"); //puts this on the second line of the file

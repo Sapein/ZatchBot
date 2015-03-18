@@ -1,3 +1,4 @@
+package main;
 /*A Simple IRC bot that uses PIRC
     Copyright (C) 2014  
 
