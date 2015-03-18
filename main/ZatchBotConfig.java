@@ -1,5 +1,7 @@
 package main;
 
+import modules.ZatchBotLogging;
+
 public class ZatchBotConfig {
 
 	private String configVersion = "1.0";

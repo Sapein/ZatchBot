@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import modules.*;
+
 import org.jibble.pircbot.*;
 
 public class ZatchBot extends PircBot
@@ -128,8 +129,8 @@ public class ZatchBot extends PircBot
 	}
 	public void onMessage(String channel, String sender, String login, String hostname, String message)
 	{	
-		ZatchBotConfigCommands ConfigCommands = new ZatchBotConfigCommands();
-		ZatchBotConfig Config = new ZatchBotConfig();
+		modules.ZatchBotConfigCommands ConfigCommands = new modules.ZatchBotConfigCommands();
+		modules.ZatchBotConfigStartup Config = new modules.ZatchBotConfigStartup();
 		
 		//Begin Variables
 		String BotNick = Config.getBotNick();

@@ -22,6 +22,8 @@ package main;
 
 import java.io.*;
 
+import modules.ZatchBotConfigStartup;
+
 import org.jibble.pircbot.*;
 
 public class ZatchBotMain {
