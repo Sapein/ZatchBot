@@ -10,8 +10,8 @@ import java.util.regex.Pattern;
 
 public class ZatchBotLogging {
 	
-	private boolean isLoggingActive = false;
-	private String loggingLocation = null;
+	private  static boolean isLoggingActive = false;
+	private static String loggingLocation = null;
 	
 	/*
 	 * This is the logging.logging function, which handles all of the bot's logging capabilities, as all things that are logged
@@ -69,15 +69,18 @@ public class ZatchBotLogging {
 		}
 	}
 	
-	public void setLoggingMode(boolean x){
-		x = isLoggingActive;
+	public void setLoggingMode(boolean isLoggingActive){
+		this.isLoggingActive = isLoggingActive;
 	}
 	
 	public boolean getLoggingMode(){
 		return isLoggingActive;
 	}
 	
-	public void setLoggingLocation(String x){
-		x = loggingLocation;
+	public void setLoggingLocation(String loggingLocation){
+		this.loggingLocation = loggingLocation;
+	}
+	public String getLoggingLocation(){
+		return loggingLocation;
 	}
 }

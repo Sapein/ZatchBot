@@ -19,7 +19,11 @@ package main;
 //Created by Sapein
 //Zatchbot v 1.0
 
-public class ZatchBotMain extends ZatchBotConfigStartup{
+import java.io.*;
+
+import org.jibble.pircbot.*;
+
+public class ZatchBotMain{
 
 	public static void main(String[] arg) throws Exception {
 		ZatchBotConfigStartup ConfigStartup = new ZatchBotConfigStartup();

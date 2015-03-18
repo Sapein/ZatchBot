@@ -4,13 +4,13 @@ public class ZatchBotConfig {
 
 	private String configVersion = "1.0";
 	
-	protected boolean OpNickUsed;
-	protected boolean OpHostnameUsed;
-	protected String BotNick;
-	protected String Master;
-	protected String OpNick;
-	protected String OpHostname;
-	protected String commandInitializer; 
+	static protected boolean OpNickUsed;
+	static protected boolean OpHostnameUsed;
+	static protected String BotNick;
+	static protected String Master;
+	static protected String OpNick;
+	static protected String OpHostname;
+	static protected String commandInitializer; 
 	/*
 	 * This is mainly designed to return the config version. This may be deprecated in the future and is only really used 
 	 * for getting the configVersion Variable. 
@@ -25,11 +25,9 @@ public class ZatchBotConfig {
 	public void isLoggingActive(boolean x){
 		ZatchBotLogging logging = new ZatchBotLogging();
 		if(x == true){
-			boolean y = true;
-			logging.setLoggingMode(y);
+			logging.setLoggingMode(true);
 		}else{
-			boolean y = false;
-			logging.setLoggingMode(y);
+			logging.setLoggingMode(false);
 		}
 	}
 	

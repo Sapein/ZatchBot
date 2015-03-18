@@ -14,9 +14,6 @@ public class ZatchBotConfigStartup extends ZatchBotConfig{
 	private String Server;
 	private String[] Channels;
 	
-
-
-	
 	/*
 	 * As it's name implies this generates the config on the first run, or if the config file is deleted.
 	 */
