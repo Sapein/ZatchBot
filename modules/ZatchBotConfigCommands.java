@@ -6,12 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 
-import main.ZatchBotConfig;
 
-import org.jibble.pircbot.PircBot;
-
-
-public class ZatchBotConfigCommands extends ZatchBotConfig{
+public class ZatchBotConfigCommands extends ZatchBot_Config {
 	/*ZatchBotConfig Config = new ZatchBotConfig();
 	private boolean OpHostnameUsed = Config.getOpHostnameUsed();
 	private boolean OpNickUsed = Config.getOpNickUsed();
@@ -25,7 +21,7 @@ public class ZatchBotConfigCommands extends ZatchBotConfig{
 	 * This handles loading and reloading of the config file. Please note that the config version return will be moved from 
 	 * this function and given it's own function as loadConfig is mainly supposed to load/reload the config. 
 	 */
-	protected void loadConfig(String chan) throws Exception{
+	public void loadConfig(String chan) throws Exception{
 		ZatchBotLogging logging = new ZatchBotLogging();
 		String configVersion;
 		BufferedReader saveFile;
@@ -100,7 +96,7 @@ public class ZatchBotConfigCommands extends ZatchBotConfig{
 	 * config is up-to-date. It also allows for me to make changes to the config file and not worry about breaking things
 	 * or having to have users update the config themselves and have something mess up.
 	 */
-	protected void updateConfig(ZatchBotConfigStartup startup, String chan) throws Exception{
+	public void updateConfig(ZatchBotConfigStartup startup, String chan) throws Exception{
 		ZatchBotLogging logging = new ZatchBotLogging();
 		ZatchBotConfigStartup ConfigStartup = new ZatchBotConfigStartup();
 		

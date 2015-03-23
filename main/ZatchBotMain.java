@@ -20,11 +20,7 @@ package main;
 //Created by Sapein
 //Zatchbot v 1.0
 
-import java.io.*;
-
 import modules.ZatchBotConfigStartup;
-
-import org.jibble.pircbot.*;
 
 public class ZatchBotMain {
 

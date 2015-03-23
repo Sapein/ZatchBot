@@ -1,15 +1,16 @@
 package modules;
 
+import main.*;
+import modules.ZatchBot_Config;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 
-import main.ZatchBotConfig;
 
-
-public class ZatchBotConfigStartup extends ZatchBotConfig{
+public class ZatchBotConfigStartup extends ZatchBot_Config {
 	
 	//Stage 1 startup Variables
 	private String Channel;
@@ -87,7 +88,7 @@ public class ZatchBotConfigStartup extends ZatchBotConfig{
 	}
 	
 	public void loadConfigState2() throws Exception{
-		ZatchBotLogging logging = new ZatchBotLogging();
+		main.ZatchBotLogging logging = new main.ZatchBotLogging();
 		
 		String configVersion;
 		BufferedReader saveFile;

@@ -56,7 +56,7 @@ public class ZatchBot extends PircBot
 
     public ZatchBot() throws Exception{
         ConfigStart = new ZatchBotConfigStartup();
-		ZatchBotConfig Config = new ZatchBotConfig();
+		ZatchBot_Config Config = new ZatchBot_Config();
 		ConfigStart.loadConfigState2();
 		String OpNick = Config.getOpNick();
 		String OpHostname = Config.getOpHostname();
@@ -81,7 +81,7 @@ public class ZatchBot extends PircBot
 	}
 
 	protected void onJoin(String channel, String sender, String login, String hostname){
-		ZatchBotConfig Config = new ZatchBotConfig();
+		ZatchBot_Config Config = new ZatchBot_Config();
 		String BotNick = Config.getBotNick();
 		String Master = Config.getMaster();
 		//logging.logging
@@ -120,7 +120,7 @@ public class ZatchBot extends PircBot
 		sendMessage(channel, "Good-bye.");
 	}
 	protected void onPrivateMessage(String sender, String login, String hostname, String message){
-		ZatchBotConfig Config = new ZatchBotConfig();
+		ZatchBot_Config Config = new ZatchBot_Config();
 		String Master = Config.getMaster();
 		sendMessage(Master, sender + ": " + message); 
 	}

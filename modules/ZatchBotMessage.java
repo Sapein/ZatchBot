@@ -1,7 +1,6 @@
 package modules;
 
 import main.ZatchBot;
-import main.ZatchBotConfig;
 
 /**
  * Created by Jarada on 08/03/15.
@@ -9,7 +8,7 @@ import main.ZatchBotConfig;
 public class ZatchBotMessage {
 
     private ZatchBot zatchBot;
-    private ZatchBotConfig config;
+    private ZatchBot_Config config;
     private ZatchBotConfigCommands commands;
     private String botNick;
     private String master;
@@ -20,7 +19,7 @@ public class ZatchBotMessage {
     private String hostname;
     private String message;
 
-    public ZatchBotMessage(ZatchBot zatchBot, ZatchBotConfig config, ZatchBotConfigCommands commands, String botNick, String master,
+    public ZatchBotMessage(ZatchBot zatchBot, ZatchBot_Config config, ZatchBotConfigCommands commands, String botNick, String master,
                            String channel, String sender, String login, String hostname, String message) {
         this.zatchBot = zatchBot;
         this.config = config;
@@ -42,11 +41,11 @@ public class ZatchBotMessage {
         this.zatchBot = zatchBot;
     }
 
-    public ZatchBotConfig getConfig() {
+    public ZatchBot_Config getConfig() {
         return config;
     }
 
-    public void setConfig(ZatchBotConfig config) {
+    public void setConfig(ZatchBot_Config config) {
         this.config = config;
     }
 

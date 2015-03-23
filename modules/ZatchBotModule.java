@@ -1,8 +1,5 @@
 package modules;
 
-import main.ZatchBot;
-import main.ZatchBotConfig;
-
 /**
  * Created by Jarada on 08/03/15.
  */
