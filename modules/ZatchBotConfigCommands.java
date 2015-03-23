@@ -25,7 +25,7 @@ public class ZatchBotConfigCommands extends ZatchBotConfig{
 	 * This handles loading and reloading of the config file. Please note that the config version return will be moved from 
 	 * this function and given it's own function as loadConfig is mainly supposed to load/reload the config. 
 	 */
-	public String loadConfig(String chan) throws Exception{
+	protected void loadConfig(String chan) throws Exception{
 		ZatchBotLogging logging = new ZatchBotLogging();
 		String configVersion;
 		BufferedReader saveFile;
@@ -93,7 +93,6 @@ public class ZatchBotConfigCommands extends ZatchBotConfig{
 		    }
 		    saveFile.close();
 		}
-	    return configVersion;
 	}
 	
 	/*
@@ -101,14 +100,13 @@ public class ZatchBotConfigCommands extends ZatchBotConfig{
 	 * config is up-to-date. It also allows for me to make changes to the config file and not worry about breaking things
 	 * or having to have users update the config themselves and have something mess up.
 	 */
-	public void updateConfig(ZatchBotConfigStartup startup, String chan) throws Exception{
+	protected void updateConfig(ZatchBotConfigStartup startup, String chan) throws Exception{
 		ZatchBotLogging logging = new ZatchBotLogging();
 		ZatchBotConfigStartup ConfigStartup = new ZatchBotConfigStartup();
 		
 		String Server = ConfigStartup.getServer();
 		String Channel = ConfigStartup.getChannel(); 
-		
-		String versionCheck = loadConfig("");
+		String versionCheck = "1.0";
 		File file = new File("Config.txt");
 		File oldFile = new File("Config-Backup.txt");
 		if(!versionCheck.equalsIgnoreCase("Config Version: " )){
