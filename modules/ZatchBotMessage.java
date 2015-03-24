@@ -2,14 +2,14 @@ package modules;
 
 import main.ZatchBot;
 
-/**
+/*
  * Created by Jarada on 08/03/15.
  */
 public class ZatchBotMessage {
 
     private ZatchBot zatchBot;
-    private ZatchBotConfigStartup config;
-    private ZatchBotConfigCommands commands;
+    private ZatchBotModuleConfigStartup config;
+    private ZatchBotModuleConfigCommands commands;
     private String botNick;
     private String master;
 
@@ -19,7 +19,7 @@ public class ZatchBotMessage {
     private String hostname;
     private String message;
 
-    public ZatchBotMessage(ZatchBot zatchBot, ZatchBotConfigStartup config, ZatchBotConfigCommands commands, String botNick, String master,
+    public ZatchBotMessage(ZatchBot zatchBot, ZatchBotModuleConfigStartup config, ZatchBotModuleConfigCommands commands, String botNick, String master,
                            String channel, String sender, String login, String hostname, String message) {
         this.zatchBot = zatchBot;
         this.config = config;
@@ -41,19 +41,19 @@ public class ZatchBotMessage {
         this.zatchBot = zatchBot;
     }
 
-    public ZatchBotConfigStartup getConfig() {
+    public ZatchBotModuleConfigStartup getConfig() {
         return config;
     }
 
-    public void setConfig(ZatchBotConfigStartup config) {
+    public void setConfig(ZatchBotModuleConfigStartup config) {
         this.config = config;
     }
 
-    public ZatchBotConfigCommands getCommands() {
+    public ZatchBotModuleConfigCommands getCommands() {
         return commands;
     }
 
-    public void setCommands(ZatchBotConfigCommands commands) {
+    public void setCommands(ZatchBotModuleConfigCommands commands) {
         this.commands = commands;
     }
 
