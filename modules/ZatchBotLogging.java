@@ -13,7 +13,18 @@ public class ZatchBotLogging {
 	
 	private  static boolean isLoggingActive = false;
 	private static String loggingLocation = null;
-	
+
+    /*
+	 * This simply checks to see if logging is active.
+	 */
+    public void setLoggingActive(boolean x){
+        if(x){
+            setLoggingMode(true);
+        }else{
+            setLoggingMode(false);
+        }
+    }
+
 	/*
 	 * This is the logging.logging function, which handles all of the bot's logging capabilities, as all things that are logged
 	 * are done so through here.  

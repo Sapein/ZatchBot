@@ -1,8 +1,5 @@
 package modules;
 
-import main.*;
-import modules.ZatchBot_Config;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -10,13 +7,22 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 
-public class ZatchBotConfigStartup extends ZatchBot_Config {
-	
-	//Stage 1 startup Variables
+public class ZatchBotConfigStartup {
+
+    static String configVersion = "1.0";
+
+    static protected boolean OpNickUsed;
+    static protected boolean OpHostnameUsed;
+    static protected String BotNick;
+    static protected String Master;
+    static protected String OpNick;
+    static protected String OpHostname;
+    static protected String commandInitializer;
+    //Stage 1 startup Variables
 	private String Channel;
 	private String Server;
 	private String[] Channels;
-	
+
 	/*
 	 * As it's name implies this generates the config on the first run, or if the config file is deleted.
 	 */
@@ -29,7 +35,7 @@ public class ZatchBotConfigStartup extends ZatchBot_Config {
 
 			FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
 			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write("Config Version: " + getConfigVersion()+  "\r\n"); //This line is important as it's used to check the config version.
+			bw.write("Config Version: " + configVersion +  "\r\n"); //This line is important as it's used to check the config version.
 			bw.write("		=--Connection--=" +"\r\n");
 			bw.write("--IRC Server--" + "\r\n"); //puts this on the first line of the file
 			bw.write("irc.rizon.net" + "\r\n"); //puts this on the second line of the file
@@ -117,11 +123,11 @@ public class ZatchBotConfigStartup extends ZatchBot_Config {
 		    boolean logsMode = Boolean.parseBoolean(saveFile.readLine()); //22st line
 		    saveFile.readLine(); //23nd Line
 		    if(logsMode == true){
-		    	isLoggingActive(true);
+                new ZatchBotLogging().setLoggingActive(true);
 		    	logging.setLoggingLocation(saveFile.readLine()); //24rd line
 		    }
 		    else{
-		    	isLoggingActive(false);
+                new ZatchBotLogging().setLoggingActive(false);
 		    	saveFile.readLine(); //24rd line
 		    }
 		    saveFile.close();
@@ -149,11 +155,11 @@ public class ZatchBotConfigStartup extends ZatchBot_Config {
 		    boolean logsMode = Boolean.parseBoolean(saveFile.readLine()); //22st line
 		    saveFile.readLine(); //23nd Line
 		    if(logsMode == true){
-		    	isLoggingActive(true);
+                new ZatchBotLogging().setLoggingActive(true);
 		    	logging.setLoggingLocation(saveFile.readLine()); //24rd line
 		    }
 		    else{
-		    	isLoggingActive(false);
+                new ZatchBotLogging().setLoggingActive(false);
 		    	saveFile.readLine(); //24rd line
 		    }
 		    saveFile.close();
@@ -171,4 +177,36 @@ public class ZatchBotConfigStartup extends ZatchBot_Config {
 	public String[] getChannels(){
 		return Channels;
 	}
+
+    public static String getConfigVersion() {
+        return configVersion;
+    }
+
+    public static boolean isOpNickUsed() {
+        return OpNickUsed;
+    }
+
+    public static boolean isOpHostnameUsed() {
+        return OpHostnameUsed;
+    }
+
+    public static String getBotNick() {
+        return BotNick;
+    }
+
+    public static String getMaster() {
+        return Master;
+    }
+
+    public static String getOpNick() {
+        return OpNick;
+    }
+
+    public static String getOpHostname() {
+        return OpHostname;
+    }
+
+    public static String getCommandInitializer() {
+        return commandInitializer;
+    }
 }

@@ -8,7 +8,7 @@ import main.ZatchBot;
 public class ZatchBotMessage {
 
     private ZatchBot zatchBot;
-    private ZatchBot_Config config;
+    private ZatchBotConfigStartup config;
     private ZatchBotConfigCommands commands;
     private String botNick;
     private String master;
@@ -19,7 +19,7 @@ public class ZatchBotMessage {
     private String hostname;
     private String message;
 
-    public ZatchBotMessage(ZatchBot zatchBot, ZatchBot_Config config, ZatchBotConfigCommands commands, String botNick, String master,
+    public ZatchBotMessage(ZatchBot zatchBot, ZatchBotConfigStartup config, ZatchBotConfigCommands commands, String botNick, String master,
                            String channel, String sender, String login, String hostname, String message) {
         this.zatchBot = zatchBot;
         this.config = config;
@@ -41,11 +41,11 @@ public class ZatchBotMessage {
         this.zatchBot = zatchBot;
     }
 
-    public ZatchBot_Config getConfig() {
+    public ZatchBotConfigStartup getConfig() {
         return config;
     }
 
-    public void setConfig(ZatchBot_Config config) {
+    public void setConfig(ZatchBotConfigStartup config) {
         this.config = config;
     }
 

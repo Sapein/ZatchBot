@@ -7,7 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 
-public class ZatchBotConfigCommands extends ZatchBot_Config {
+public class ZatchBotConfigCommands {
 	/*ZatchBotConfig Config = new ZatchBotConfig();
 	private boolean OpHostnameUsed = Config.getOpHostnameUsed();
 	private boolean OpNickUsed = Config.getOpNickUsed();
@@ -35,26 +35,26 @@ public class ZatchBotConfigCommands extends ZatchBot_Config {
 		    saveFile.readLine(); //7th line
 		    saveFile.readLine(); //8th line
 		    saveFile.readLine(); //9th line
-		    OpHostnameUsed = Boolean.parseBoolean(saveFile.readLine()); //10th line
+		    ZatchBotConfigStartup.OpHostnameUsed = Boolean.parseBoolean(saveFile.readLine()); //10th line
 		    saveFile.readLine(); //11th line
-		    OpNickUsed = Boolean.parseBoolean(saveFile.readLine()); //12th line
+		    ZatchBotConfigStartup.OpNickUsed = Boolean.parseBoolean(saveFile.readLine()); //12th line
 		    saveFile.readLine(); //13th line
-		    BotNick = saveFile.readLine(); //14th line
+		    ZatchBotConfigStartup.BotNick = saveFile.readLine(); //14th line
 		    saveFile.readLine(); //15th line
-		    Master = saveFile.readLine(); //16th line
+		    ZatchBotConfigStartup.Master = saveFile.readLine(); //16th line
 		    saveFile.readLine(); //17th line
-		    OpNick = saveFile.readLine(); //18th line
+		    ZatchBotConfigStartup.OpNick = saveFile.readLine(); //18th line
 		    saveFile.readLine(); //19th line
-		    OpHostname = saveFile.readLine(); //10h line 
+		    ZatchBotConfigStartup.OpHostname = saveFile.readLine(); //10h line
 		    saveFile.readLine(); //21th line 
 		    boolean logsMode = Boolean.parseBoolean(saveFile.readLine()); //22st line
 		    saveFile.readLine(); //23nd Line
 		    if(logsMode == true){
-		    	isLoggingActive(true);
+		    	new ZatchBotLogging().setLoggingActive(true);
 		    	logging.setLoggingLocation(saveFile.readLine()); //24rd line
 		    }
 		    else{
-		    	isLoggingActive(false);
+                new ZatchBotLogging().setLoggingActive(false);
 		    	saveFile.readLine(); //24rd line
 		    }
 		    saveFile.close();
@@ -67,24 +67,24 @@ public class ZatchBotConfigCommands extends ZatchBot_Config {
 		    saveFile.readLine(); //7th line
 		    saveFile.readLine(); //8th line
 		    saveFile.readLine(); //9th line
-		    OpHostnameUsed = Boolean.parseBoolean(saveFile.readLine()); //10th line
+		    ZatchBotConfigStartup.OpHostnameUsed = Boolean.parseBoolean(saveFile.readLine()); //10th line
 		    saveFile.readLine(); //11th line
-		    OpNickUsed = Boolean.parseBoolean(saveFile.readLine()); //12th line
+		    ZatchBotConfigStartup.OpNickUsed = Boolean.parseBoolean(saveFile.readLine()); //12th line
 		    saveFile.readLine(); //13th line
-		    BotNick = saveFile.readLine(); //14th line
+		    ZatchBotConfigStartup.BotNick = saveFile.readLine(); //14th line
 		    saveFile.readLine(); //15th line
-		    Master = saveFile.readLine(); //16th line
+		    ZatchBotConfigStartup.Master = saveFile.readLine(); //16th line
 		    saveFile.readLine(); //17th line
-		    OpNick = saveFile.readLine(); //18th line
+		    ZatchBotConfigStartup.OpNick = saveFile.readLine(); //18th line
 		    saveFile.readLine(); //19th line
-		    OpHostname = saveFile.readLine(); //10h line 
+		    ZatchBotConfigStartup.OpHostname = saveFile.readLine(); //10h line
 		    boolean logsMode = Boolean.parseBoolean(saveFile.readLine()); //22st line
 		    if(logsMode == true){
-		    	isLoggingActive(true);
+                new ZatchBotLogging().setLoggingActive(true);
 		    	logging.setLoggingLocation(saveFile.readLine()); //24rd line
 		    }
 		    else{
-		    	isLoggingActive(false);
+                new ZatchBotLogging().setLoggingActive(false);
 		    	saveFile.readLine(); //24rd line
 		    }
 		    saveFile.close();
@@ -119,17 +119,17 @@ public class ZatchBotConfigCommands extends ZatchBot_Config {
 				bw.write(startup.getChannel() + "\r\n"); //puts this on the fifth line of the file
 				bw.write("		==--IRC Bot--==" + "\r\n"); //creates the sixth line of the file
 				bw.write("--Toggle Hostname Verification for Ops--" + "\r\n"); //puts this on the Seventh line of the file
-				bw.write(OpHostnameUsed + "\r\n"); //makes Hostname Verification False by default
+				bw.write(ZatchBotConfigStartup.OpHostnameUsed + "\r\n"); //makes Hostname Verification False by default
 				bw.write("--Toggle Nick Verification for Ops--" + "\r\n"); //puts this on the Ninth line of the file
-				bw.write(OpNickUsed + "\r\n"); //Sets the Nick verification to true
+				bw.write(ZatchBotConfigStartup.OpNickUsed + "\r\n"); //Sets the Nick verification to true
 				bw.write("--Bot Name--" +"\r\n"); //puts this on the Eleventh line of the file
-				bw.write(BotNick + "\r\n"); //puts this on the twelfth line of the file
+				bw.write(ZatchBotConfigStartup.BotNick + "\r\n"); //puts this on the twelfth line of the file
 				bw.write("--Master--" + "\r\n"); //puts this on the thirteenth line of the file
-				bw.write(Master + "\r\n"); //puts this on the fourteenth line of the file
+				bw.write(ZatchBotConfigStartup.Master + "\r\n"); //puts this on the fourteenth line of the file
 				bw.write("--Op Nicks--" + "\r\n"); //puts this on the fifteenth line of the file
-				bw.write(OpNick + "\r\n"); //generates a blank space
+				bw.write(ZatchBotConfigStartup.OpNick + "\r\n"); //generates a blank space
 				bw.write("--Op Hostnames" + "\r\n"); //puts this on the Seventeenth line of the file
-				bw.write(OpHostname + "\r\n"); //generates blank space on the Eighteenth line of the file
+				bw.write(ZatchBotConfigStartup.OpHostname + "\r\n"); //generates blank space on the Eighteenth line of the file
 				bw.write("--Toggle Logs" +"\r\n"); 
 				bw.write(logging.getLoggingMode() + "\r\n");
 				bw.write("--Logs Location--" + "\r\n");
