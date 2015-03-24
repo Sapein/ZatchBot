@@ -20,12 +20,12 @@ package main;
 //Created by Sapein
 //Zatchbot v 1.0
 
-import modules.ZatchBotConfigStartup;
+import modules.ZatchBotModuleConfigStartup;
 
 public class ZatchBotMain {
 
 	public static void main(String[] arg) throws Exception {
-		ZatchBotConfigStartup ConfigStartup = new ZatchBotConfigStartup();
+		ZatchBotModuleConfigStartup ConfigStartup = new ZatchBotModuleConfigStartup();
 
 		ConfigStartup.generateConfig();
 		ConfigStartup.loadConfigStage1();

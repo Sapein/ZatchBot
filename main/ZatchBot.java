@@ -44,7 +44,7 @@ public class ZatchBot extends PircBot
     ArrayList<String> includedChannels;
     ArrayList<ZatchBotModule> modules;
     final static String version = "1.1";
-    ZatchBotConfigStartup ConfigStart;
+    ZatchBotModuleConfigStartup ConfigStart;
 
     public String[] getOpNicks() {
         return OpNicks;
@@ -55,8 +55,8 @@ public class ZatchBot extends PircBot
     }
 
     public ZatchBot() throws Exception{
-        ConfigStart = new ZatchBotConfigStartup();
-		ZatchBotConfigStartup Config = new ZatchBotConfigStartup();
+        ConfigStart = new ZatchBotModuleConfigStartup();
+		ZatchBotModuleConfigStartup Config = new ZatchBotModuleConfigStartup();
 		ConfigStart.loadConfigState2();
 		String OpNick = Config.getOpNick();
 		String OpHostname = Config.getOpHostname();
@@ -70,18 +70,19 @@ public class ZatchBot extends PircBot
             OpHostnames = new String[0];
         }
 
-        System.out.println("BotNick: "+ BotNick);
-        this.setName("Zatch-Wuufu");
-		this.setLogin("Zatch-Wuufu");
+        //System.out.println("BotNick: "+ BotNick);
+        this.setName(BotNick);
+		this.setLogin("Zatch");
 
         // Load modules
         modules = new ArrayList<ZatchBotModule>();
         modules.add(new ZatchBotModuleHelp());
+        modules.add(new ZatchBotModule_Config());
 		
 	}
 
 	protected void onJoin(String channel, String sender, String login, String hostname){
-		ZatchBotConfigStartup Config = new ZatchBotConfigStartup();
+		ZatchBotModuleConfigStartup Config = new ZatchBotModuleConfigStartup();
 		String BotNick = Config.getBotNick();
 		String Master = Config.getMaster();
 		//logging.logging
@@ -120,7 +121,7 @@ public class ZatchBot extends PircBot
 		sendMessage(channel, "Good-bye.");
 	}
 	protected void onPrivateMessage(String sender, String login, String hostname, String message){
-		ZatchBotConfigStartup Config = new ZatchBotConfigStartup();
+		ZatchBotModuleConfigStartup Config = new ZatchBotModuleConfigStartup();
 		String Master = Config.getMaster();
 		sendMessage(Master, sender + ": " + message); 
 	}
@@ -129,8 +130,8 @@ public class ZatchBot extends PircBot
 	}
 	public void onMessage(String channel, String sender, String login, String hostname, String message)
 	{	
-		modules.ZatchBotConfigCommands ConfigCommands = new modules.ZatchBotConfigCommands();
-		modules.ZatchBotConfigStartup Config = new modules.ZatchBotConfigStartup();
+		modules.ZatchBotModuleConfigCommands ConfigCommands = new modules.ZatchBotModuleConfigCommands();
+		modules.ZatchBotModuleConfigStartup Config = new modules.ZatchBotModuleConfigStartup();
 		
 		//Begin Variables
 		String BotNick = Config.getBotNick();
@@ -152,6 +153,7 @@ public class ZatchBot extends PircBot
         //Begin Check Module Actions
         for (ZatchBotModule module : modules) {
             module.onMessage(zatchBotMessage);
+            	
         }
         //End Check Module Actions
 		
@@ -493,25 +495,6 @@ public class ZatchBot extends PircBot
 	  	}
 		//auto-log code ends
 		
-		if(sender.equalsIgnoreCase(Master)){
-			if(message.equalsIgnoreCase("&reloadConfigs")){
-				try {
-					ConfigCommands.loadConfig(channel);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		if(sender.equalsIgnoreCase(Master)){
-			if(message.equalsIgnoreCase("&updateConfig")){
-				try {
-					ConfigCommands.updateConfig(ConfigStart, channel);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
 		//End Processes that Zatch Does Automatically
 	}
 	protected void onKick(String channel, String kickerNick, String kickerLogin, String kickerHostname, String recipientNick, String reason){
