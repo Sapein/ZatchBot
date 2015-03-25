@@ -34,27 +34,11 @@ public class ZatchBotMain {
 
 		ZatchBot bot = new ZatchBot(); // this starts your bot
 		bot.setVerbose(true); // enable debugging, useful during programming
-		bot.connect(Server); // Connect to the Server(The Server Variable is
-								// called here)
-		for (int ChannelAmount = 0; ChannelAmount < Channels.length; ++ChannelAmount) { // This
-																						// makes
-																						// sure
-																						// that
-																						// all
-																						// Channels
-																						// listed
-																						// are
-																						// joined
-																						// as
-																						// we
-																						// stored
-																						// it
-																						// in
-																						// a
-																						// variable
-																						// earlier.
-			bot.joinChannel(Channels[ChannelAmount]); // Actually Joins the
-														// channels.
+		bot.connect(Server); // Connect to the Server(The Server Variable is called here)
+		// This makes sure all Channels listed are joined as we stored it in a variable earlier.
+		for (int ChannelAmount = 0; ChannelAmount < Channels.length; ++ChannelAmount) { 
+
+			bot.joinChannel(Channels[ChannelAmount]); // Actually Joins the channels.
 		}
 	}
 }
