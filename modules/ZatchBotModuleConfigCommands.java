@@ -21,7 +21,7 @@ public class ZatchBotModuleConfigCommands extends ZatchBotModule_Config{
 	 * This handles loading and reloading of the config file. Please note that the config version return will be moved from 
 	 * this function and given it's own function as loadConfig is mainly supposed to load/reload the config. 
 	 */
-	public void loadConfig(String chan) throws Exception{
+	protected void loadConfig(String chan) throws Exception{
 		ZatchBotLogging logging = new ZatchBotLogging();
 		String configVersion;
 		BufferedReader saveFile;
@@ -96,7 +96,7 @@ public class ZatchBotModuleConfigCommands extends ZatchBotModule_Config{
 	 * config is up-to-date. It also allows for me to make changes to the config file and not worry about breaking things
 	 * or having to have users update the config themselves and have something mess up.
 	 */
-	public void updateConfig(String chan) throws Exception{
+	protected void updateConfig(String chan) throws Exception{
 		ZatchBotLogging logging = new ZatchBotLogging();
 		ZatchBotModuleConfigStartup ConfigStartup = new ZatchBotModuleConfigStartup();
 		

@@ -21,14 +21,15 @@ package main;
 //Zatchbot v 1.0
 
 import modules.ZatchBotModuleConfigStartup;
+import modules.ZatchBotModule_Config;
 
 public class ZatchBotMain {
 
 	public static void main(String[] arg) throws Exception {
 		ZatchBotModuleConfigStartup ConfigStartup = new ZatchBotModuleConfigStartup();
 
-		ConfigStartup.generateConfig();
-		ConfigStartup.loadConfigStage1();
+		ZatchBotModule_Config.startUp(0);
+		ZatchBotModule_Config.startUp(1);
 		String Server = ConfigStartup.getServer();
 		String[] Channels = ConfigStartup.getChannels();
 

@@ -57,7 +57,7 @@ public class ZatchBot extends PircBot
     public ZatchBot() throws Exception{
         ConfigStart = new ZatchBotModuleConfigStartup();
 		ZatchBotModuleConfigStartup Config = new ZatchBotModuleConfigStartup();
-		ConfigStart.loadConfigState2();
+		ZatchBotModule_Config.startUp(2);
 		String OpNick = Config.getOpNick();
 		String OpHostname = Config.getOpHostname();
 		String BotNick = Config.getBotNick();

@@ -26,7 +26,7 @@ public class ZatchBotModuleConfigStartup extends ZatchBotModule_Config{
 	/*
 	 * As it's name implies this generates the config on the first run, or if the config file is deleted.
 	 */
-	public void generateConfig() throws Exception{
+	protected void generateConfig() throws Exception{
 		File file = new File("Config.txt"); //sets the file name
 		
 		// NOTE: That the defaults set here are to prevent the bot from erroring out upon start-up, your changes will not be overwritten.
@@ -67,7 +67,7 @@ public class ZatchBotModuleConfigStartup extends ZatchBotModule_Config{
 	 * This beings the loading process for the configuration file. Stage 1 is simply getting the Server and the Channels to
 	 * connect to at first. This is then followed by Stage 2 afterwards. 
 	 */
-	public void loadConfigStage1() throws Exception{
+	protected void loadConfigStage1() throws Exception{
 		String conVersion;
 		BufferedReader saveFile= new BufferedReader(new FileReader("Config.txt"));
 		   // Get the integer value from the String.
@@ -93,7 +93,7 @@ public class ZatchBotModuleConfigStartup extends ZatchBotModule_Config{
 		    Channels = Channel.split(",");
 	}
 	
-	public void loadConfigState2() throws Exception{
+	protected void loadConfigStage2() throws Exception{
 		ZatchBotLogging logging = new ZatchBotLogging();
 		
 		String configVersion;
